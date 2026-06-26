@@ -2,7 +2,7 @@
 
 ```bash
 pip install -r requirements.txt
-uvicorn main:app --reload
+flask --app main run --reload
 ```
 
 Server runs at `http://localhost:8000`.

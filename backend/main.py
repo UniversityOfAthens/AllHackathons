@@ -1,14 +1,13 @@
-from fastapi import FastAPI
-from fastapi.responses import PlainTextResponse
+from flask import Flask
 
-app = FastAPI()
+app = Flask(__name__)
 
 
-@app.get("/health", response_class=PlainTextResponse)
-async def health():
+@app.route("/health")
+def health():
     return "Healthy!\n"
 
 
-@app.get("/ping", response_class=PlainTextResponse)
-async def ping():
+@app.route("/ping")
+def ping():
     return "Pong!\n"
