@@ -6,7 +6,7 @@ Find your next hackathon, see what's coming up, and if one's missing, submit it 
 
 > The site UI is **Greek-first** — that's our audience. This README is in English for anyone landing on the repo from outside.
 
-> 🚧 **Early days.** This is being built in the open, mostly by students at the University of Athens. There's plenty to grab — see [Contributing](#contributing).
+> 🚧 **Early days.** This is being built in the open, mostly by students at the University of Athens. There's plenty to grab — see [Contributing](#contributing), and come say hi on our [Discord](https://discord.gg/zENTyrbJh).
 
 ## What it is
 
@@ -64,7 +64,7 @@ A student community project — **contributors welcome**, especially from UoA. T
 3. **Fork → branch → PR.** Most contributors won't have push access: fork, work on a branch, open a pull request. Keep each PR focused on one issue.
 4. **Match what's there** — the existing TypeScript / Tailwind / shadcn patterns on the frontend, and the [API contract (#2)](../../issues/2) for data shapes.
 
-Full guide in **[CONTRIBUTING.md](CONTRIBUTING.md)**. Questions → Discord `#webdev`.
+Full guide in **[CONTRIBUTING.md](CONTRIBUTING.md)**. Questions? Join our **[Discord](https://discord.gg/zENTyrbJh)** and chat in `#hackathons` or `#webdev`.
 
 ## Roadmap
 
