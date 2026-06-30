@@ -3,6 +3,9 @@
 Thanks for wanting to help. This is a community project — built mostly by University of Athens
 students — and it only works if it's easy to jump in. Here's how.
 
+**First stop:** join our [Discord](https://discord.gg/zENTyrbJh) and say hi in `#hackathons` or `#webdev`.
+That's where we coordinate who's working on what.
+
 ## Ways to contribute
 
 - **Build a feature** from the issues.
@@ -73,5 +76,5 @@ flask --app main run        #  →  http://localhost:5000
 
 ## Communication
 
-- Day-to-day: Discord `#webdev`.
+- Day-to-day: our [Discord](https://discord.gg/zENTyrbJh) — `#hackathons` or `#webdev`.
 - Decisions worth keeping: write them on the relevant issue.
