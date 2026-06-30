@@ -6,6 +6,10 @@ The rule: **propose a design, get a nod from the team, _then_ implement.** A wir
 afternoon; a half-built page that gets thrown away costs a week. If you have an idea for a screen,
 post it here and in `#webdev` first.
 
+> **Wireframes are a reference, not a spec.** They're here to get an idea across — the layout and the
+> gist of it. The exact text, colours, and spacing are suggestions, not gospel. If you're building one
+> and a different choice makes the site better, make it. Match the _idea_, not the pixels.
+
 ## What goes here
 
 - `wireframes/` — self-contained HTML mockups (open them in any browser, no build step). These are
