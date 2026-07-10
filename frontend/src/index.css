@@ -155,3 +155,20 @@
     @apply font-sans;
   }
 }
+
+/* Live indicator: the dot breathes — shrinks + fades, then expands + returns. */
+@keyframes live-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.7);
+    opacity: 0.3;
+  }
+}
+
+@utility animate-live-pulse {
+  animation: live-pulse 1.4s ease-in-out infinite;
+}
