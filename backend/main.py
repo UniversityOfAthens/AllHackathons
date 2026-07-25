@@ -162,7 +162,7 @@ def all_hackathons():
         if params["q"]:
             like = f"%{params["q"]}%"
             
-            query = query.filter(Hackathon.name.ilike(like) | Hackathon.description.ilike(like) |
+            query = query.filter(Hackathon.name.ilike(like) | Hackathon.url.ilike(like) | Hackathon.description.ilike(like) |
                                  Hackathon.location.ilike(like) | Hackathon.organizer.ilike(like) | Hackathon.hasPrize.ilike(like) |
                                  Hackathon.prizeDetails.ilike(like) | Hackathon.tags.ilike(like))
         

@@ -258,3 +258,72 @@ def test_all_hackathons_q_parameter(app,client):
     response3 = client.post("/api/hackathons", data=hackathon3)
     assert response3.status_code == 200
     assert response3.json["response"]["success"] == "Successfully added hackathon:Hackathon3!"
+    
+    result_test1 = client.get("api/hackathons?q=Crete") #q for location test
+    result_test2 = client.get("api/hackathons?q=ai") #q for tags test
+    result_test3 = client.get("api/hackathons?q=1500") #q for prizeDetails test
+    result_test4 = client.get("api/hackathons?q=hack3") #q for url test
+    result_test5 = client.get("api/hackathons?q=athens") #q for location test 2
+    result_test6 = client.get("api/hackathons?q=cybersecurity") #q for tags test 2 | should give us 2 results
+    result_test7 = client.get("api/hackathons?q=cool") #q for description test
+    result_test8 = client.get("api/hackathons?q=hackathon1") #q for name test
+    
+    
+    assert result_test1.status_code == 200
+    assert result_test1.json[0]["name"] == "Hackathon3"
+    assert result_test1.json[0]["tags"] == "Cybersecurity"
+    assert result_test1.json[0]["location"] == "Crete"
+    assert result_test1.json[0]["url"] == "hack3.com"
+    
+    assert result_test2.status_code == 200
+    assert result_test2.json[0]["name"] == "Hackathon2"
+    assert result_test2.json[0]["prizeDetails"] == "1500$"
+    assert result_test2.json[0]["location"] == "Athens,Greece"
+    assert result_test2.json[0]["description"] == "Cool Description"
+    assert result_test2.json[0]["url"] == "hack2.com"
+    
+    assert result_test3.status_code == 200
+    assert result_test3.json[0]["name"] == "Hackathon2"
+    assert result_test3.json[0]["prizeDetails"] == "1500$"
+    assert result_test3.json[0]["location"] == "Athens,Greece"
+    assert result_test3.json[0]["description"] == "Cool Description"
+    assert result_test3.json[0]["url"] == "hack2.com"
+    
+    assert result_test4.status_code == 200
+    assert result_test4.json[0]["name"] == "Hackathon3"
+    assert result_test4.json[0]["tags"] == "Cybersecurity"
+    assert result_test4.json[0]["location"] == "Crete"
+    assert result_test4.json[0]["url"] == "hack3.com"
+    
+    assert result_test5.status_code == 200
+    assert result_test5.json[0]["name"] == "Hackathon2"
+    assert result_test5.json[0]["prizeDetails"] == "1500$"
+    assert result_test5.json[0]["location"] == "Athens,Greece"
+    assert result_test5.json[0]["description"] == "Cool Description"
+    assert result_test5.json[0]["url"] == "hack2.com"
+    
+        
+    assert result_test6.status_code == 200
+    assert result_test6.json[1]["name"] == "Hackathon3"
+    assert result_test6.json[1]["tags"] == "Cybersecurity"
+    assert result_test6.json[1]["location"] == "Crete"
+    assert result_test6.json[1]["url"] == "hack3.com"
+    
+    assert result_test6.json[0]["name"] == "Hackathon1"
+    assert result_test6.json[0]["tags"] == "Cybersecurity"
+    assert result_test6.json[0]["location"] == "Kavala"
+    assert result_test6.json[0]["description"] == "Another Description"
+    assert result_test6.json[0]["url"] == "hack1.com"
+    
+    assert result_test7.status_code == 200
+    assert result_test7.json[0]["name"] == "Hackathon2"
+    assert result_test7.json[0]["prizeDetails"] == "1500$"
+    assert result_test7.json[0]["location"] == "Athens,Greece"
+    assert result_test7.json[0]["description"] == "Cool Description"
+    assert result_test7.json[0]["url"] == "hack2.com"
+    
+    assert result_test8.json[0]["name"] == "Hackathon1"
+    assert result_test8.json[0]["tags"] == "Cybersecurity"
+    assert result_test8.json[0]["location"] == "Kavala"
+    assert result_test8.json[0]["description"] == "Another Description"
+    assert result_test8.json[0]["url"] == "hack1.com"
