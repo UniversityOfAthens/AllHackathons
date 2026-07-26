@@ -177,9 +177,9 @@ def all_hackathons():
             elif params["sort"] == "sumbittedAt":
                 query = query.order_by(Hackathon.submittedAt)
             elif params["sort"] == "updatedAt":
-                query = query.order_by(Hackathon.updatedAt)
+                query = query.order_by(Hackathon.updatedAt.desc())
             elif params["sort"] == "interestCount":
-                query = query.order_by(Hackathon.interestCount)
+                query = query.order_by(Hackathon.interestCount.desc()) #highest to lowest
                 
         results = query.all()
         data = [result.to_dict() for result in results]

@@ -1,4 +1,5 @@
 from datetime import datetime,timedelta
+from utils import add_row
 
 # TESTING ALL HACKATHONS API | ENDPOINT: /api/hackathons | METHOD: GET
 
@@ -203,18 +204,18 @@ def test_all_hackathons_tags_parameter(app,client):
     assert response2.json["response"]["success"] == "Successfully added hackathon:Hackathon2!"
 
     result_test1 = client.get("/api/hackathons?tags=Web Development")
-    result_test1.status_code == 200
-    result_test1.json[0]["name"] == "Hackathon1"
-    result_test1.json[0]["tags"] == "Web Development"
+    assert result_test1.status_code == 200
+    assert result_test1.json[0]["name"] == "Hackathon1"
+    assert result_test1.json[0]["tags"] == "Web Development"
 
     result_test2 = client.get("/api/hackathons?tags=Cybersecurity")
-    result_test2.status_code == 200
-    result_test2.json[0]["name"] == "Hackathon2"
-    result_test2.json[0]["tags"] == "Cybersecurity"
+    assert result_test2.status_code == 200
+    assert result_test2.json[0]["name"] == "Hackathon2"
+    assert result_test2.json[0]["tags"] == "Cybersecurity"
     
-    result_test3 = client.get("api/hackatonhs?tags=something")
-    result_test3.status_code == 200
-    result_test3.json == None
+    result_test3 = client.get("api/hackathons?tags=something")
+    assert result_test3.status_code == 200
+    assert result_test3.json == []
     
 def test_all_hackathons_q_parameter(app,client):
     
@@ -327,3 +328,100 @@ def test_all_hackathons_q_parameter(app,client):
     assert result_test8.json[0]["location"] == "Kavala"
     assert result_test8.json[0]["description"] == "Another Description"
     assert result_test8.json[0]["url"] == "hack1.com"
+    
+def test_all_hackathons_sort_parameter(app,client):
+    
+    hackathon1 = {
+                "name":"Hackathon1",
+                "url":"hack1.com",
+                "startDate":"2024-06-02 15:00:00",
+                "endDate":"2024-06-05 18:00:00"
+                }
+		
+    hackathon2 = {
+				"name":"Hackathon2",
+				"url":"hack2.com",
+                "startDate":"2026-08-03 15:00:00",
+                "endDate":"2026-09-07 12:00:00"
+			    }
+	
+    hackathon3 = {
+                "name":"Hackathon3",
+                "url":"hack3.com",
+                "startDate":"2027-10-05 12:00:00",
+                "endDate":"2027-10-07 12:00:00"
+				}
+    
+    with app.app_context():
+        from main import db,Hackathon
+        db.create_all()
+    
+    response1 = client.post("api/hackathons",data=hackathon1)
+    assert response1.status_code == 200
+    assert response1.json["response"]["success"] == "Successfully added hackathon:Hackathon1!"
+    
+    response2 = client.post("api/hackathons",data=hackathon2)
+    assert response2.status_code == 200
+    assert response2.json["response"]["success"] == "Successfully added hackathon:Hackathon2!"
+        
+    response3 = client.post("api/hackathons",data=hackathon3)
+    assert response3.status_code == 200
+    assert response3.json["response"]["success"] == "Successfully added hackathon:Hackathon3!"
+
+    with app.app_context():
+        from main import db,Hackathon
+        hackathon_to_update1 = db.get_or_404(Hackathon,1)
+        hackathon_to_update1.interestCount = 4
+        
+        hackathon_to_update3 = db.get_or_404(Hackathon,3)
+        hackathon_to_update3.interestCount = 67
+                
+        hackathon_to_update2 = db.get_or_404(Hackathon,2)
+        hackathon_to_update2.interestCount = 17
+        db.session.commit()
+            
+    result_test1 = client.get("api/hackathons?sort=name")
+    assert result_test1.status_code == 200
+    assert result_test1.json[0]["name"] == "Hackathon1"
+    assert result_test1.json[0]["url"] == "hack1.com"
+    assert result_test1.json[1]["name"] == "Hackathon2"
+    assert result_test1.json[1]["url"] == "hack2.com"
+    assert result_test1.json[2]["name"] == "Hackathon3"
+    assert result_test1.json[2]["url"] == "hack3.com"
+    
+    result_test2 = client.get("api/hackathons?sort=startDate")
+    assert result_test2.status_code == 200
+    assert result_test1.status_code == 200
+    assert result_test1.json[0]["name"] == "Hackathon1"
+    assert result_test1.json[0]["url"] == "hack1.com"
+    assert result_test1.json[1]["name"] == "Hackathon2"
+    assert result_test1.json[1]["url"] == "hack2.com"
+    assert result_test1.json[2]["name"] == "Hackathon3"
+    assert result_test1.json[2]["url"] == "hack3.com"
+    
+    result_test3 = client.get("api/hackathons?sort=endDate")
+    assert result_test3.status_code == 200
+    assert result_test3.json[0]["name"] == "Hackathon1"
+    assert result_test3.json[0]["url"] == "hack1.com"
+    assert result_test3.json[1]["name"] == "Hackathon2"
+    assert result_test3.json[1]["url"] == "hack2.com"
+    assert result_test3.json[2]["name"] == "Hackathon3"
+    assert result_test3.json[2]["url"] == "hack3.com"
+    
+    result_test4 = client.get("api/hackathons?sort=interestCount")
+    assert result_test4.status_code == 200
+    assert result_test4.json[0]["name"] == "Hackathon3"
+    assert result_test4.json[0]["url"] == "hack3.com"
+    assert result_test4.json[1]["name"] == "Hackathon2"
+    assert result_test4.json[1]["url"] == "hack2.com"
+    assert result_test4.json[2]["name"] == "Hackathon1"
+    assert result_test4.json[2]["url"] == "hack1.com"
+    
+    result_test5 = client.get("api/hackathons?sort=submittedAt")
+    assert result_test5.status_code == 200
+    assert result_test5.json[0]["name"] == "Hackathon1"
+    assert result_test5.json[0]["url"] == "hack1.com"
+    assert result_test5.json[1]["name"] == "Hackathon2"
+    assert result_test5.json[1]["url"] == "hack2.com"
+    assert result_test5.json[2]["name"] == "Hackathon3"
+    assert result_test5.json[2]["url"] == "hack3.com"
