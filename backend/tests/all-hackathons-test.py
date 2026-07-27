@@ -1,5 +1,6 @@
 from datetime import datetime,timedelta
-from utils import add_row
+from utils import add_row,update_row
+import time
 
 # TESTING ALL HACKATHONS API | ENDPOINT: /api/hackathons | METHOD: GET
 
@@ -352,6 +353,96 @@ def test_all_hackathons_sort_parameter(app,client):
                 "endDate":"2027-10-07 12:00:00"
 				}
     
+    kwargs1 = {
+                    "name": "Ioannis",
+                    "description":None,
+                    "url": "ioannis.com",
+                    "startDate": None,
+                    "endDate": None,
+                    "location": None,
+                    "mode": None,
+                    "organizer": "BYBIT",
+                    "hasPrize": True,
+                    "prizeDetails": "1400$",
+                    "tags": "None",
+                    "status": None,
+                    "submittedAt": None,
+                    "updatedAt": None,
+                    "interestCount": None,
+                }
+        
+    kwargs2 = {
+                "name": "Kostas",
+                "description":None,
+                "url": "kostas.com",
+                "startDate": None,
+                "endDate": None,
+                "location": None,
+                "mode": None,
+                "organizer": "BYBIT",
+                "hasPrize": True,
+                "prizeDetails": "1400$",
+                "tags": "None",
+                "status": None,
+                "submittedAt": None,
+                "updatedAt": None,
+                "interestCount": None,
+            }
+    
+    kwargs3 = {
+                "name": "Nikos",
+                "description":None,
+                "url": "nikos.com",
+                "startDate": None,
+                "endDate": None,
+                "location": None,
+                "mode": None,
+                "organizer": "BYBIT",
+                "hasPrize": True,
+                "prizeDetails": "1400$",
+                "tags": "None",
+                "status": None,
+                "submittedAt": None,
+                "updatedAt": None,
+                "interestCount": None,
+            }
+    
+    kwargs4 = {
+                "name": "Fotis",
+                "description":None,
+                "url": "fotis.com",
+                "startDate": None,
+                "endDate": None,
+                "location": None,
+                "mode": None,
+                "organizer": "BYBIT",
+                "hasPrize": True,
+                "prizeDetails": "1400$",
+                "tags": "None",
+                "status": None,
+                "submittedAt": None,
+                "updatedAt": None,
+                "interestCount": None,
+            }
+    
+    kwargs5 = {
+                "name": "George",
+                "description":None,
+                "url": "george.com",
+                "startDate": None,
+                "endDate": None,
+                "location": None,
+                "mode": None,
+                "organizer": "BYBIT",
+                "hasPrize": True,
+                "prizeDetails": "1400$",
+                "tags": "None",
+                "status": None,
+                "submittedAt": None,
+                "updatedAt": None,
+                "interestCount": None,
+            }
+    
     with app.app_context():
         from main import db,Hackathon
         db.create_all()
@@ -373,11 +464,12 @@ def test_all_hackathons_sort_parameter(app,client):
         hackathon_to_update1 = db.get_or_404(Hackathon,1)
         hackathon_to_update1.interestCount = 4
         
+        hackathon_to_update2 = db.get_or_404(Hackathon,2)
+        hackathon_to_update2.interestCount = 17
+
         hackathon_to_update3 = db.get_or_404(Hackathon,3)
         hackathon_to_update3.interestCount = 67
                 
-        hackathon_to_update2 = db.get_or_404(Hackathon,2)
-        hackathon_to_update2.interestCount = 17
         db.session.commit()
             
     result_test1 = client.get("api/hackathons?sort=name")
@@ -425,3 +517,27 @@ def test_all_hackathons_sort_parameter(app,client):
     assert result_test5.json[1]["url"] == "hack2.com"
     assert result_test5.json[2]["name"] == "Hackathon3"
     assert result_test5.json[2]["url"] == "hack3.com"
+
+    
+    update_row(id=1,**kwargs1) #firstly we update hackathon1
+    time.sleep(2) #we need to wait at least 2 secs, otherwise updatedAt values have the same updatedAt time 
+    update_row(id=3,**kwargs3) 
+    time.sleep(2)
+    update_row(id=2,**kwargs2) #lastly we update hackathon2 and sort=updatedAt will show this first since it was updated last
+    time.sleep(2)
+    add_row(**kwargs4)
+    time.sleep(2)
+    add_row(**kwargs5)
+    
+    result_test6 = client.get("api/hackathons?sort=updatedAt")
+    assert result_test6.status_code == 200
+    assert result_test6.json[0]["name"] == "George"
+    assert result_test6.json[0]["url"] == "george.com"
+    assert result_test6.json[1]["name"] == "Fotis"
+    assert result_test6.json[1]["url"] == "fotis.com"
+    assert result_test6.json[2]["name"] == "Kostas"
+    assert result_test6.json[2]["url"] == "kostas.com"
+    assert result_test6.json[3]["name"] == "Nikos"
+    assert result_test6.json[3]["url"] == "nikos.com"
+    assert result_test6.json[4]["name"] == "Ioannis"
+    assert result_test6.json[4]["url"] == "ioannis.com"

@@ -70,10 +70,10 @@ def add_row(**kwargs):
                         raise ValueError("Wrong status")
                 
                 if key == "hasPrize":
-                    if value.lower() == "true":
+                    if str(value).lower() == "true":
                         value = True
                         kwargs[key] = True
-                    elif value.lower() == "false":
+                    elif str(value).lower() == "false":
                         value = False
                         kwargs[key] = False
                         kwargs["prizeDetails"] = None #prizeDetails is None anyways IF hackathon doesnt have a prize
@@ -83,7 +83,7 @@ def add_row(**kwargs):
     
         new_hackathon = Hackathon(name=kwargs["name"],url=kwargs["url"],description=kwargs["description"],startDate=kwargs["startDate"],endDate=kwargs["endDate"],location=kwargs["location"],mode=kwargs["mode"],
                                     organizer=kwargs["organizer"],hasPrize=kwargs["hasPrize"],prizeDetails=kwargs["prizeDetails"],tags=kwargs["tags"],status=kwargs["status"],
-                                    submittedAt=kwargs["submittedAt"],updatedAt=kwargs["updatedAt"],interestCount=0)
+                                    submittedAt=datetime.now().replace(microsecond=0),updatedAt=datetime.now().replace(microsecond=0),interestCount=0)
         db.session.add(new_hackathon)
         db.session.commit()
         print("Successfully added row.")
@@ -125,7 +125,7 @@ def update_row(id,**kwargs):
                     # named key on the object,it doesn't use the value of our key variable
                     # To dynamically set an attribute using a variable name, use the setattr() method.
 
-            hackathon_to_update.updatedAt = today
+            hackathon_to_update.updatedAt = datetime.now().replace(microsecond=0)
             db.session.commit()
 
         except NotFound:
