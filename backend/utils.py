@@ -79,7 +79,12 @@ def add_row(**kwargs):
                         kwargs["prizeDetails"] = None #prizeDetails is None anyways IF hackathon doesnt have a prize
                     else:
                         raise ValueError("Wrong has Prize")
-        
+                
+                if key in ("startDate", "endDate", "updatedAt", "submittedAt") and isinstance(value, str):
+                    #updatedAt and submittedAt values are always set to now() when a row gets added check line 91
+                    value = datetime.strptime(value, "%Y-%m-%d %H:%M:%S")
+
+                kwargs[key] = value
     
         new_hackathon = Hackathon(name=kwargs["name"],url=kwargs["url"],description=kwargs["description"],startDate=kwargs["startDate"],endDate=kwargs["endDate"],location=kwargs["location"],mode=kwargs["mode"],
                                     organizer=kwargs["organizer"],hasPrize=kwargs["hasPrize"],prizeDetails=kwargs["prizeDetails"],tags=kwargs["tags"],status=kwargs["status"],
@@ -117,6 +122,10 @@ def update_row(id,**kwargs):
                             StatusEnum(value)
                         except ValueError:
                             raise ValueError(f"Wrong status name: {key}")
+                    
+                    if key in ("startDate", "endDate", "updatedAt", "submittedAt") and isinstance(value, str):
+                        #updatedAt and submittedAt values are always set to now() when a row gets added check line 91
+                        value = datetime.strptime(value, "%Y-%m-%d %H:%M:%S")
                         
                     setattr(hackathon_to_update, key,value)
                     print(f"Successfully updated {key} with a value of {str(value)}!")
@@ -181,6 +190,12 @@ def delete_all_rows():
             Hackathon.query.delete()
             db.session.commit()
         print("Successfully deleted the WHOLE table.")
+        
+def cleanup_db():
+    with app.app_context():
+        db.session.remove()  # It deletes stored cache and cleans up the db so there are no conflicts
+        db.drop_all()  # After each test is completed it completely deletes db schema & table.
+    print("Successfully cleaned up database.")
     
     
 def main():
@@ -240,6 +255,12 @@ def main():
         help="delete-table-in-the-database"
     )
     
+    parser.add_argument(
+			"--cleanup_db",
+			action="store_true",
+			help="delete-table-in-the-database"
+		)
+    
     # arguments for add_row
     parser.add_argument("--id", type=str)
     parser.add_argument("--name", type=str)
@@ -264,8 +285,8 @@ def main():
     args = parser.parse_args() #reads the actual text the user typed after the script name in the terminal
                                #and matches it against all the args that we have defined except (--help)
 
-    startDate = datetime.strptime(args.startDate, "%Y-%m-%d %H:%M:%S") if args.startDate else None
-    endDate = datetime.strptime(args.endDate, "%Y-%m-%d %H:%M:%S") if args.endDate else None
+    #startDate = datetime.strptime(args.startDate, "%Y-%m-%d %H:%M:%S") if args.startDate else None
+    #endDate = datetime.strptime(args.endDate, "%Y-%m-%d %H:%M:%S") if args.endDate else None
     submittedAt = datetime.strptime(args.submittedAt, "%Y-%m-%d %H:%M:%S") if args.submittedAt else None
     updatedAt = datetime.strptime(args.updatedAt, "%Y-%m-%d %H:%M:%S") if args.updatedAt else None
     
@@ -273,8 +294,8 @@ def main():
         "name": args.name,
         "description":args.description,
         "url": args.url,
-        "startDate": startDate,
-        "endDate": endDate,
+        "startDate": args.startDate,
+        "endDate": args.endDate,
         "location": args.location,
         "mode": args.mode,
         "organizer": args.organizer,
@@ -310,6 +331,9 @@ def main():
     
     if args.current_migrations:
         return current_migrations()
+    
+    if args.cleanup_db:
+        return cleanup_db()
     
     return
     

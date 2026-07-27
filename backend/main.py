@@ -67,7 +67,7 @@ def parse_parameters(method:str):
             "prizeDetails": request.form.get("prizeDetails") or None,
             "submittedAt": request.form.get("submittedAt") or None,
             "updatedAt": now,
-            "interestCount": request.form.get("interestCount"),
+            "interestCount": request.form.get("interestCount") or None,
         }
     return True,params
 
@@ -94,25 +94,34 @@ def validate_parameters(params:dict,method:str,hackathon_to_update:Hackathon = N
                     return False,"Wrong mode"
             
             if key == "hasPrize":
-                if value.lower() == "true":
+                if str(value).lower() == "true":
                     value = True
                     params[key] = True
-                elif value.lower() == "false":
+                elif str(value).lower() == "false":
                     value = False
                     params[key] = False
                     params["prizeDetails"] = None #prizeDetails is None anyways IF hackathon doesnt have a prize
                 else:
                     return False,"Wrong hasPrize"
+            
+            if key == "interestCount":
+                if not(isinstance(value,int)):
+                    try:
+                        value = int(value)
+                    except ValueError:
+                        return False, "Wrong interestCount"
 
             if hackathon_to_update:
                 setattr(hackathon_to_update, key,value)
                 
     if method == "PATCH":
+        if str(params["hasPrize"]).lower() == "false":
+            setattr(hackathon_to_update, "prizeDetails",None)
         return True,None
     if method == "POST":
         return True,params
     
-@app.route("/api/hackathons",methods=["GET"])    
+@app.route("/api/hackathons",methods=["GET"])
 def all_hackathons():
     if request.method == "GET":
         now = datetime.now().replace(microsecond=0) #Formats time like this: YYYY-MM-DD HH:MM:SS example: 2026-05-01 15:12:00
@@ -130,7 +139,7 @@ def all_hackathons():
         
         query = db.session.query(Hackathon) # Arxiko query pou kanei build up stin sinexeia
                                             # me vasi ta params pou exoun epistrafei
-            
+
         #status parameter
         if params["status"]:
             if (params["status"] in (StatusEnum.draft.value, StatusEnum.pending.value, StatusEnum.published.value, StatusEnum.needs_changes.value)):
@@ -146,7 +155,7 @@ def all_hackathons():
         elif params["upcoming"]:
             return jsonify(error="Wrong upcoming"), 404
         
-        #past parameter    
+        #past parameter
         if params["past"] == "true":
             query = query.filter(Hackathon.startDate < now)
         elif params["past"] == "false":
@@ -194,7 +203,7 @@ def find_hackathon(hackathon_id):
     except NotFound:
         return jsonify(error="Wrong id"),404
 
-@app.route("/api/<hackathon_id>",methods=['PATCH']) #future api/hackathons endpoint
+@app.route("/api/<hackathon_id>",methods=['PATCH'])
 def update_hackathon(hackathon_id):
     
     result , value = parse_parameters(request.method)
@@ -202,19 +211,19 @@ def update_hackathon(hackathon_id):
     if result:
         params = value
     else:
-        return jsonify(error={"error":f"{value}"}),400
+        return jsonify(error=f"{value}"),400
     
     if not(id):
-        return jsonify(error={"Missing Fields": "id is required."}),400
+        return jsonify(error="id is required"),400
     
     try:
         hackathon_to_update = db.get_or_404(Hackathon,hackathon_id)
         result , error = validate_parameters(params,request.method,hackathon_to_update)
         if result and not(error):
             db.session.commit()
-            return jsonify(response={"Success":f"Successfully updated hackathon with an id of : {hackathon_id}"}),200
+            return jsonify(success=f"Successfully updated hackathon with an id of : {hackathon_id}"),200
         else:
-            return jsonify(error={"error":f"{error}"}),400    
+            return jsonify(error=f"{error}"),400
     except NotFound:
         return jsonify(error="Wrong id"),404
     
