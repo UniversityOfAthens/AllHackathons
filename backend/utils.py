@@ -117,7 +117,7 @@ def update_row(id,**kwargs):
                         except ValueError:
                             raise ValueError(f"Wrong mode name: {key}")
                         
-                    elif key == "status":
+                    if key == "status":
                         try:
                             StatusEnum(value)
                         except ValueError:
@@ -135,6 +135,8 @@ def update_row(id,**kwargs):
                     # To dynamically set an attribute using a variable name, use the setattr() method.
 
             hackathon_to_update.updatedAt = datetime.now().replace(microsecond=0)
+            if str(kwargs["hasPrize"]).lower() == "false":
+                setattr(hackathon_to_update, "prizeDetails",None)
             db.session.commit()
 
         except NotFound:
@@ -258,7 +260,7 @@ def main():
     parser.add_argument(
 			"--cleanup_db",
 			action="store_true",
-			help="delete-table-in-the-database"
+			help="cleanup-the-database"
 		)
     
     # arguments for add_row

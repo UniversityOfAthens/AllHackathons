@@ -71,6 +71,168 @@ update_hackathon_dtst1 = {
 						"interestCount": None,
 					}
 
+update_hackathon_dtst1_on_updt_only_hasPrize_wrong_str_and_prizeDetails = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None,
+						"endDate": None,
+						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": "wrong hasPrize", #our hasPrize value is wrong so an error must occur from our backend
+						"prizeDetails": "123", 
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_hasPrize_correct_str_and_prizeDetails_wrong = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None,
+						"endDate": None,
+						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": "false", #hasPrize is a str value here, our backend will make sure it passes it as a bool
+						"prizeDetails": "123", #prizeDetails cant contain any value since hasPrize is set to False
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_hasPrize_correct_str_and_prizeDetails_correct = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None,
+						"endDate": None,
+						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": "false",
+						"prizeDetails": None, #prizeDetails cant contain any value since hasPrize is set to False
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_hasPrize_correct_bool_and_prizeDetails_wrong = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None,
+						"endDate": None,
+						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": False,
+						"prizeDetails": "123", #prizeDetails cant contain any value since hasPrize is set to False
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_hasPrize_and_prizeDetails_correct = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None,
+						"endDate": None,
+						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": False,
+						"prizeDetails": None,
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_mode_wrong = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None,
+						"endDate": None,
+						"location": None,
+						"mode": "wrong mode",
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None,
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_mode_correct = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None,
+						"endDate": None,
+						"location": None,
+						"mode": "hybrid",
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None,
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_status_correct = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None,
+						"endDate": None,
+						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None,
+						"tags": None,
+						"status": "draft",
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_status_wrong = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None,
+						"endDate": None,
+						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None,
+						"tags": None,
+						"status": "wrong status",
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
 update_hackathon_dtst1_on_updt = {
 						"name": "Hackathon1 Changed",
 						"description":"Full Description Changed",
@@ -124,6 +286,24 @@ update_hackathon_dtst1_on_updt_only_url = {
 						"updatedAt": None,
 						"interestCount": None,
 					}
+
+update_hackathon_dtst1_on_updt_description_location_organizer_tags = {
+							"name": None,
+							"description":"Full Description Changed",
+							"url": None,
+							"startDate": None,
+							"endDate": None,
+							"location": "Kavala Changed",
+							"mode": None,
+							"organizer": "UoA Changed",
+							"hasPrize": None,
+							"prizeDetails": None,
+							"tags": "AI,ML,Python Changed",
+							"status": None,
+							"submittedAt": None,
+							"updatedAt": None,
+							"interestCount": None,
+						}
 
 update_hackathon_dtst2_on_updt = {
 							"name": "Hackathon2 Changed",
