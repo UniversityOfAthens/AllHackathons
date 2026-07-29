@@ -71,6 +71,26 @@ update_hackathon_dtst1 = {
 						"interestCount": None,
 					}
 
+update_hackathon_dtst1_on_updt_only_interestCount_correct_str = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None, #wrong startDate format
+						"endDate": None, #wrong endDate format
+ 						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None, 
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": "15", #even though it is an str it is a number,
+											   #our backend makes sure it will add it anyways
+											   #check lines 117 - 122 main.py
+					}
+
 update_hackathon_dtst1_on_updt_only_interestCount_wrong_str = {
 						"name": None,
 						"description":None,
