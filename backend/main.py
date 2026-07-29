@@ -5,6 +5,16 @@ from werkzeug.exceptions import NotFound
 from datetime import datetime,timedelta
 import os
 
+#NOTE: If interestCount value is a number whether it is integer or string type it will join the db
+#NOTE: If hasPrize value is a string or bool type since it is validated as a str.lower() it will join the db
+#NOTE: If hasPrize is False then even if we add a value in the prizeDetails field its value will remain NULL inside db
+#NOTE: hasPrize can only be *ADDED* in db only if hasPrize is True in any other case it will be None
+#NOTE: hasPrize can only be *UPDATED* if hasPrize was set to True and in the PATCH request hasPrize is either True or None
+#NOTE: If hasPrize is False while being *UPDATED* then prizeDetails will always be None no matter the values we assign to it
+#NOTE: If status and mode, do not contain any of their appropriate values they will throw an error and wont join db.
+#NOTE: status and mode are handled as str values at first and then they get converted to StatusEnum or ModeEnum types
+
+
 today = datetime.now().replace(microsecond=0)
 tommorow = today + timedelta(days=1)
 allowed = ["name", "url", "description", "startDate", "endDate", "updatedAt", "submittedAt", "location", "mode",
@@ -118,6 +128,7 @@ def validate_parameters(params:dict,method:str,hackathon_to_update:Hackathon = N
         if str(params["hasPrize"]).lower() == "false":
             setattr(hackathon_to_update, "prizeDetails",None)
         return True,None
+    
     if method == "POST":
         return True,params
     

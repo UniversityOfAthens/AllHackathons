@@ -359,6 +359,37 @@ def test_update_hackathon_only_hasPrize_correct_str_and_prizeDetails_wrong(app,c
     assert response_get1_after.json["status"] == "published"
     assert response_get1_after.json["mode"] == "online"
 
+def test_update_hackathon_only_hasPrize_none_and_prizeDetails_correct(app,client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+    
+    add_row(**update_hackathon_dtst1)
+    
+    response_get1_before = client.get("api/hackathons/1")
+    assert response_get1_before.status_code == 200
+    assert response_get1_before.json["hasPrize"] == True #changes on update
+    assert response_get1_before.json["prizeDetails"] == "500$" #changes on update
+    
+    response_patch1 = client.patch("api/1",data=update_hackathon_dtst1_on_updt_only_hasPrize_none_and_prizeDetails_correct)
+    assert response_patch1.status_code == 200
+    assert response_patch1.json["success"] == "Successfully updated hackathon with an id of : 1"
+    
+    response_get1_after = client.get("api/hackathons/1")
+    assert response_get1_after.status_code == 200
+    assert response_get1_after.json["name"] == "Hackathon1"
+    assert response_get1_after.json["description"] == "Full Description"
+    assert response_get1_after.json["url"] == "hack1.com"
+    assert response_get1_after.json["startDate"] == "2027-01-02T01:03:00"
+    assert response_get1_after.json["endDate"] == "2027-02-02T01:03:00"
+    assert response_get1_after.json["location"] == "Kavala"
+    assert response_get1_after.json["organizer"] == "UoA"
+    assert response_get1_after.json["hasPrize"] == True #does not change on update since its value in the dataset is None
+    assert response_get1_after.json["prizeDetails"] == "123" #changes on update
+    assert response_get1_after.json["tags"] == "AI,ML,Python"
+    assert response_get1_after.json["status"] == "published"
+    assert response_get1_after.json["mode"] == "online"
+    
 def test_update_hackathon_only_hasPrize_wrong_str_and_prizeDetails_correct(app,client):
     
     with app.app_context():
@@ -375,15 +406,152 @@ def test_update_hackathon_only_hasPrize_wrong_str_and_prizeDetails_correct(app,c
     response_patch1 = client.patch("api/1",data=update_hackathon_dtst1_on_updt_only_hasPrize_wrong_str_and_prizeDetails)
     assert response_patch1.status_code == 400
     assert response_patch1.json["error"] == "Wrong hasPrize"
+    
+    response_get1_after = client.get("api/hackathons/1")
+    assert response_get1_after.status_code == 200
+    assert response_get1_after.json["hasPrize"] == True #must not change on update
+    assert response_get1_after.json["prizeDetails"] == "500$" #must not change on update
 
 def test_update_hackathon_only_startDate_and_endDate_correct(app,client):
-    pass
+    with app.app_context():
+        from main import db
+        db.create_all()
+    
+    add_row(**update_hackathon_dtst1)
+    
+    response_get1_before = client.get("api/hackathons/1")
+    assert response_get1_before.status_code == 200
+    assert response_get1_before.json["startDate"] == "2027-01-02T01:03:00" #changes on update
+    assert response_get1_before.json["endDate"] == "2027-02-02T01:03:00" #changes on update
+    
+    response_patch1 = client.patch("api/1",data=update_hackathon_dtst1_on_updt_only_startDate_and_endDate_correct)
+    assert response_patch1.status_code == 200
+    assert response_patch1.json["success"] == "Successfully updated hackathon with an id of : 1"
+    
+    response_get1_after = client.get("api/hackathons/1")
+    assert response_get1_after.status_code == 200
+    assert response_get1_after.json["name"] == "Hackathon1"
+    assert response_get1_after.json["description"] == "Full Description"
+    assert response_get1_after.json["url"] == "hack1.com"
+    assert response_get1_after.json["startDate"] == "2028-01-02T01:03:00" #changes on update
+    assert response_get1_after.json["endDate"] == "2028-02-02T01:03:00" #chages on update
+    assert response_get1_after.json["location"] == "Kavala"
+    assert response_get1_after.json["organizer"] == "UoA"
+    assert response_get1_after.json["hasPrize"] == True
+    assert response_get1_after.json["prizeDetails"] == "500$" 
+    assert response_get1_after.json["tags"] == "AI,ML,Python"
+    assert response_get1_after.json["status"] == "published"
+    assert response_get1_after.json["mode"] == "online"
 
 def test_update_hackathon_only_startDate_wrong_and_endDate_correct(app,client):
-    pass
+    with app.app_context():
+        from main import db
+        db.create_all()
+    
+    add_row(**update_hackathon_dtst1)
+    
+    response_get1_before = client.get("api/hackathons/1")
+    assert response_get1_before.status_code == 200
+    assert response_get1_before.json["startDate"] == "2027-01-02T01:03:00" 
+    assert response_get1_before.json["endDate"] == "2027-02-02T01:03:00" 
+    
+    response_patch1 = client.patch("api/1",data=update_hackathon_dtst1_on_updt_only_startDate_wrong_and_endDate_correct)
+    assert response_patch1.status_code == 400
+    assert response_patch1.json["error"] == "Wrong date format"
+    
+    response_get1_after = client.get("api/hackathons/1")
+    assert response_get1_after.status_code == 200
+    assert response_get1_after.json["startDate"] == "2027-01-02T01:03:00" #must not change on update
+    assert response_get1_after.json["endDate"] == "2027-02-02T01:03:00" #must not change on update
 
 def test_update_hackathon_only_startDate_correct_and_endDate_wrong(app,client):
-    pass
+    with app.app_context():
+        from main import db
+        db.create_all()
+    
+    add_row(**update_hackathon_dtst1)
+    
+    response_get1_before = client.get("api/hackathons/1")
+    assert response_get1_before.status_code == 200
+    assert response_get1_before.json["startDate"] == "2027-01-02T01:03:00" 
+    assert response_get1_before.json["endDate"] == "2027-02-02T01:03:00" 
+    
+    response_patch1 = client.patch("api/1",data=update_hackathon_dtst1_on_updt_only_startDate_correct_and_endDate_wrong)
+    assert response_patch1.status_code == 400
+    assert response_patch1.json["error"] == "Wrong date format"
+    
+    response_get1_after = client.get("api/hackathons/1")
+    assert response_get1_after.status_code == 200
+    assert response_get1_after.json["startDate"] == "2027-01-02T01:03:00" #must not change on update
+    assert response_get1_after.json["endDate"] == "2027-02-02T01:03:00" #must not change on update
+    
+def test_update_hackathon_only_startDate_and_endDate_wrong(app,client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+    
+    add_row(**update_hackathon_dtst1)
+    
+    response_get1_before = client.get("api/hackathons/1")
+    assert response_get1_before.status_code == 200
+    assert response_get1_before.json["startDate"] == "2027-01-02T01:03:00" 
+    assert response_get1_before.json["endDate"] == "2027-02-02T01:03:00" 
+    
+    response_patch1 = client.patch("api/1",data=update_hackathon_dtst1_on_updt_only_startDate_and_endDate_wrong)
+    assert response_patch1.status_code == 400
+    assert response_patch1.json["error"] == "Wrong date format"
+    
+    response_get1_after = client.get("api/hackathons/1")
+    assert response_get1_after.status_code == 200
+    assert response_get1_after.json["startDate"] == "2027-01-02T01:03:00" #must not change on update
+    assert response_get1_after.json["endDate"] == "2027-02-02T01:03:00" #must not change on update
 
-# def test_update_hackathon_only_name_and_url(app,client):
-#     pass
+def test_update_hackathon_only_interestCount_correct(app,client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+    
+    add_row(**update_hackathon_dtst1)
+    
+    response_get1_before = client.get("api/hackathons/1")
+    assert response_get1_before.status_code == 200
+    assert response_get1_before.json["interestCount"] == 0 #changes on update
+    
+    response_patch1 = client.patch("api/1",data=update_hackathon_dtst1_on_updt_only_interestCount_correct)
+    assert response_patch1.status_code == 200
+    assert response_patch1.json["success"] == "Successfully updated hackathon with an id of : 1"
+    
+    response_get1_after = client.get("api/hackathons/1")
+    assert response_get1_after.status_code == 200
+    assert response_get1_after.json["name"] == "Hackathon1"
+    assert response_get1_after.json["description"] == "Full Description"
+    assert response_get1_after.json["url"] == "hack1.com"
+    assert response_get1_after.json["startDate"] == "2027-01-02T01:03:00" #changes on update
+    assert response_get1_after.json["endDate"] == "2027-02-02T01:03:00" #chages on update
+    assert response_get1_after.json["location"] == "Kavala"
+    assert response_get1_after.json["organizer"] == "UoA"
+    assert response_get1_after.json["hasPrize"] == True
+    assert response_get1_after.json["prizeDetails"] == "500$" 
+    assert response_get1_after.json["tags"] == "AI,ML,Python"
+    assert response_get1_after.json["status"] == "published"
+    assert response_get1_after.json["mode"] == "online"
+    assert response_get1_after.json["interestCount"] == 15
+    
+def test_update_hackathon_only_interestCount_wrong_str(app,client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+    
+    add_row(**update_hackathon_dtst1)
+    
+    response_get1_before = client.get("api/hackathons/1")
+    assert response_get1_before.status_code == 200
+    assert response_get1_before.json["interestCount"] == 0 #changes on update
+    
+    response_patch1 = client.patch("api/1",data=update_hackathon_dtst1_on_updt_only_interestCount_wrong_str)
+    assert response_patch1.status_code == 400
+    assert response_patch1.json["error"] == "Wrong interestCount"
+    
+    response_get1_after = client.get("api/hackathons/1")
+    assert response_get1_after.status_code == 200
+    assert response_get1_after.json["interestCount"] == 0

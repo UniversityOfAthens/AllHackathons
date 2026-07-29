@@ -71,6 +71,132 @@ update_hackathon_dtst1 = {
 						"interestCount": None,
 					}
 
+update_hackathon_dtst1_on_updt_only_interestCount_wrong_str = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None, #wrong startDate format
+						"endDate": None, #wrong endDate format
+ 						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None, 
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": "abc",
+					}
+
+update_hackathon_dtst1_on_updt_only_interestCount_correct = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None, #wrong startDate format
+						"endDate": None, #wrong endDate format
+ 						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None, 
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": 15,
+					}
+
+update_hackathon_dtst1_on_updt_only_startDate_and_endDate_wrong = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": "2028/02/01 01:03:00", #wrong startDate format
+						"endDate": "abc", #wrong endDate format
+ 						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None, 
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_startDate_correct_and_endDate_wrong = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": "2028-02-01 01:03:00", 
+						"endDate": "2028-02-02 01-03-00", #wrong endDate format
+ 						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None, 
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_startDate_wrong_and_endDate_correct = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": "2028-02-01", #wrong startDate format
+						"endDate": "2028-02-02 01:03:00",
+						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+      					"prizeDetails": None, 
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_startDate_and_endDate_correct = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": "2028-01-02 01:03:00",
+						"endDate": "2028-02-02 01:03:00",
+						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+      					"prizeDetails": None, 
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_hasPrize_none_and_prizeDetails_correct = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None,
+						"endDate": None,
+						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+      					"prizeDetails": "123", 
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
 update_hackathon_dtst1_on_updt_only_hasPrize_wrong_str_and_prizeDetails = {
 						"name": None,
 						"description":None,
@@ -80,8 +206,8 @@ update_hackathon_dtst1_on_updt_only_hasPrize_wrong_str_and_prizeDetails = {
 						"location": None,
 						"mode": None,
 						"organizer": None,
-						"hasPrize": "wrong hasPrize", #our hasPrize value is wrong so an error must occur from our backend
-						"prizeDetails": "123", 
+						"hasPrize": "wrong hasPrize",
+      					"prizeDetails": "123", 
 						"tags": None,
 						"status": None,
 						"submittedAt": None,
