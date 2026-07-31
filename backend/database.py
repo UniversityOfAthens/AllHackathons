@@ -1,9 +1,12 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-from sqlalchemy import Integer, String, Float, Boolean, DateTime, Enum, text
+from sqlalchemy import Integer, String, Float, Boolean, DateTime, Enum, text, CheckConstraint
 from sqlalchemy.sql import func
 from datetime import datetime,timedelta
 import enum
+#from main import MAX_INTERESTCOUNT_VALUE
+
+MAX_INTERESTCOUNT_VALUE = 10000
 
 class Base(DeclarativeBase):
     pass
@@ -38,9 +41,10 @@ class Hackathon(db.Model): #db has the model class=Base, we can add another base
     prizeDetails: Mapped[str] = mapped_column(String,nullable=True)
     tags: Mapped[str] = mapped_column(String,nullable=True)
     status: Mapped[StatusEnum] = mapped_column(Enum(StatusEnum),nullable=True) # sqlalchemy's Enum(StatusEnum) restricts this column to only those values: draft,pending,published,needs-change 
-    submittedAt: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(),nullable=True)
-    updatedAt: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(),nullable=True)
+    submittedAt: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(),nullable=False)
+    updatedAt: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(),nullable=False)
     interestCount: Mapped[int] = mapped_column(Integer,nullable=True)
+    __table_args__ = (CheckConstraint(f'interestCount >= 0 AND interestCount <= {MAX_INTERESTCOUNT_VALUE}', name='check_interest_count_range'),)
     
     
     def to_dict(self):

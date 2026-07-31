@@ -71,6 +71,78 @@ update_hackathon_dtst1 = {
 						"interestCount": None,
 					}
 
+update_hackathon_dtst1_on_updt_only_updatedAt = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None, #wrong startDate format
+						"endDate": None, #wrong endDate format
+ 						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None, 
+						"tags": None,
+						"status": None,
+						"submittedAt": None, #must not be updated
+						"updatedAt": "2020-02-01 05:10:00",
+						"interestCount":None
+					}
+
+update_hackathon_dtst1_on_updt_only_submittedAt = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None, #wrong startDate format
+						"endDate": None, #wrong endDate format
+ 						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None, 
+						"tags": None,
+						"status": None,
+						"submittedAt": "2020-02-01 05:10:00", #must not be updated
+						"updatedAt": None,
+						"interestCount":None
+					}
+
+update_hackathon_dtst1_on_updt_only_interestCount_large_int = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None,
+						"endDate": None,
+ 						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None, 
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": 99999999999999,# MAX_INTERSTCOUNT_VALUE is 10000
+					}
+
+update_hackathon_dtst1_on_updt_only_interestCount_negative_int = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None, #wrong startDate format
+						"endDate": None, #wrong endDate format
+ 						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None, 
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": -5,# wrong interestCount value
+					}
+
 update_hackathon_dtst1_on_updt_only_interestCount_correct_str = {
 						"name": None,
 						"description":None,

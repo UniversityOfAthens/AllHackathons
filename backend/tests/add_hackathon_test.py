@@ -15,7 +15,7 @@ def test_add_hackathon_response_body_and_status(app,client):
         "url":"https://ioannis.com"
         })
     assert response.status_code == 200  
-    assert response.json["response"]["success"] == "Successfully added hackathon:Ioannis!"
+    assert response.json["success"] == "Successfully added hackathon:Ioannis!"
 
 def test_add_hackathon_response_body_and_status_when_name_is_none(app, client):
     """
@@ -30,8 +30,7 @@ def test_add_hackathon_response_body_and_status_when_name_is_none(app, client):
         "url":"https://ioannis.com"
         })
     assert response.status_code == 400
-    assert response.json["error"]["Missing Fields"] == "name and url are required."
-    
+    assert response.json["error"] == "name and url are required"
 
 def test_add_hackathon_response_body_and_status_when_name_and_url_is_none(app, client):
     
@@ -48,7 +47,7 @@ def test_add_hackathon_response_body_and_status_when_name_and_url_is_none(app, c
         "url":None
         })
     assert response.status_code == 400
-    assert response.json["error"]["Missing Fields"] == "name and url are required."
+    assert response.json["error"] == "name and url are required"
 
 def test_add_hackathon_response_and_status_code_dataset1(app, client):
     
@@ -76,7 +75,7 @@ def test_add_hackathon_response_and_status_code_dataset1(app, client):
         
     response = client.post("/api/hackathons", data=dataset1)
     assert response.status_code == 200
-    assert response.json["response"]["success"] == "Successfully added hackathon:Nikos!"
+    assert response.json["success"] == "Successfully added hackathon:Nikos!"
 
 def test_add_hackathon_response_and_status_code_dataset2(app, client):
     
@@ -104,7 +103,7 @@ def test_add_hackathon_response_and_status_code_dataset2(app, client):
         
     response = client.post("/api/hackathons", data=dataset2)
     assert response.status_code == 200
-    assert response.json["response"]["success"] == "Successfully added hackathon:Lefteris!"
+    assert response.json["success"] == "Successfully added hackathon:Lefteris!"
 
 
 def test_add_hackathon_response_and_status_code_dataset3(app, client):
@@ -133,7 +132,7 @@ def test_add_hackathon_response_and_status_code_dataset3(app, client):
         
     response = client.post("/api/hackathons", data=dataset3)
     assert response.status_code == 400
-    assert response.json["error"]["error"] == "Wrong status"
+    assert response.json["error"] == "Wrong status"
 
 def test_add_hackathon_response_and_status_code_dataset4(app, client):
     
@@ -161,7 +160,7 @@ def test_add_hackathon_response_and_status_code_dataset4(app, client):
         
     response = client.post("/api/hackathons", data=dataset4)
     assert response.status_code == 400
-    assert response.json["error"]["error"] == "Wrong mode"
+    assert response.json["error"] == "Wrong mode"
     
 def test_add_hackathon_response_and_status_code_dataset5(app, client):
     
@@ -189,7 +188,7 @@ def test_add_hackathon_response_and_status_code_dataset5(app, client):
         
     response = client.post("/api/hackathons", data=dataset5)
     assert response.status_code == 400
-    assert response.json["error"]["error"] == "Wrong hasPrize"
+    assert response.json["error"] == "Wrong hasPrize"
 
 def test_add_hackathon_status_code_dataset6(app, client):
     
@@ -217,7 +216,7 @@ def test_add_hackathon_status_code_dataset6(app, client):
         
     response = client.post("/api/hackathons", data=dataset6)
     assert response.status_code == 400
-    assert response.json["error"]["error"] == "Wrong date format"
+    assert response.json["error"] == "Wrong date format"
 
 
 def test_add_hackathon_response_and_status_code_dataset7(app, client):
@@ -246,7 +245,7 @@ def test_add_hackathon_response_and_status_code_dataset7(app, client):
         
     response = client.post("/api/hackathons", data=dataset7)
     assert response.status_code == 400
-    assert response.json["error"]["error"] == "Wrong status" #'Wrong mode' wont be printed yet since it is validated after status in validate_parameters() func
+    assert response.json["error"] == "Wrong status" #'Wrong mode' wont be printed yet since it is validated after status in validate_parameters() func
 
 def test_add_hackathon_response_and_status_code_dataset8(app, client):
     
@@ -274,7 +273,7 @@ def test_add_hackathon_response_and_status_code_dataset8(app, client):
         
     response = client.post("/api/hackathons", data=dataset8)
     assert response.status_code == 400
-    assert response.json["error"]["error"] == "Wrong status"
+    assert response.json["error"] == "Wrong status"
 
 def test_add_hackathon_response_and_status_code_dataset9(app, client):
     
@@ -302,7 +301,7 @@ def test_add_hackathon_response_and_status_code_dataset9(app, client):
         
     response = client.post("/api/hackathons", data=dataset9)
     assert response.status_code == 400
-    assert response.json["error"]["error"] == "Wrong date format"
+    assert response.json["error"] == "Wrong date format"
 
 def test_add_hackathon_response_and_status_code_dataset10(app, client):
     
@@ -333,7 +332,7 @@ def test_add_hackathon_response_and_status_code_dataset10(app, client):
     after = datetime.now().replace(microsecond=0)
     
     assert response1.status_code == 200
-    assert response1.json["response"]["success"] == "Successfully added hackathon:Nikos!"
+    assert response1.json["success"] == "Successfully added hackathon:Nikos!"
     
     response2 = client.get("/api/hackathons/1")
     updatedAt_value = datetime.fromisoformat(response2.json["updatedAt"])
@@ -376,7 +375,7 @@ def test_add_hackathon_response_and_status_code_dataset11(app, client):
     after = datetime.now().replace(microsecond=0)
     
     assert response1.status_code == 200
-    assert response1.json["response"]["success"] == "Successfully added hackathon:Nikos!"
+    assert response1.json["success"] == "Successfully added hackathon:Nikos!"
     
     response2 = client.get("/api/hackathons/1")
     updatedAt_value = datetime.fromisoformat(response2.json["updatedAt"])
@@ -415,6 +414,6 @@ def test_add_hackathon_response_and_status_code_dataset12(app, client):
     response1 = client.post("/api/hackathons", data=dataset5)
     response2 = client.get("/api/hackathons/1")
     assert response1.status_code == 200
-    assert response1.json["response"]["success"] == "Successfully added hackathon:Nikos!"
+    assert response1.json["success"] == "Successfully added hackathon:Nikos!"
     assert response2.status_code == 200
     assert response2.json["prizeDetails"] == None

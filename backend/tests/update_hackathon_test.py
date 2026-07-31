@@ -66,17 +66,17 @@ def test_update_hackathon_only_name(app,client):
     response_get1_after = client.get("api/hackathons/1")
     assert response_get1_after.status_code == 200
     assert response_get1_after.json["name"] == "Hackathon1 Changed" #changed on update
-    assert response_get1_before.json["description"] == "Full Description"
-    assert response_get1_before.json["url"] == "hack1.com"
-    assert response_get1_before.json["startDate"] == "2027-01-02T01:03:00"
-    assert response_get1_before.json["endDate"] == "2027-02-02T01:03:00"
-    assert response_get1_before.json["location"] == "Kavala"
-    assert response_get1_before.json["mode"] == "online"
-    assert response_get1_before.json["organizer"] == "UoA"
-    assert response_get1_before.json["hasPrize"] == True
-    assert response_get1_before.json["prizeDetails"] == "500$"
-    assert response_get1_before.json["tags"] == "AI,ML,Python"
-    assert response_get1_before.json["status"] == "published"
+    assert response_get1_after.json["description"] == "Full Description"
+    assert response_get1_after.json["url"] == "hack1.com"
+    assert response_get1_after.json["startDate"] == "2027-01-02T01:03:00"
+    assert response_get1_after.json["endDate"] == "2027-02-02T01:03:00"
+    assert response_get1_after.json["location"] == "Kavala"
+    assert response_get1_after.json["mode"] == "online"
+    assert response_get1_after.json["organizer"] == "UoA"
+    assert response_get1_after.json["hasPrize"] == True
+    assert response_get1_after.json["prizeDetails"] == "500$"
+    assert response_get1_after.json["tags"] == "AI,ML,Python"
+    assert response_get1_after.json["status"] == "published"
 
 def test_update_hackathon_only_url(app,client):
     with app.app_context():
@@ -97,16 +97,16 @@ def test_update_hackathon_only_url(app,client):
     assert response_get1_after.status_code == 200
     assert response_get1_after.json["name"] == "Hackathon1"
     assert response_get1_after.json["url"] == "hack1.com Changed" #changed on update
-    assert response_get1_before.json["description"] == "Full Description"
-    assert response_get1_before.json["startDate"] == "2027-01-02T01:03:00"
-    assert response_get1_before.json["endDate"] == "2027-02-02T01:03:00"
-    assert response_get1_before.json["location"] == "Kavala"
-    assert response_get1_before.json["mode"] == "online"
-    assert response_get1_before.json["organizer"] == "UoA"
-    assert response_get1_before.json["hasPrize"] == True
-    assert response_get1_before.json["prizeDetails"] == "500$"
-    assert response_get1_before.json["tags"] == "AI,ML,Python"
-    assert response_get1_before.json["status"] == "published"
+    assert response_get1_after.json["description"] == "Full Description"
+    assert response_get1_after.json["startDate"] == "2027-01-02T01:03:00"
+    assert response_get1_after.json["endDate"] == "2027-02-02T01:03:00"
+    assert response_get1_after.json["location"] == "Kavala"
+    assert response_get1_after.json["mode"] == "online"
+    assert response_get1_after.json["organizer"] == "UoA"
+    assert response_get1_after.json["hasPrize"] == True
+    assert response_get1_after.json["prizeDetails"] == "500$"
+    assert response_get1_after.json["tags"] == "AI,ML,Python"
+    assert response_get1_after.json["status"] == "published"
 
 def test_update_hackathon_only_description_location_organizer_tags(app,client):
     with app.app_context():
@@ -132,14 +132,14 @@ def test_update_hackathon_only_description_location_organizer_tags(app,client):
     assert response_get1_after.json["location"] == "Kavala Changed"
     assert response_get1_after.json["organizer"] == "UoA Changed"
     assert response_get1_after.json["tags"] == "AI,ML,Python Changed"
-    assert response_get1_before.json["name"] == "Hackathon1"
-    assert response_get1_before.json["url"] == "hack1.com"
-    assert response_get1_before.json["startDate"] == "2027-01-02T01:03:00"
-    assert response_get1_before.json["endDate"] == "2027-02-02T01:03:00"
-    assert response_get1_before.json["mode"] == "online"
-    assert response_get1_before.json["hasPrize"] == True
-    assert response_get1_before.json["prizeDetails"] == "500$"
-    assert response_get1_before.json["status"] == "published"
+    assert response_get1_after.json["name"] == "Hackathon1"
+    assert response_get1_after.json["url"] == "hack1.com"
+    assert response_get1_after.json["startDate"] == "2027-01-02T01:03:00"
+    assert response_get1_after.json["endDate"] == "2027-02-02T01:03:00"
+    assert response_get1_after.json["mode"] == "online"
+    assert response_get1_after.json["hasPrize"] == True
+    assert response_get1_after.json["prizeDetails"] == "500$"
+    assert response_get1_after.json["status"] == "published"
 
 def test_update_hackathon_only_status_correct(app,client):
     
@@ -159,18 +159,18 @@ def test_update_hackathon_only_status_correct(app,client):
 
     response_get1_after = client.get("api/hackathons/1")
     assert response_get1_after.status_code == 200
-    assert response_get1_before.json["name"] == "Hackathon1"
-    assert response_get1_before.json["description"] == "Full Description"
-    assert response_get1_before.json["url"] == "hack1.com"
-    assert response_get1_before.json["startDate"] == "2027-01-02T01:03:00"
-    assert response_get1_before.json["endDate"] == "2027-02-02T01:03:00"
-    assert response_get1_before.json["location"] == "Kavala"
+    assert response_get1_after.json["name"] == "Hackathon1"
+    assert response_get1_after.json["description"] == "Full Description"
+    assert response_get1_after.json["url"] == "hack1.com"
+    assert response_get1_after.json["startDate"] == "2027-01-02T01:03:00"
+    assert response_get1_after.json["endDate"] == "2027-02-02T01:03:00"
+    assert response_get1_after.json["location"] == "Kavala"
     assert response_get1_after.json["status"] == "draft"
-    assert response_get1_before.json["mode"] == "online"
-    assert response_get1_before.json["organizer"] == "UoA"
-    assert response_get1_before.json["hasPrize"] == True
-    assert response_get1_before.json["prizeDetails"] == "500$"
-    assert response_get1_before.json["tags"] == "AI,ML,Python"
+    assert response_get1_after.json["mode"] == "online"
+    assert response_get1_after.json["organizer"] == "UoA"
+    assert response_get1_after.json["hasPrize"] == True
+    assert response_get1_after.json["prizeDetails"] == "500$"
+    assert response_get1_after.json["tags"] == "AI,ML,Python"
 
 def test_update_hackathon_only_status_wrong(app,client):
     
@@ -187,6 +187,10 @@ def test_update_hackathon_only_status_wrong(app,client):
     response_patch1 = client.patch("api/1",data=update_hackathon_dtst1_on_updt_only_status_wrong)
     assert response_patch1.status_code == 400
     assert response_patch1.json["error"] == "Wrong status"
+    
+    response_get1_after = client.get("api/hackathons/1")
+    assert response_get1_after.status_code == 200
+    assert response_get1_after.json["status"] == "published" #must not change on update
 
 def test_update_hackathon_only_mode_correct(app,client):
     with app.app_context():
@@ -205,17 +209,17 @@ def test_update_hackathon_only_mode_correct(app,client):
     
     response_get1_after = client.get("api/hackathons/1")
     assert response_get1_after.status_code == 200
-    assert response_get1_before.json["name"] == "Hackathon1"
-    assert response_get1_before.json["description"] == "Full Description"
-    assert response_get1_before.json["url"] == "hack1.com"
-    assert response_get1_before.json["startDate"] == "2027-01-02T01:03:00"
-    assert response_get1_before.json["endDate"] == "2027-02-02T01:03:00"
-    assert response_get1_before.json["location"] == "Kavala"
-    assert response_get1_before.json["organizer"] == "UoA"
-    assert response_get1_before.json["hasPrize"] == True
-    assert response_get1_before.json["prizeDetails"] == "500$"
-    assert response_get1_before.json["tags"] == "AI,ML,Python"
-    assert response_get1_before.json["status"] == "published"
+    assert response_get1_after.json["name"] == "Hackathon1"
+    assert response_get1_after.json["description"] == "Full Description"
+    assert response_get1_after.json["url"] == "hack1.com"
+    assert response_get1_after.json["startDate"] == "2027-01-02T01:03:00"
+    assert response_get1_after.json["endDate"] == "2027-02-02T01:03:00"
+    assert response_get1_after.json["location"] == "Kavala"
+    assert response_get1_after.json["organizer"] == "UoA"
+    assert response_get1_after.json["hasPrize"] == True
+    assert response_get1_after.json["prizeDetails"] == "500$"
+    assert response_get1_after.json["tags"] == "AI,ML,Python"
+    assert response_get1_after.json["status"] == "published"
     assert response_get1_after.json["mode"] == "hybrid"
     
 def test_update_hackathon_only_mode_wrong(app,client):
@@ -233,7 +237,11 @@ def test_update_hackathon_only_mode_wrong(app,client):
     response_patch1 = client.patch("api/1",data=update_hackathon_dtst1_on_updt_only_mode_wrong)
     assert response_patch1.status_code == 400
     assert response_patch1.json["error"] == "Wrong mode"
-
+    
+    response_get1_after = client.get("api/hackathons/1")
+    assert response_get1_after.status_code == 200
+    assert response_get1_after.json["mode"] == "online" #must not change on update
+    
 def test_update_hackathon_only_hasPrize_and_prizeDetails_correct(app,client):
     
     with app.app_context():
@@ -556,7 +564,7 @@ def test_update_hackathon_only_interestCount_wrong_str(app,client):
     assert response_get1_after.status_code == 200
     assert response_get1_after.json["interestCount"] == 0 #must not change after update
 
-def test_update_hackathon_only_interestCount_correct(app,client):
+def test_update_hackathon_only_interestCount_correct_str(app,client):
     with app.app_context():
         from main import db
         db.create_all()
@@ -586,3 +594,95 @@ def test_update_hackathon_only_interestCount_correct(app,client):
     assert response_get1_after.json["status"] == "published"
     assert response_get1_after.json["mode"] == "online"
     assert response_get1_after.json["interestCount"] == 15
+    
+def test_update_hackathon_only_interestCount_negative_int(app,client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+    
+    add_row(**update_hackathon_dtst1)
+    
+    response_get1_before = client.get("api/hackathons/1")
+    assert response_get1_before.status_code == 200
+    assert response_get1_before.json["interestCount"] == 0 #changes on update
+    
+    response_patch1 = client.patch("api/1",data=update_hackathon_dtst1_on_updt_only_interestCount_negative_int)
+    assert response_patch1.status_code == 400
+    assert response_patch1.json["error"] == "Wrong interestCount"
+
+    response_get1_after = client.get("api/hackathons/1")
+    assert response_get1_after.status_code == 200
+    assert response_get1_after.json["interestCount"] == 0 #changes on update
+    
+def test_update_hackathon_only_interestCount_large_int(app,client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+    
+    add_row(**update_hackathon_dtst1)
+    
+    response_get1_before = client.get("api/hackathons/1")
+    assert response_get1_before.status_code == 200
+    assert response_get1_before.json["interestCount"] == 0 #changes on update
+    
+    response_patch1 = client.patch("api/1",data=update_hackathon_dtst1_on_updt_only_interestCount_large_int)
+    assert response_patch1.status_code == 400
+    assert response_patch1.json["error"] == "Wrong interestCount"
+
+    response_get1_after = client.get("api/hackathons/1")
+    assert response_get1_after.status_code == 200
+    assert response_get1_after.json["interestCount"] == 0 #changes on update
+
+def test_update_hackathon_only_submittedAt(app,client):
+    
+    with app.app_context():
+        from main import db
+        db.create_all()
+    
+    before = datetime.now().replace(microsecond=0)
+    time.sleep(1)
+    add_row(**update_hackathon_dtst1)
+    time.sleep(1)
+    after = datetime.now().replace(microsecond=0)
+    
+    response_get1_before = client.get("api/hackathons/1")
+    submittedAt_value = datetime.fromisoformat(response_get1_before.json["submittedAt"])
+    
+    #Checking that submittedAt is correctly parsed
+    assert response_get1_before.status_code == 200
+    assert before <= submittedAt_value <= after
+    
+    response_patch1 = client.patch("api/1",data=update_hackathon_dtst1_on_updt_only_submittedAt)
+    assert response_patch1.status_code == 200
+    assert response_patch1.json["success"] == "Successfully updated hackathon with an id of : 1"
+    
+    response_get1_after = client.get("api/hackathons/1")
+    assert response_get1_after.status_code == 200
+    assert before <= submittedAt_value <= after
+    
+def test_update_hackathon_only_updatedAt(app,client):
+    
+    with app.app_context():
+        from main import db
+        db.create_all()
+    
+    before = datetime.now().replace(microsecond=0)
+    time.sleep(1)
+    add_row(**update_hackathon_dtst1)
+    time.sleep(1)
+    after = datetime.now().replace(microsecond=0)
+    
+    response_get1_before = client.get("api/hackathons/1")
+    updatedAt_value = datetime.fromisoformat(response_get1_before.json["updatedAt"])
+    
+    #Checking that submittedAt is correctly parsed
+    assert response_get1_before.status_code == 200
+    assert before <= updatedAt_value <= after
+    
+    response_patch1 = client.patch("api/1",data=update_hackathon_dtst1_on_updt_only_updatedAt)
+    assert response_patch1.status_code == 200
+    assert response_patch1.json["success"] == "Successfully updated hackathon with an id of : 1"
+    
+    response_get1_after = client.get("api/hackathons/1")
+    assert response_get1_after.status_code == 200
+    assert before <= updatedAt_value <= after
