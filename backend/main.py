@@ -4,13 +4,13 @@ from sqlalchemy.exc import IntegrityError
 from flask_alembic import Alembic
 from werkzeug.exceptions import NotFound
 from datetime import datetime,timedelta
-import os
+import os,json
 
 #NOTE: If interestCount value is a number whether it is integer or string type it will join the db
 #NOTE: If hasPrize value is a string or bool type since it is validated as a str.lower() it will join the db
-#NOTE: If hasPrize is False then even if we add a value in the prizeDetails field its value will remain NULL inside db
-#NOTE: hasPrize can only be *ADDED* in db only if hasPrize is True in any other case it will be None
-#NOTE: hasPrize can only be *UPDATED* if hasPrize was set to True and in the PATCH request hasPrize is either True or None
+#NOTE: If hasPrize is False then even if we add a value in the prizeDetails field it will throw an error
+#NOTE: prizeDetails can only be *ADDED* in db only if hasPrize is True in any other case it will be None
+#NOTE: prizeDetails can only be *UPDATED* if hasPrize was set to True and in the PATCH request hasPrize is either True or None
 #NOTE: If hasPrize is False while being *UPDATED* then prizeDetails will always be None no matter the values we assign to it
 #NOTE: If status and mode, do not contain any of their appropriate values they will throw an error and wont join db.
 #NOTE: status and mode are handled as str values at first and then they get converted to StatusEnum or ModeEnum types
@@ -41,7 +41,7 @@ def parse_parameters(method:str):
     try:
         startDate = datetime.strptime(request.form.get("startDate"), "%Y-%m-%d %H:%M:%S") if request.form.get("startDate") else None
         endDate = datetime.strptime(request.form.get("endDate"), "%Y-%m-%d %H:%M:%S") if request.form.get("endDate") else None
-        submittedAt = datetime.strptime(request.form.get("submittedAt"), "%Y-%m-%d %H:%M:%S") if request.form.get("submittedAt") else None
+        #submittedAt = datetime.strptime(request.form.get("submittedAt"), "%Y-%m-%d %H:%M:%S") if request.form.get("submittedAt") else None
     except ValueError:
         return False,"Wrong date format"
     
@@ -83,60 +83,148 @@ def parse_parameters(method:str):
         }
     return True,params
 
-def validate_parameters(params:dict,method:str,hackathon_to_update:Hackathon = None):
-    
-    """
-    IMPORTANT NOTE: startDate and endDate values are getting validated in parse_parameters() func
-    """
-    
-    for key,value in params.items():
-        
-        if (key in allowed) and value is not None:
-                
-            if key == "status":
-                try:
-                    value = StatusEnum(value)
-                except ValueError:
-                    return False,"Wrong status"
-            
-            if key == "mode":
-                try:
-                    value = ModeEnum(value)  #converts string "online" to ModeEnum.online
-                except ValueError:
-                    return False,"Wrong mode"
-            
-            if key == "hasPrize":
-                if str(value).lower() == "true":
-                    value = True
-                    params[key] = True
-                elif str(value).lower() == "false":
-                    value = False
-                    params[key] = False
-                    params["prizeDetails"] = None #prizeDetails is None anyways IF hackathon doesnt have a prize
-                else:
-                    return False,"Wrong hasPrize"
-            
-            if key == "interestCount":
-                if not(isinstance(value,int)):
-                    try:
-                        value = int(value)
-                        if value < 0 or value > MAX_INTERESTCOUNT_VALUE:
-                            return False, "Wrong interestCount" #maybe we cahange it to big interestCount in the future
-                    except ValueError:
-                        return False, "Wrong interestCount"
-
-            if hackathon_to_update:
-                setattr(hackathon_to_update, key,value)
-                
-    if method == "PATCH":
-        
-        if (str(params["hasPrize"]).lower() == "false") or (hackathon_to_update.hasPrize == False):
-            setattr(hackathon_to_update, "prizeDetails",None)
-            return False, "When hasPrize is False, prizeDetails cannot contain any value"
-        return True,None
-    
+def validate_parameters2(params:dict,method:str,hackathon_to_update:Hackathon = None):
     if method == "POST":
-        return True,params
+        validated_parameters = {
+                            "name": None,
+                            "description":None,
+                            "url": None,
+                            "startDate": None,
+                            "endDate": None,
+                            "location": None,
+                            "mode": None,
+                            "organizer": None,
+                            "hasPrize": None,
+                            "prizeDetails": None,
+                            "tags": None,
+                            "status": None,
+                            "submittedAt": None,
+                            "updatedAt": None,
+                            "interestCount": None,
+                        }
+        
+        if (params["name"] is None) or (params["url"] is None):
+            return False,"name and url are required"
+        
+        for key,value in params.items():
+            
+            if (key in allowed) and value is not None:
+                    
+                if key == "status":
+                    try:
+                        value = StatusEnum(value)
+                    except ValueError:
+                        return False,"Wrong status"
+                
+                if key == "mode":
+                    try:
+                        value = ModeEnum(value)  #converts string "online" to ModeEnum.online
+                    except ValueError:
+                        return False,"Wrong mode"
+                
+                if key == "hasPrize":
+                    if str(value).lower() == "true":
+                        value = True
+                        #params[key] = True
+                    elif str(value).lower() == "false":
+                        value = False
+                        #params[key] = False
+                        #params["prizeDetails"] = None #prizeDetails is None anyways IF hackathon doesnt have a prize                       
+                    else:
+                        return False,"Wrong hasPrize"
+                
+                if key == "interestCount":
+                    if not(isinstance(value,int)):
+                        try:
+                            value = int(value)
+                        except ValueError:
+                            return False, "Wrong interestCount"
+                    if value < 0 or value > MAX_INTERESTCOUNT_VALUE:
+                        return False, "Wrong interestCount" #maybe we cahange it to big interestCount in the future
+
+                if key == "prizeDetails":
+                    if (validated_parameters["hasPrize"] is None) or (validated_parameters["hasPrize"] is False):
+                        return False, f"prizeDetails cannot contain any value when hasPrize is {str(validated_parameters['hasPrize'])}"
+                
+                validated_parameters[key] = value
+                
+        return True, validated_parameters
+    
+    if method == "PATCH":
+        validated_parameters = {
+                                "name": hackathon_to_update.name,
+                                "description":hackathon_to_update.description,
+                                "url": hackathon_to_update.url,
+                                "startDate": hackathon_to_update.startDate,
+                                "endDate": hackathon_to_update.endDate,
+                                "location": hackathon_to_update.location,
+                                "mode": hackathon_to_update.mode,
+                                "organizer": hackathon_to_update.organizer,
+                                "hasPrize": hackathon_to_update.hasPrize,
+                                "prizeDetails": hackathon_to_update.prizeDetails,
+                                "tags": hackathon_to_update.tags,
+                                "status": hackathon_to_update.status,
+                                "submittedAt": hackathon_to_update.submittedAt,
+                                "updatedAt": hackathon_to_update.updatedAt,
+                                "interestCount": hackathon_to_update.interestCount,
+                                }
+        
+        for key,value in params.items():
+            
+            if (key in allowed) and value is not None:
+                    
+                if key == "status":
+                    try:
+                        value = StatusEnum(value)
+                    except ValueError:
+                        return False,"Wrong status"
+                
+                if key == "mode":
+                    try:
+                        value = ModeEnum(value)  #converts string "online" to ModeEnum.online
+                    except ValueError:
+                        return False,"Wrong mode"
+                
+                if key == "hasPrize":
+                    if str(value).lower() == "true":
+                        value = True
+                        params[key] = True
+                    elif str(value).lower() == "false":
+                        value = False
+                        params[key] = False
+                        #params["prizeDetails"] = None #prizeDetails is None anyways IF hackathon doesnt have a prize                       
+                    else:
+                        return False,"Wrong hasPrize"
+                
+                if key == "interestCount":
+                    if not(isinstance(value,int)):
+                        try:
+                            value = int(value)
+                        except ValueError:
+                            return False, "Wrong interestCount"
+                    if value < 0 or value > MAX_INTERESTCOUNT_VALUE:
+                        return False, "Wrong interestCount" #maybe we cahange it to big interestCount in the future
+                
+                if key == "prizeDetails":
+                    if params["hasPrize"] is None: #sto request
+                        if (hackathon_to_update.hasPrize is False) or (hackathon_to_update.hasPrize is None):
+                            #we dont accept prizeDetails so we do:
+                            return False,f"prizeDetails cannot contain any value when hasPrize is {str(hackathon_to_update.hasPrize)}"
+                    else:
+                        if (params["hasPrize"] is False) and (params["prizeDetails"] is not None):
+                            return False,f"prizeDetails cannot contain any value when hasPrize is False"
+                        
+                validated_parameters[key] = value
+
+        if (params["hasPrize"] is False) and (hackathon_to_update.prizeDetails is not None):#or hackathon_to_update.prizeDetails is not None
+            validated_parameters["prizeDetails"] = None
+        if (params["hasPrize"] is False) and (hackathon_to_update.prizeDetails is None):
+            validated_parameters["prizeDetails"] = None
+        
+        for key,value in validated_parameters.items():
+            setattr(hackathon_to_update, key,value)
+    
+    return True,None
     
 @app.route("/api/hackathons",methods=["GET"])
 def all_hackathons():
@@ -235,7 +323,7 @@ def update_hackathon(hackathon_id):
     
     try:
         hackathon_to_update = db.get_or_404(Hackathon,hackathon_id)
-        result_validated , error_validated = validate_parameters(params_parsed,request.method,hackathon_to_update)
+        result_validated , error_validated = validate_parameters2(params_parsed,request.method,hackathon_to_update)
         if result_validated and not(error_validated):
             try:
                 db.session.commit()
@@ -257,10 +345,12 @@ def add_hackathon():
     else:
         return jsonify(error=f"{value_parsed}"),400
     
-    if (params_parsed["name"] is None) or (params_parsed["url"] is None):
-        return jsonify(error="name and url are required"),400
+    # if (params_parsed["name"] is None) or (params_parsed["url"] is None):
+    #     return jsonify(error="name and url are required"),400
     
-    result_validated , value_validated = validate_parameters(params_parsed,request.method,None)
+    result_validated , value_validated = validate_parameters2(params_parsed,request.method,None)
+    #print([i for i in value_validated.to_dict()])
+    print(value_validated)
     
     if result_validated:
         new_hackathon = Hackathon(name=value_validated["name"],url=value_validated["url"],description=value_validated["description"],startDate=value_validated["startDate"],endDate=value_validated["endDate"],location=value_validated["location"],mode=value_validated["mode"],

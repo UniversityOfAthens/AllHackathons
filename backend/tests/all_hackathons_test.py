@@ -22,7 +22,7 @@ def test_all_hackathons_while_adding_one_hackathon(app,client):
             
     response1 = client.post("/api/hackathons", data=hackathon1)
     assert response1.status_code == 200
-    assert response1.json["response"]["success"] == "Successfully added hackathon:Hackathon1!"
+    assert response1.json["success"] == "Successfully added hackathon:Hackathon1!"
     
     #We are making sure that our post requests are valid and successfully reach our backend.
     
@@ -47,11 +47,11 @@ def test_all_hackathons_while_adding_two_hackathons(app,client):
             
     response1 = client.post("/api/hackathons", data=hackathon1)
     assert response1.status_code == 200
-    assert response1.json["response"]["success"] == "Successfully added hackathon:Hackathon1!"
+    assert response1.json["success"] == "Successfully added hackathon:Hackathon1!"
     
     response2 = client.post("/api/hackathons", data=hackathon2)
     assert response2.status_code == 200
-    assert response2.json["response"]["success"] == "Successfully added hackathon:Hackathon2!"
+    assert response2.json["success"] == "Successfully added hackathon:Hackathon2!"
     
     #We are making sure that our post requests are valid and successfully reach our backend.
     
@@ -80,11 +80,11 @@ def test_all_hackathons_with_wrong_and_right_status_parameter(app,client):
             
     response1 = client.post("/api/hackathons", data=hackathon1)
     assert response1.status_code == 200
-    assert response1.json["response"]["success"] == "Successfully added hackathon:Hackathon1!"
+    assert response1.json["success"] == "Successfully added hackathon:Hackathon1!"
     
     response2 = client.post("/api/hackathons", data=hackathon2)
     assert response2.status_code == 200
-    assert response2.json["response"]["success"] == "Successfully added hackathon:Hackathon2!"
+    assert response2.json["success"] == "Successfully added hackathon:Hackathon2!"
     
     result_test1 = client.get("/api/hackathons?status=published")
     assert result_test1.status_code == 200
@@ -120,11 +120,11 @@ def test_all_hackathons_with_wrong_and_right_upcoming_parameter(app,client):
     
     response1 = client.post("/api/hackathons", data=hackathon1)
     assert response1.status_code == 200
-    assert response1.json["response"]["success"] == "Successfully added hackathon:Hackathon1!"
+    assert response1.json["success"] == "Successfully added hackathon:Hackathon1!"
     
     response2 = client.post("/api/hackathons", data=hackathon2)
     assert response2.status_code == 200
-    assert response2.json["response"]["success"] == "Successfully added hackathon:Hackathon2!"
+    assert response2.json["success"] == "Successfully added hackathon:Hackathon2!"
 
     result_test1 = client.get("api/hackathons?upcoming=True")
     assert result_test1.status_code == 200
@@ -160,11 +160,11 @@ def test_all_hackathons_with_wrong_and_right_past_parameter(app,client):
     
     response1 = client.post("/api/hackathons", data=hackathon1)
     assert response1.status_code == 200
-    assert response1.json["response"]["success"] == "Successfully added hackathon:Hackathon1!"
+    assert response1.json["success"] == "Successfully added hackathon:Hackathon1!"
     
     response2 = client.post("/api/hackathons", data=hackathon2)
     assert response2.status_code == 200
-    assert response2.json["response"]["success"] == "Successfully added hackathon:Hackathon2!"
+    assert response2.json["success"] == "Successfully added hackathon:Hackathon2!"
 
     result_test1 = client.get("api/hackathons?past=True")
     assert result_test1.status_code == 200
@@ -198,11 +198,11 @@ def test_all_hackathons_tags_parameter(app,client):
     
     response1 = client.post("/api/hackathons", data=hackathon1)
     assert response1.status_code == 200
-    assert response1.json["response"]["success"] == "Successfully added hackathon:Hackathon1!"
+    assert response1.json["success"] == "Successfully added hackathon:Hackathon1!"
 
     response2 = client.post("/api/hackathons", data=hackathon2)
     assert response2.status_code == 200
-    assert response2.json["response"]["success"] == "Successfully added hackathon:Hackathon2!"
+    assert response2.json["success"] == "Successfully added hackathon:Hackathon2!"
 
     result_test1 = client.get("/api/hackathons?tags=Web Development")
     assert result_test1.status_code == 200
@@ -251,15 +251,15 @@ def test_all_hackathons_q_parameter(app,client):
     
     response1 = client.post("/api/hackathons", data=hackathon1)
     assert response1.status_code == 200
-    assert response1.json["response"]["success"] == "Successfully added hackathon:Hackathon1!"
+    assert response1.json["success"] == "Successfully added hackathon:Hackathon1!"
 
     response2 = client.post("/api/hackathons", data=hackathon2)
     assert response2.status_code == 200
-    assert response2.json["response"]["success"] == "Successfully added hackathon:Hackathon2!"
+    assert response2.json["success"] == "Successfully added hackathon:Hackathon2!"
     
     response3 = client.post("/api/hackathons", data=hackathon3)
     assert response3.status_code == 200
-    assert response3.json["response"]["success"] == "Successfully added hackathon:Hackathon3!"
+    assert response3.json["success"] == "Successfully added hackathon:Hackathon3!"
     
     result_test1 = client.get("api/hackathons?q=Crete") #q for location test
     result_test2 = client.get("api/hackathons?q=ai") #q for tags test
@@ -449,15 +449,15 @@ def test_all_hackathons_sort_parameter(app,client):
     
     response1 = client.post("api/hackathons",data=hackathon1)
     assert response1.status_code == 200
-    assert response1.json["response"]["success"] == "Successfully added hackathon:Hackathon1!"
+    assert response1.json["success"] == "Successfully added hackathon:Hackathon1!"
     
     response2 = client.post("api/hackathons",data=hackathon2)
     assert response2.status_code == 200
-    assert response2.json["response"]["success"] == "Successfully added hackathon:Hackathon2!"
+    assert response2.json["success"] == "Successfully added hackathon:Hackathon2!"
         
     response3 = client.post("api/hackathons",data=hackathon3)
     assert response3.status_code == 200
-    assert response3.json["response"]["success"] == "Successfully added hackathon:Hackathon3!"
+    assert response3.json["success"] == "Successfully added hackathon:Hackathon3!"
 
     with app.app_context():
         from main import db,Hackathon

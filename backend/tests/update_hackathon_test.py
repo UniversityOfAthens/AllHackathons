@@ -287,8 +287,8 @@ def test_update_hackathon_only_hasPrize_correct_bool_and_prizeDetails_wrong(app,
     assert response_get1_before.json["prizeDetails"] == "500$" #changes on update
     
     response_patch1 = client.patch("api/1",data=update_hackathon_dtst1_on_updt_only_hasPrize_correct_bool_and_prizeDetails_wrong)
-    assert response_patch1.status_code == 200
-    assert response_patch1.json["success"] == "Successfully updated hackathon with an id of : 1"
+    assert response_patch1.status_code == 400
+    assert response_patch1.json["error"] == "prizeDetails cannot contain any value when hasPrize is False"
     
     response_get1_after = client.get("api/hackathons/1")
     assert response_get1_after.status_code == 200
@@ -299,8 +299,8 @@ def test_update_hackathon_only_hasPrize_correct_bool_and_prizeDetails_wrong(app,
     assert response_get1_after.json["endDate"] == "2027-02-02T01:03:00"
     assert response_get1_after.json["location"] == "Kavala"
     assert response_get1_after.json["organizer"] == "UoA"
-    assert response_get1_after.json["hasPrize"] == False #changes on update
-    assert response_get1_after.json["prizeDetails"] == None #even though our dataset has prizeDetails set to 123 our backend will make it None since hasPrize is set to False
+    assert response_get1_after.json["hasPrize"] == True #changes on update
+    assert response_get1_after.json["prizeDetails"] == "500$" #even though our dataset has prizeDetails set to 123 our backend will make it None since hasPrize is set to False
     assert response_get1_after.json["tags"] == "AI,ML,Python"
     assert response_get1_after.json["status"] == "published"
     assert response_get1_after.json["mode"] == "online"
@@ -349,8 +349,8 @@ def test_update_hackathon_only_hasPrize_correct_str_and_prizeDetails_wrong(app,c
     assert response_get1_before.json["prizeDetails"] == "500$" #changes on update
     
     response_patch1 = client.patch("api/1",data=update_hackathon_dtst1_on_updt_only_hasPrize_correct_str_and_prizeDetails_wrong)
-    assert response_patch1.status_code == 200
-    assert response_patch1.json["success"] == "Successfully updated hackathon with an id of : 1"
+    assert response_patch1.status_code == 400
+    assert response_patch1.json["error"] == "prizeDetails cannot contain any value when hasPrize is False"
     
     response_get1_after = client.get("api/hackathons/1")
     assert response_get1_after.status_code == 200
@@ -361,8 +361,8 @@ def test_update_hackathon_only_hasPrize_correct_str_and_prizeDetails_wrong(app,c
     assert response_get1_after.json["endDate"] == "2027-02-02T01:03:00"
     assert response_get1_after.json["location"] == "Kavala"
     assert response_get1_after.json["organizer"] == "UoA"
-    assert response_get1_after.json["hasPrize"] == False #changes on update while being a str our backend makes sure it passes as bool value
-    assert response_get1_after.json["prizeDetails"] == None #even though our dataset has prizeDetails set to 123 our backend will make it None since hasPrize is set to False
+    assert response_get1_after.json["hasPrize"] == True #changes on update while being a str our backend makes sure it passes as bool value
+    assert response_get1_after.json["prizeDetails"] == "500$" #even though our dataset has prizeDetails set to 123 our backend will make it None since hasPrize is set to False
     assert response_get1_after.json["tags"] == "AI,ML,Python"
     assert response_get1_after.json["status"] == "published"
     assert response_get1_after.json["mode"] == "online"

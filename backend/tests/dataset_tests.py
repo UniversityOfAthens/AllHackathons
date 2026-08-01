@@ -52,7 +52,6 @@ find_hackathon_dtst3 = {
 						"interestCount": None,
 					}
 
-
 update_hackathon_dtst1 = {
 						"name": "Hackathon1",
 						"description":"Full Description",
@@ -66,6 +65,24 @@ update_hackathon_dtst1 = {
 						"prizeDetails": "500$",
 						"tags": "AI,ML,Python",
 						"status": "published",
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_hasPrize_correct_str_and_prizeDetails_wrong = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None,
+						"endDate": None,
+						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": "false", #hasPrize is a str value here, our backend will make sure it passes it as a bool
+						"prizeDetails": "123", #prizeDetails cant contain any value since hasPrize is set to False
+						"tags": None,
+						"status": None,
 						"submittedAt": None,
 						"updatedAt": None,
 						"interestCount": None,
@@ -300,24 +317,6 @@ update_hackathon_dtst1_on_updt_only_hasPrize_wrong_str_and_prizeDetails = {
 						"organizer": None,
 						"hasPrize": "wrong hasPrize",
       					"prizeDetails": "123", 
-						"tags": None,
-						"status": None,
-						"submittedAt": None,
-						"updatedAt": None,
-						"interestCount": None,
-					}
-
-update_hackathon_dtst1_on_updt_only_hasPrize_correct_str_and_prizeDetails_wrong = {
-						"name": None,
-						"description":None,
-						"url": None,
-						"startDate": None,
-						"endDate": None,
-						"location": None,
-						"mode": None,
-						"organizer": None,
-						"hasPrize": "false", #hasPrize is a str value here, our backend will make sure it passes it as a bool
-						"prizeDetails": "123", #prizeDetails cant contain any value since hasPrize is set to False
 						"tags": None,
 						"status": None,
 						"submittedAt": None,

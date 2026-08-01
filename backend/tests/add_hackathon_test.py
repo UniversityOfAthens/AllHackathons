@@ -102,8 +102,8 @@ def test_add_hackathon_response_and_status_code_dataset2(app, client):
         db.create_all()
         
     response = client.post("/api/hackathons", data=dataset2)
-    assert response.status_code == 200
-    assert response.json["success"] == "Successfully added hackathon:Lefteris!"
+    assert response.status_code == 400
+    assert response.json["error"] == "prizeDetails cannot contain any value when hasPrize is False"
 
 
 def test_add_hackathon_response_and_status_code_dataset3(app, client):
@@ -389,11 +389,11 @@ def test_add_hackathon_response_and_status_code_dataset11(app, client):
 def test_add_hackathon_response_and_status_code_dataset12(app, client):
     
     """
-    dataset3: tests if prizeDetails remains None even if user tries to pass a value
+    dataset12: tests if prizeDetails remains None even if user tries to pass a value
               in prizeDetails when hasPrize is already False
     """
     
-    dataset5 = {
+    dataset12 = {
         "name":"Nikos",
         "description": "Hackathon Description",
         "url":"nikos.com",
@@ -411,9 +411,7 @@ def test_add_hackathon_response_and_status_code_dataset12(app, client):
         from main import db
         db.create_all()
         
-    response1 = client.post("/api/hackathons", data=dataset5)
+    response1 = client.post("/api/hackathons", data=dataset12)
     response2 = client.get("/api/hackathons/1")
-    assert response1.status_code == 200
-    assert response1.json["success"] == "Successfully added hackathon:Nikos!"
-    assert response2.status_code == 200
-    assert response2.json["prizeDetails"] == None
+    assert response1.status_code == 400
+    assert response1.json["error"] == "prizeDetails cannot contain any value when hasPrize is False"
