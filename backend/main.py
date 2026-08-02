@@ -15,7 +15,6 @@ import os,json
 #NOTE: If status and mode, do not contain any of their appropriate values they will throw an error and wont join db.
 #NOTE: status and mode are handled as str values at first and then they get converted to StatusEnum or ModeEnum types
 
-#MAX_INTERESTCOUNT_VALUE = 10000
 today = datetime.now().replace(microsecond=0)
 tommorow = today + timedelta(days=1)
 allowed = ["name", "url", "description", "startDate", "endDate", "updatedAt", "submittedAt", "location", "mode",
@@ -41,7 +40,6 @@ def parse_parameters(method:str):
     try:
         startDate = datetime.strptime(request.form.get("startDate"), "%Y-%m-%d %H:%M:%S") if request.form.get("startDate") else None
         endDate = datetime.strptime(request.form.get("endDate"), "%Y-%m-%d %H:%M:%S") if request.form.get("endDate") else None
-        #submittedAt = datetime.strptime(request.form.get("submittedAt"), "%Y-%m-%d %H:%M:%S") if request.form.get("submittedAt") else None
     except ValueError:
         return False,"Wrong date format"
     
@@ -77,7 +75,6 @@ def parse_parameters(method:str):
             "location": request.form.get("location") or None,
             "hasPrize": request.form.get("hasPrize") or None,
             "prizeDetails": request.form.get("prizeDetails") or None,
-            #"submittedAt": submittedAt, no need to send submittedAt since only once gets a value
             "updatedAt": now,
             "interestCount": request.form.get("interestCount") or None,
         }
@@ -150,7 +147,7 @@ def validate_parameters2(params:dict,method:str,hackathon_to_update:Hackathon = 
                 
         return True, validated_parameters
     
-    if method == "PATCH":
+    elif method == "PATCH":
         validated_parameters = {
                                 "name": hackathon_to_update.name,
                                 "description":hackathon_to_update.description,
@@ -345,12 +342,7 @@ def add_hackathon():
     else:
         return jsonify(error=f"{value_parsed}"),400
     
-    # if (params_parsed["name"] is None) or (params_parsed["url"] is None):
-    #     return jsonify(error="name and url are required"),400
-    
     result_validated , value_validated = validate_parameters2(params_parsed,request.method,None)
-    #print([i for i in value_validated.to_dict()])
-    print(value_validated)
     
     if result_validated:
         new_hackathon = Hackathon(name=value_validated["name"],url=value_validated["url"],description=value_validated["description"],startDate=value_validated["startDate"],endDate=value_validated["endDate"],location=value_validated["location"],mode=value_validated["mode"],

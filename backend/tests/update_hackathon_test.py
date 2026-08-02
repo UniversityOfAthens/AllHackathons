@@ -242,6 +242,248 @@ def test_update_hackathon_only_mode_wrong(app,client):
     assert response_get1_after.status_code == 200
     assert response_get1_after.json["mode"] == "online" #must not change on update
     
+
+#________________testing1 with: hasPrize_true_and_prizeDetails_none _____________________________
+def test_update_hackathon1_only_hasPrize_false_and_prizeDetails_none(app,client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+    
+    add_row(**update_hackathon_dtst1_hasPrize_true_and_prizeDetails_none)
+    
+    response_get1_before = client.get("api/hackathons/1")
+    assert response_get1_before.status_code == 200
+    assert response_get1_before.json["hasPrize"] == True #changes on update
+    assert response_get1_before.json["prizeDetails"] == None #changes on update
+    
+    response_patch1 = client.patch("api/1",data=update_hackathon_dtst1_on_updt_hasPrize_false_and_prizeDetails_none)
+    assert response_patch1.status_code == 200
+    assert response_patch1.json["success"] == "Successfully updated hackathon with an id of : 1"
+    
+    response_get1_after = client.get("api/hackathons/1")
+    assert response_get1_after.status_code == 200
+    assert response_get1_after.json["hasPrize"] == False #changes on update
+    assert response_get1_after.json["prizeDetails"] == None #changes on update
+
+def test_update_hackathon1_only_hasPrize_false_and_prizeDetails_contain_value(app,client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+    
+    add_row(**update_hackathon_dtst1_hasPrize_true_and_prizeDetails_none)
+    
+    response_get1_before = client.get("api/hackathons/1")
+    assert response_get1_before.status_code == 200
+    assert response_get1_before.json["hasPrize"] == True #changes on update
+    assert response_get1_before.json["prizeDetails"] == None #changes on update
+    
+    response_patch1 = client.patch("api/1",data=update_hackathon_dtst1_on_updt_hasPrize_false_and_prizeDetails_contain_value)
+    assert response_patch1.status_code == 400
+    assert response_patch1.json["error"] == "prizeDetails cannot contain any value when hasPrize is False"
+    
+    response_get1_after = client.get("api/hackathons/1")
+    assert response_get1_after.status_code == 200
+    assert response_get1_after.json["hasPrize"] == True #must not change on update
+    assert response_get1_after.json["prizeDetails"] == None #muts not change on update
+    
+def test_update_hackathon1_only_hasPrize_none_and_prizeDetails_contain_value(app,client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+    
+    add_row(**update_hackathon_dtst1_hasPrize_true_and_prizeDetails_none)
+    
+    response_get1_before = client.get("api/hackathons/1")
+    assert response_get1_before.status_code == 200
+    assert response_get1_before.json["hasPrize"] == True #changes on update
+    assert response_get1_before.json["prizeDetails"] == None #changes on update
+    
+    response_patch1 = client.patch("api/1",data=update_hackathon_dtst1_on_updt_hasPrize_none_and_prizeDetails_contain_value)
+    assert response_patch1.status_code == 200
+    assert response_patch1.json["success"] == "Successfully updated hackathon with an id of : 1"
+    
+    response_get1_after = client.get("api/hackathons/1")
+    assert response_get1_after.status_code == 200
+    assert response_get1_after.json["hasPrize"] == True #changes on update
+    assert response_get1_after.json["prizeDetails"] == "1500$" #changes on update
+#____________________________________________________________________________________
+
+#________________testing2 with: hasPrize_false_and_prizeDetails_none _____________________________
+    
+def test_update_hackathon2_only_hasPrize_none_and_prizeDetails_contain_value(app,client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+    
+    add_row(**update_hackathon_dtst1_hasPrize_false_prizeDetails_none)
+    
+    response_get1_before = client.get("api/hackathons/1")
+    assert response_get1_before.status_code == 200
+    assert response_get1_before.json["hasPrize"] == False #changes on update
+    assert response_get1_before.json["prizeDetails"] == None #changes on update
+    
+    response_patch1 = client.patch("api/1",data=update_hackathon_dtst1_on_updt_hasPrize_none_prizeDetails_contain_value)
+    assert response_patch1.status_code == 400
+    assert response_patch1.json["error"] == "prizeDetails cannot contain any value when hasPrize is False"
+    
+    response_get1_after = client.get("api/hackathons/1")
+    assert response_get1_after.status_code == 200
+    assert response_get1_after.json["hasPrize"] == False #changes on update
+    assert response_get1_after.json["prizeDetails"] == None #changes on update    
+
+def test_update_hackathon2_only_hasPrize_false_and_prizeDetails_contain_value(app,client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+    
+    add_row(**update_hackathon_dtst1_hasPrize_false_prizeDetails_none)
+    
+    response_get1_before = client.get("api/hackathons/1")
+    assert response_get1_before.status_code == 200
+    assert response_get1_before.json["hasPrize"] == False #changes on update
+    assert response_get1_before.json["prizeDetails"] == None #changes on update
+    
+    response_patch1 = client.patch("api/1",data=update_hackathon_dtst1_on_updt_hasPrize_false_prizeDetails_contain_value)
+    assert response_patch1.status_code == 400
+    assert response_patch1.json["error"] == "prizeDetails cannot contain any value when hasPrize is False"
+    
+    response_get1_after = client.get("api/hackathons/1")
+    assert response_get1_after.status_code == 200
+    assert response_get1_after.json["hasPrize"] == False #changes on update
+    assert response_get1_after.json["prizeDetails"] == None #changes on update    
+
+def test_update_hackathon2_only_hasPrize_true_and_prizeDetails_none(app,client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+    
+    add_row(**update_hackathon_dtst1_hasPrize_false_prizeDetails_none)
+    
+    response_get1_before = client.get("api/hackathons/1")
+    assert response_get1_before.status_code == 200
+    assert response_get1_before.json["hasPrize"] == False #changes on update
+    assert response_get1_before.json["prizeDetails"] == None #changes on update
+    
+    response_patch1 = client.patch("api/1",data=update_hackathon_dtst1_on_updt_hasPrize_true_prizeDetails_none)
+    assert response_patch1.status_code == 200
+    assert response_patch1.json["success"] == "Successfully updated hackathon with an id of : 1"
+    
+    response_get1_after = client.get("api/hackathons/1")
+    assert response_get1_after.status_code == 200
+    assert response_get1_after.json["hasPrize"] == True #changes on update
+    assert response_get1_after.json["prizeDetails"] == None #changes on update    
+
+def test_update_hackathon2_only_hasPrize_true_and_prizeDetails_contain_value(app,client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+    
+    add_row(**update_hackathon_dtst1_hasPrize_false_prizeDetails_none)
+    
+    response_get1_before = client.get("api/hackathons/1")
+    assert response_get1_before.status_code == 200
+    assert response_get1_before.json["hasPrize"] == False #changes on update
+    assert response_get1_before.json["prizeDetails"] == None #changes on update
+    
+    response_patch1 = client.patch("api/1",data=update_hackathon_dtst1_on_updt_hasPrize_true_prizeDetails_contain_value)
+    assert response_patch1.status_code == 200
+    assert response_patch1.json["success"] == "Successfully updated hackathon with an id of : 1"
+    
+    response_get1_after = client.get("api/hackathons/1")
+    assert response_get1_after.status_code == 200
+    assert response_get1_after.json["hasPrize"] == True #changes on update
+    assert response_get1_after.json["prizeDetails"] == "350$" #changes on update
+    
+#____________________________________________________________________________________
+
+#________________testing3 with: hasPrize_none_and_prizeDetails_none _____________________________
+
+def test_update_hackathon3_only_hasPrize_true_and_prizeDetails_none(app,client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+    
+    add_row(**update_hackathon_dtst1_hasPrize_none_prizeDetails_none)
+    
+    response_get1_before = client.get("api/hackathons/1")
+    assert response_get1_before.status_code == 200
+    assert response_get1_before.json["hasPrize"] == None #changes on update
+    assert response_get1_before.json["prizeDetails"] == None #changes on update
+    
+    response_patch1 = client.patch("api/1",data=update_hackathon_dtst1_on_updt_hasPrize_true_and_prizeDetails_none)
+    assert response_patch1.status_code == 200
+    assert response_patch1.json["success"] == "Successfully updated hackathon with an id of : 1"
+    
+    response_get1_after = client.get("api/hackathons/1")
+    assert response_get1_after.status_code == 200
+    assert response_get1_after.json["hasPrize"] == True #changes on update
+    assert response_get1_after.json["prizeDetails"] == None
+    
+def test_update_hackathon3_only_hasPrize_true_and_prizeDetails_contain_value(app,client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+    
+    add_row(**update_hackathon_dtst1_hasPrize_none_prizeDetails_none)
+    
+    response_get1_before = client.get("api/hackathons/1")
+    assert response_get1_before.status_code == 200
+    assert response_get1_before.json["hasPrize"] == None #changes on update
+    assert response_get1_before.json["prizeDetails"] == None #changes on update
+    
+    response_patch1 = client.patch("api/1",data=update_hackathon_dtst1_on_updt_hasPrize_true_and_prizeDetails_contain_value)
+    assert response_patch1.status_code == 200
+    assert response_patch1.json["success"] == "Successfully updated hackathon with an id of : 1"
+    
+    response_get1_after = client.get("api/hackathons/1")
+    assert response_get1_after.status_code == 200
+    assert response_get1_after.json["hasPrize"] == True #changes on update
+    assert response_get1_after.json["prizeDetails"] == "500$" #changes on update
+    
+def test_update_hackathon3_only_hasPrize_false_and_prizeDetails_none(app,client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+    
+    add_row(**update_hackathon_dtst1_hasPrize_none_prizeDetails_none)
+    
+    response_get1_before = client.get("api/hackathons/1")
+    assert response_get1_before.status_code == 200
+    assert response_get1_before.json["hasPrize"] == None #changes on update
+    assert response_get1_before.json["prizeDetails"] == None #changes on update
+    
+    response_patch1 = client.patch("api/1",data=update_hackathon_dtst1_on_updt_hasPrize_false_and_prizeDetails_none)
+    assert response_patch1.status_code == 200
+    assert response_patch1.json["success"] == "Successfully updated hackathon with an id of : 1"
+    
+    response_get1_after = client.get("api/hackathons/1")
+    assert response_get1_after.status_code == 200
+    assert response_get1_after.json["hasPrize"] == False #changes on update
+    assert response_get1_after.json["prizeDetails"] == None #changes on update
+    
+def test_update_hackathon3_only_hasPrize_false_and_prizeDetails_contain_value(app,client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+    
+    add_row(**update_hackathon_dtst1_hasPrize_none_prizeDetails_none)
+    
+    response_get1_before = client.get("api/hackathons/1")
+    assert response_get1_before.status_code == 200
+    assert response_get1_before.json["hasPrize"] == None #changes on update
+    assert response_get1_before.json["prizeDetails"] == None #changes on update
+    
+    response_patch1 = client.patch("api/1",data=update_hackathon_dtst1_on_updt_hasPrize_false_and_prizeDetails_contain_value)
+    assert response_patch1.status_code == 400
+    assert response_patch1.json["error"] == "prizeDetails cannot contain any value when hasPrize is False"
+    
+    response_get1_after = client.get("api/hackathons/1")
+    assert response_get1_after.status_code == 200
+    assert response_get1_after.json["hasPrize"] == None #changes on update
+    assert response_get1_after.json["prizeDetails"] == None #changes on update
+
+#____________________________________________________________________________________
+
 def test_update_hackathon_only_hasPrize_and_prizeDetails_correct(app,client):
     
     with app.app_context():
