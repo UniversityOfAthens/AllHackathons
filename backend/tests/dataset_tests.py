@@ -1,0 +1,1019 @@
+find_hackathon_dtst1 = {
+						"name": "Hackathon1",
+						"description":None,
+						"url": "hack1.com",
+						"startDate": None,
+						"endDate": None,
+						"location": "Crete",
+						"mode": None,
+						"organizer": "BYBIT",
+						"hasPrize": True,
+						"prizeDetails": "1400$",
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+find_hackathon_dtst2 = {
+						"name": "Hackathon2",
+						"description":None,
+						"url": "hack2.com",
+						"startDate": None,
+						"endDate": None,
+						"location": None,
+						"mode": None,
+						"organizer": "Oracle",
+						"hasPrize": False,
+						"prizeDetails": None,
+						"tags": None,
+						"status": "pending",
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+find_hackathon_dtst3 = {
+						"name": "Hackathon3",
+						"description":None,
+						"url": "hack3.com",
+						"startDate": "2027-01-02 01:03:00",
+						"endDate": "2027-02-02 01:03:00",
+						"location": "Kavala",
+						"mode": None,
+						"organizer": "UoA",
+						"hasPrize": True,
+						"prizeDetails": "Hundai Car",
+						"tags": None,
+						"status": "published",
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1 = {
+						"name": "Hackathon1",
+						"description":"Full Description",
+						"url": "hack1.com",
+      					"startDate": "2027-01-02 01:03:00",
+						"endDate": "2027-02-02 01:03:00",
+						"location": "Kavala",
+						"mode": "online",
+						"organizer": "UoA",
+						"hasPrize": True,
+						"prizeDetails": "500$",
+						"tags": "AI,ML,Python",
+						"status": "published",
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+#hasPrize True and prizeDetails contain value is completed from update_hackathon_dtst1 dataset
+update_hackathon_dtst1_hasPrize_true_and_prizeDetails_none = {
+						"name": "Hackathon1",
+						"description":"Full Description",
+						"url": "hack1.com",
+      					"startDate": "2027-01-02 01:03:00",
+						"endDate": "2027-02-02 01:03:00",
+						"location": "Kavala",
+						"mode": "online",
+						"organizer": "UoA",
+						"hasPrize": True,
+						"prizeDetails": None,
+						"tags": "AI,ML,Python",
+						"status": "published",
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_hasPrize_none_and_prizeDetails_contain_value = {
+						"name": "Hackathon1",
+						"description":"Full Description",
+						"url": "hack1.com",
+      					"startDate": "2027-01-02 01:03:00",
+						"endDate": "2027-02-02 01:03:00",
+						"location": "Kavala",
+						"mode": "online",
+						"organizer": "UoA",
+						"hasPrize": None,
+						"prizeDetails": "1500$", #prizeDetails must be updated
+						"tags": "AI,ML,Python",
+						"status": "published",
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_hasPrize_false_and_prizeDetails_contain_value = {
+						"name": "Hackathon1",
+						"description":"Full Description",
+						"url": "hack1.com",
+      					"startDate": "2027-01-02 01:03:00",
+						"endDate": "2027-02-02 01:03:00",
+						"location": "Kavala",
+						"mode": "online",
+						"organizer": "UoA",
+						"hasPrize": False,
+						"prizeDetails": "1500$", #prizeDetails cannot contain any value when hasPrize is False
+						"tags": "AI,ML,Python",
+						"status": "published",
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_hasPrize_false_and_prizeDetails_none = {
+						"name": "Hackathon1",
+						"description":"Full Description",
+						"url": "hack1.com",
+      					"startDate": "2027-01-02 01:03:00",
+						"endDate": "2027-02-02 01:03:00",
+						"location": "Kavala",
+						"mode": "online",
+						"organizer": "UoA",
+						"hasPrize": False,
+						"prizeDetails": None,
+						"tags": "AI,ML,Python",
+						"status": "published",
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+#######################################################################################
+
+#######################################################################################
+update_hackathon_dtst1_hasPrize_false_prizeDetails_none = {
+						"name": "Hackathon1",
+						"description":"Full Description",
+						"url": "hack1.com",
+      					"startDate": "2027-01-02 01:03:00",
+						"endDate": "2027-02-02 01:03:00",
+						"location": "Kavala",
+						"mode": "online",
+						"organizer": "UoA",
+						"hasPrize": False,
+						"prizeDetails": None,
+						"tags": "AI,ML,Python",
+						"status": "published",
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_hasPrize_true_prizeDetails_contain_value = {
+						"name": "Hackathon1",
+						"description":"Full Description",
+						"url": "hack1.com",
+      					"startDate": "2027-01-02 01:03:00",
+						"endDate": "2027-02-02 01:03:00",
+						"location": "Kavala",
+						"mode": "online",
+						"organizer": "UoA",
+						"hasPrize": True,
+						"prizeDetails": "350$", #it will be updated since hasPrize is set to True
+						"tags": "AI,ML,Python",
+						"status": "published",
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_hasPrize_true_prizeDetails_none = {
+						"name": "Hackathon1",
+						"description":"Full Description",
+						"url": "hack1.com",
+      					"startDate": "2027-01-02 01:03:00",
+						"endDate": "2027-02-02 01:03:00",
+						"location": "Kavala",
+						"mode": "online",
+						"organizer": "UoA",
+						"hasPrize": True, #it will be updated correctly
+						"prizeDetails": None,
+						"tags": "AI,ML,Python",
+						"status": "published",
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_hasPrize_false_prizeDetails_contain_value = {
+						"name": "Hackathon1",
+						"description":"Full Description",
+						"url": "hack1.com",
+      					"startDate": "2027-01-02 01:03:00",
+						"endDate": "2027-02-02 01:03:00",
+						"location": "Kavala",
+						"mode": "online",
+						"organizer": "UoA",
+						"hasPrize": False,
+						"prizeDetails": "120", #prizeDetails cannot contain any value when hasPrize is preset to False
+						"tags": "AI,ML,Python",
+						"status": "published",
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_hasPrize_none_prizeDetails_contain_value = {
+						"name": "Hackathon1",
+						"description":"Full Description",
+						"url": "hack1.com",
+      					"startDate": "2027-01-02 01:03:00",
+						"endDate": "2027-02-02 01:03:00",
+						"location": "Kavala",
+						"mode": "online",
+						"organizer": "UoA",
+						"hasPrize": None,
+						"prizeDetails": "120", #prizeDetails cannot contain any value when hasPrize is preset to False
+						"tags": "AI,ML,Python",
+						"status": "published",
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+#######################################################################################
+
+#######################################################################################
+
+update_hackathon_dtst1_hasPrize_none_prizeDetails_none = {
+						"name": "Hackathon1",
+						"description":"Full Description",
+						"url": "hack1.com",
+      					"startDate": "2027-01-02 01:03:00",
+						"endDate": "2027-02-02 01:03:00",
+						"location": "Kavala",
+						"mode": "online",
+						"organizer": "UoA",
+						"hasPrize": None,
+						"prizeDetails": None,
+						"tags": "AI,ML,Python",
+						"status": "published",
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_hasPrize_false_and_prizeDetails_contain_value = {
+						"name": "Hackathon1",
+						"description":"Full Description",
+						"url": "hack1.com",
+      					"startDate": "2027-01-02 01:03:00",
+						"endDate": "2027-02-02 01:03:00",
+						"location": "Kavala",
+						"mode": "online",
+						"organizer": "UoA",
+						"hasPrize": False, 
+						"prizeDetails": "1430$", # prizeDetails cannot contain any value when hasPrize is set to False
+						"tags": "AI,ML,Python",
+						"status": "published",
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_hasPrize_false_and_prizeDetails_none = {
+						"name": "Hackathon1",
+						"description":"Full Description",
+						"url": "hack1.com",
+      					"startDate": "2027-01-02 01:03:00",
+						"endDate": "2027-02-02 01:03:00",
+						"location": "Kavala",
+						"mode": "online",
+						"organizer": "UoA",
+						"hasPrize": False, #will be updated correctly
+						"prizeDetails": None,
+						"tags": "AI,ML,Python",
+						"status": "published",
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_hasPrize_true_and_prizeDetails_none = {
+						"name": "Hackathon1",
+						"description":"Full Description",
+						"url": "hack1.com",
+      					"startDate": "2027-01-02 01:03:00",
+						"endDate": "2027-02-02 01:03:00",
+						"location": "Kavala",
+						"mode": "online",
+						"organizer": "UoA",
+						"hasPrize": True, #will be updated correctly
+						"prizeDetails": None,
+						"tags": "AI,ML,Python",
+						"status": "published",
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_hasPrize_true_and_prizeDetails_contain_value = {
+						"name": "Hackathon1",
+						"description":"Full Description",
+						"url": "hack1.com",
+      					"startDate": "2027-01-02 01:03:00",
+						"endDate": "2027-02-02 01:03:00",
+						"location": "Kavala",
+						"mode": "online",
+						"organizer": "UoA",
+						"hasPrize": True,
+						"prizeDetails": "500$", #will be updated correctly since hasPrize is set to True
+						"tags": "AI,ML,Python",
+						"status": "published",
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+#######################################################################################
+
+update_hackathon_dtst1_on_updt_only_hasPrize_correct_str_and_prizeDetails_wrong = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None,
+						"endDate": None,
+						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": "false", #hasPrize is a str value here, our backend will make sure it passes it as a bool
+						"prizeDetails": "123", #prizeDetails cant contain any value since hasPrize is set to False
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_hasPrize_none_and_prizeDetails_correct = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None,
+						"endDate": None,
+						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+      					"prizeDetails": "123", 
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_hasPrize_wrong_str_and_prizeDetails = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None,
+						"endDate": None,
+						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": "wrong hasPrize",
+      					"prizeDetails": "123", 
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_hasPrize_correct_str_and_prizeDetails_correct = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None,
+						"endDate": None,
+						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": "false",
+						"prizeDetails": None, #prizeDetails cant contain any value since hasPrize is set to False
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_hasPrize_correct_bool_and_prizeDetails_wrong = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None,
+						"endDate": None,
+						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": False,
+						"prizeDetails": "123", #prizeDetails cant contain any value since hasPrize is set to False
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_hasPrize_and_prizeDetails_correct = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None,
+						"endDate": None,
+						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": False,
+						"prizeDetails": None,
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_updatedAt_data_provided = {
+						"name": "Hackathon1",
+						"description":None,
+						"url": "hack1.com",
+						"startDate": None, #wrong startDate format
+						"endDate": None, #wrong endDate format
+ 						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None, 
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount":None
+					}
+
+update_hackathon_dtst1_on_updt_only_updatedAt_contain_value_data_provided = {
+						"name": "Hackathon1",
+						"description":None,
+						"url": "hack1.com",
+						"startDate": None, 
+						"endDate": None, 
+ 						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None, 
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": "2020-02-01 05:00:02",
+						"interestCount":None
+					}
+
+update_hackathon_dtst1_on_updt_only_submittedAt_data_provided = {
+						"name": "Hackathon1",
+						"description":None,
+						"url": "hack1.com",
+						"startDate": None,
+						"endDate": None, 
+ 						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None, 
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount":None
+					}
+
+update_hackathon_dtst1_on_updt_only_submittedAt_contain_value_data_provided = {
+						"name": "Hackathon1",
+						"description":None,
+						"url": "hack1.com",
+						"startDate": None,
+						"endDate": None, 
+ 						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None, 
+						"tags": None,
+						"status": None,
+						"submittedAt": "2020-01-02 01:00:00",
+						"updatedAt": None,
+						"interestCount":None
+					}
+
+update_hackathon_dtst1_on_updt_only_when_data_NOT_provided = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None,
+						"endDate": None, 
+ 						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None, 
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount":None
+					}
+
+update_hackathon_dtst1_on_updt_only_interestCount_large_int = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None,
+						"endDate": None,
+ 						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None, 
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": 99999999999999,# MAX_INTERSTCOUNT_VALUE is 10000
+					}
+
+update_hackathon_dtst1_on_updt_only_interestCount_negative_int = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None, #wrong startDate format
+						"endDate": None, #wrong endDate format
+ 						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None, 
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": -5,# wrong interestCount value
+					}
+
+update_hackathon_dtst1_on_updt_only_interestCount_correct_str = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None, #wrong startDate format
+						"endDate": None, #wrong endDate format
+ 						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None, 
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": "15", #even though it is an str it is a number,
+											   #our backend makes sure it will add it anyways
+											   #check lines 117 - 122 main.py
+					}
+
+update_hackathon_dtst1_on_updt_only_interestCount_wrong_str = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None, #wrong startDate format
+						"endDate": None, #wrong endDate format
+ 						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None, 
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": "abc",
+					}
+
+update_hackathon_dtst1_on_updt_only_interestCount_correct = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None, #wrong startDate format
+						"endDate": None, #wrong endDate format
+ 						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None, 
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": 15,
+					}
+
+update_hackathon_dtst1_on_updt_only_startDate_and_endDate_wrong = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": "2028/02/01 01:03:00", #wrong startDate format
+						"endDate": "abc", #wrong endDate format
+ 						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None, 
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_startDate_correct_and_endDate_wrong = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": "2028-02-01 01:03:00", 
+						"endDate": "2028-02-02 01-03-00", #wrong endDate format
+ 						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None, 
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_startDate_wrong_and_endDate_correct = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": "2028-02-01", #wrong startDate format
+						"endDate": "2028-02-02 01:03:00",
+						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+      					"prizeDetails": None, 
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_startDate_and_endDate_correct = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": "2028-01-02 01:03:00",
+						"endDate": "2028-02-02 01:03:00",
+						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+      					"prizeDetails": None, 
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_mode_wrong = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None,
+						"endDate": None,
+						"location": None,
+						"mode": "wrong mode",
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None,
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_mode_hybrid= {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None,
+						"endDate": None,
+						"location": None,
+						"mode": "hybrid",
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None,
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_mode_in_person= {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None,
+						"endDate": None,
+						"location": None,
+						"mode": "in_person",
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None,
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_mode_online= {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None,
+						"endDate": None,
+						"location": None,
+						"mode": "online",
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None,
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_status_draft = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None,
+						"endDate": None,
+						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None,
+						"tags": None,
+						"status": "draft",
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_status_pending = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None,
+						"endDate": None,
+						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None,
+						"tags": None,
+						"status": "pending",
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_status_published = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None,
+						"endDate": None,
+						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None,
+						"tags": None,
+						"status": "published",
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_status_needs_changes = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None,
+						"endDate": None,
+						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None,
+						"tags": None,
+						"status": "needs-changes",
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_status_wrong = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None,
+						"endDate": None,
+						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None,
+						"tags": None,
+						"status": "wrong status",
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt = {
+						"name": "Hackathon1 Changed",
+						"description":"Full Description Changed",
+						"url": "hack1.com Changed",
+      					"startDate": "2027-01-02 01:03:00",
+						"endDate": "2027-02-02 01:03:00",
+						"location": "Kavala Changed",
+						"mode": "hybrid",
+						"organizer": "UoA",
+						"hasPrize": "False",
+						"prizeDetails": None,
+						"tags": "AI,ML,Python Changed",
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": 15,
+					}
+
+update_hackathon_dtst1_on_updt_only_name = {
+							"name": "Hackathon1 Changed",
+							"description":None,
+							"url": None,
+							"startDate": None,
+							"endDate": None,
+							"location": None,
+							"mode": None,
+							"organizer": None,
+							"hasPrize": None,
+							"prizeDetails": None,
+							"tags": None,
+							"status": None,
+							"submittedAt": None,
+							"updatedAt": None,
+							"interestCount": None,
+						}
+
+update_hackathon_dtst1_on_updt_only_url = {
+						"name": None,
+						"description":None,
+						"url": "hack1.com Changed",
+						"startDate": None,
+						"endDate": None,
+						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None,
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_description_location_organizer_tags = {
+							"name": None,
+							"description":"Full Description Changed",
+							"url": None,
+							"startDate": None,
+							"endDate": None,
+							"location": "Kavala Changed",
+							"mode": None,
+							"organizer": "UoA Changed",
+							"hasPrize": None,
+							"prizeDetails": None,
+							"tags": "AI,ML,Python Changed",
+							"status": None,
+							"submittedAt": None,
+							"updatedAt": None,
+							"interestCount": None,
+						}
+
+update_hackathon_dtst2_on_updt = {
+							"name": "Hackathon2 Changed",
+							"description":"Description 2",
+							"url": None,
+							"startDate": None,
+							"endDate": None,
+							"location": None,
+							"mode": None,
+							"organizer": None,
+							"hasPrize": None,
+							"prizeDetails": None,
+							"tags": "Web Development,JS Changed",
+							"status": None,
+							"submittedAt": None,
+							"updatedAt": None,
+							"interestCount": "15", #checking if string number will pass
+						}
+
+update_hackathon_dtst3 = {
+						"name": "Hackathon3",
+						"description":None,
+						"url": "hack3.com",
+						"startDate": None,
+						"endDate": None,
+						"location": "Athens",
+						"mode": "in_person",
+						"organizer": None,
+						"hasPrize": False,
+						"prizeDetails": None,
+						"tags": "CTF",
+						"status": "pending",
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst3_on_updt = {
+							"name": None,
+							"description":"Description 2",
+							"url": None,
+							"startDate": None,
+							"endDate": None,
+							"location": None,
+							"mode": None,
+							"organizer": None,
+							"hasPrize": None,
+							"prizeDetails": None,
+							"tags": None,
+							"status": None,
+							"submittedAt": None,
+							"updatedAt": None,
+							"interestCount": "abc", #checking if string number will pass
+						}
+
+update_hackathon_dtst4 = {
+						"name": "Hackathon4",
+						"description":None,
+						"url": "hack4.com",
+						"startDate": None,
+						"endDate": None,
+						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None,
+						"tags": None,
+						"status": "draft",
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst5 = {
+						"name": "Hackathon5",
+						"description":None,
+						"url": "hack5.com",
+						"startDate": None,
+						"endDate": None,
+						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None,
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}

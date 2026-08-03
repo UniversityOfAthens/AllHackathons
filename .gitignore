@@ -3,7 +3,11 @@ node_modules
 __pycache__
 env
 
+.idea/
+.vscode/
+db/
+migrations/
+
 # Build output
 dist
-
 
