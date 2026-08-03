@@ -111,7 +111,7 @@ export default function SubmitHackathonModal({ open, onOpenChange, onSubmit }: P
               onChange={(e) => setUrl(e.target.value)}
             />
           </div>
-          <p className="text-xs text-muted-foreground">Name or Link is required — fill in as much as you know.</p>
+          <p className="text-xs text-muted-foreground">Name or Link is required. Fill in as much as you know.</p>
           <DialogFooter>
             <Button type="button" variant="outline" className="cursor-pointer" onClick={() => onOpenChange(false)}>
               Cancel
