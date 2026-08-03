@@ -440,10 +440,10 @@ update_hackathon_dtst1_on_updt_only_hasPrize_and_prizeDetails_correct = {
 						"interestCount": None,
 					}
 
-update_hackathon_dtst1_on_updt_only_updatedAt = {
-						"name": None,
+update_hackathon_dtst1_on_updt_only_updatedAt_data_provided = {
+						"name": "Hackathon1",
 						"description":None,
-						"url": None,
+						"url": "hack1.com",
 						"startDate": None, #wrong startDate format
 						"endDate": None, #wrong endDate format
  						"location": None,
@@ -453,17 +453,17 @@ update_hackathon_dtst1_on_updt_only_updatedAt = {
 						"prizeDetails": None, 
 						"tags": None,
 						"status": None,
-						"submittedAt": None, #must not be updated
-						"updatedAt": "2020-02-01 05:10:00",
+						"submittedAt": None,
+						"updatedAt": None,
 						"interestCount":None
 					}
 
-update_hackathon_dtst1_on_updt_only_submittedAt = {
-						"name": None,
+update_hackathon_dtst1_on_updt_only_updatedAt_contain_value_data_provided = {
+						"name": "Hackathon1",
 						"description":None,
-						"url": None,
-						"startDate": None, #wrong startDate format
-						"endDate": None, #wrong endDate format
+						"url": "hack1.com",
+						"startDate": None, 
+						"endDate": None, 
  						"location": None,
 						"mode": None,
 						"organizer": None,
@@ -471,7 +471,61 @@ update_hackathon_dtst1_on_updt_only_submittedAt = {
 						"prizeDetails": None, 
 						"tags": None,
 						"status": None,
-						"submittedAt": "2020-02-01 05:10:00", #must not be updated
+						"submittedAt": None,
+						"updatedAt": "2020-02-01 05:00:02",
+						"interestCount":None
+					}
+
+update_hackathon_dtst1_on_updt_only_submittedAt_data_provided = {
+						"name": "Hackathon1",
+						"description":None,
+						"url": "hack1.com",
+						"startDate": None,
+						"endDate": None, 
+ 						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None, 
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount":None
+					}
+
+update_hackathon_dtst1_on_updt_only_submittedAt_contain_value_data_provided = {
+						"name": "Hackathon1",
+						"description":None,
+						"url": "hack1.com",
+						"startDate": None,
+						"endDate": None, 
+ 						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None, 
+						"tags": None,
+						"status": None,
+						"submittedAt": "2020-01-02 01:00:00",
+						"updatedAt": None,
+						"interestCount":None
+					}
+
+update_hackathon_dtst1_on_updt_only_when_data_NOT_provided = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None,
+						"endDate": None, 
+ 						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None, 
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
 						"updatedAt": None,
 						"interestCount":None
 					}
@@ -658,7 +712,7 @@ update_hackathon_dtst1_on_updt_only_mode_wrong = {
 						"interestCount": None,
 					}
 
-update_hackathon_dtst1_on_updt_only_mode_correct = {
+update_hackathon_dtst1_on_updt_only_mode_hybrid= {
 						"name": None,
 						"description":None,
 						"url": None,
@@ -676,7 +730,43 @@ update_hackathon_dtst1_on_updt_only_mode_correct = {
 						"interestCount": None,
 					}
 
-update_hackathon_dtst1_on_updt_only_status_correct = {
+update_hackathon_dtst1_on_updt_only_mode_in_person= {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None,
+						"endDate": None,
+						"location": None,
+						"mode": "in_person",
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None,
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_mode_online= {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None,
+						"endDate": None,
+						"location": None,
+						"mode": "online",
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None,
+						"tags": None,
+						"status": None,
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_status_draft = {
 						"name": None,
 						"description":None,
 						"url": None,
@@ -689,6 +779,60 @@ update_hackathon_dtst1_on_updt_only_status_correct = {
 						"prizeDetails": None,
 						"tags": None,
 						"status": "draft",
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_status_pending = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None,
+						"endDate": None,
+						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None,
+						"tags": None,
+						"status": "pending",
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_status_published = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None,
+						"endDate": None,
+						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None,
+						"tags": None,
+						"status": "published",
+						"submittedAt": None,
+						"updatedAt": None,
+						"interestCount": None,
+					}
+
+update_hackathon_dtst1_on_updt_only_status_needs_changes = {
+						"name": None,
+						"description":None,
+						"url": None,
+						"startDate": None,
+						"endDate": None,
+						"location": None,
+						"mode": None,
+						"organizer": None,
+						"hasPrize": None,
+						"prizeDetails": None,
+						"tags": None,
+						"status": "needs-changes",
 						"submittedAt": None,
 						"updatedAt": None,
 						"interestCount": None,

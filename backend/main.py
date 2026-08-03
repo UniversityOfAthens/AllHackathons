@@ -78,6 +78,18 @@ def parse_parameters(method:str):
             "updatedAt": now,
             "interestCount": request.form.get("interestCount") or None,
         }
+        #we dont need to implement same logic in POST request since
+        #we only need name and url to be provided and error-case is 
+        #handled directly from validate_parameters() func underneath
+        all_values_are_none = True
+        for key,value in params.items():
+            if (value is not None) and (key != "updatedAt"):
+                all_values_are_none = False
+                break
+        
+        if all_values_are_none:
+            return False,"No data provided to update"
+        
     return True,params
 
 def validate_parameters2(params:dict,method:str,hackathon_to_update:Hackathon = None):
@@ -305,8 +317,20 @@ def find_hackathon(hackathon_id):
     except NotFound:
         return jsonify(error="Wrong id"),404
 
+@app.route("/api/", methods=['PATCH'], defaults={'hackathon_id': None})
 @app.route("/api/<hackathon_id>",methods=['PATCH'])
 def update_hackathon(hackathon_id):
+    
+    print(hackathon_id)
+    print(type(hackathon_id))
+    
+    if (hackathon_id is None) or (hackathon_id == ""):
+        return jsonify(error="id is required"),400
+    
+    try:
+        int(hackathon_id)
+    except ValueError:
+        return jsonify(error="id must be a number"),400
     
     result_parsed , value_parsed = parse_parameters(request.method)
     
@@ -314,9 +338,6 @@ def update_hackathon(hackathon_id):
         params_parsed = value_parsed
     else:
         return jsonify(error=f"{value_parsed}"),400
-    
-    if not(hackathon_id):
-        return jsonify(error="id is required"),400
     
     try:
         hackathon_to_update = db.get_or_404(Hackathon,hackathon_id)
@@ -330,7 +351,7 @@ def update_hackathon(hackathon_id):
         else:
             return jsonify(error=f"{error_validated}"),400
     except NotFound:
-        return jsonify(error="Wrong id"),404
+        return jsonify(error="Hackathon not found"),404
     
 @app.route("/api/hackathons",methods=["POST"])
 def add_hackathon():
