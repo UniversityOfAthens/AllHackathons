@@ -36,12 +36,7 @@ with app.app_context():
     db.create_all()
 
 def parse_parameters(method:str):
-    now = datetime.now().replace(microsecond=0)
-    try:
-        startDate = datetime.strptime(request.form.get("startDate"), "%Y-%m-%d %H:%M:%S") if request.form.get("startDate") else None
-        endDate = datetime.strptime(request.form.get("endDate"), "%Y-%m-%d %H:%M:%S") if request.form.get("endDate") else None
-    except ValueError:
-        return False,"Wrong date format"
+    now = datetime.now()
     
     if method == "POST":
         params = {
@@ -52,14 +47,14 @@ def parse_parameters(method:str):
             "status": request.form.get("status") or None,
             "mode": request.form.get("mode") or None,
             "tags": request.form.get("tags") or None,
-            "startDate": startDate,
-            "endDate": endDate,
+            "startDate": request.form.get("startDate") or None,
+            "endDate": request.form.get("endDate") or None,
             "location": request.form.get("location") or None,
             "hasPrize": request.form.get("hasPrize") or None,
             "prizeDetails": request.form.get("prizeDetails") or None,
             "submittedAt": now,
             "updatedAt": now,
-            "interestCount": 0,
+            "interestCount": 0, #we dont even parse interestCount from the request since it is always 0 when a new hackathon is added
         }
     elif method == "PATCH":
         params = {
@@ -70,8 +65,8 @@ def parse_parameters(method:str):
             "status": request.form.get("status") or None,
             "mode": request.form.get("mode") or None,
             "tags": request.form.get("tags") or None,
-            "startDate": startDate,
-            "endDate": endDate,
+            "startDate": request.form.get("startDate") or None,
+            "endDate": request.form.get("endDate") or None,
             "location": request.form.get("location") or None,
             "hasPrize": request.form.get("hasPrize") or None,
             "prizeDetails": request.form.get("prizeDetails") or None,
@@ -93,6 +88,7 @@ def parse_parameters(method:str):
     return True,params
 
 def validate_parameters2(params:dict,method:str,hackathon_to_update:Hackathon = None):
+    
     if method == "POST":
         validated_parameters = {
                             "name": None,
@@ -134,11 +130,8 @@ def validate_parameters2(params:dict,method:str,hackathon_to_update:Hackathon = 
                 if key == "hasPrize":
                     if str(value).lower() == "true":
                         value = True
-                        #params[key] = True
                     elif str(value).lower() == "false":
                         value = False
-                        #params[key] = False
-                        #params["prizeDetails"] = None #prizeDetails is None anyways IF hackathon doesnt have a prize                       
                     else:
                         return False,"Wrong hasPrize"
                 
@@ -155,7 +148,22 @@ def validate_parameters2(params:dict,method:str,hackathon_to_update:Hackathon = 
                     if (validated_parameters["hasPrize"] is None) or (validated_parameters["hasPrize"] is False):
                         return False, f"prizeDetails cannot contain any value when hasPrize is {str(validated_parameters['hasPrize'])}"
                 
+                if key in ["startDate", "endDate"]:
+                    try:
+                        value = datetime.strptime(value, "%Y-%m-%d %H:%M:%S") if value else None
+                    except ValueError:
+                        return False,"Wrong date format"
+                try:
+                    startDate = datetime.strptime(request.form.get("startDate"), "%Y-%m-%d %H:%M:%S") if request.form.get("startDate") else None
+                    endDate = datetime.strptime(request.form.get("endDate"), "%Y-%m-%d %H:%M:%S") if request.form.get("endDate") else None
+                except ValueError:
+                    return False,"Wrong date format"
+                
                 validated_parameters[key] = value
+        
+        if (validated_parameters["startDate"] is not None) and validated_parameters["endDate"] is not None:
+            if validated_parameters["startDate"] > validated_parameters["endDate"]:
+                return False,"startDate cannot be greater than endDate"
                 
         return True, validated_parameters
     
@@ -223,7 +231,17 @@ def validate_parameters2(params:dict,method:str,hackathon_to_update:Hackathon = 
                         if (params["hasPrize"] is False) and (params["prizeDetails"] is not None):
                             return False,f"prizeDetails cannot contain any value when hasPrize is False"
                         
+                if key in ["startDate", "endDate"]:
+                    try:
+                        value = datetime.strptime(value, "%Y-%m-%d %H:%M:%S") if value else None
+                    except ValueError:
+                        return False,"Wrong date format"
+                        
                 validated_parameters[key] = value
+        
+        if (validated_parameters["startDate"] is not None) and validated_parameters["endDate"] is not None:
+            if validated_parameters["startDate"] > validated_parameters["endDate"]:
+                return False,"startDate cannot be greater than endDate"
 
         if (params["hasPrize"] is False) and (hackathon_to_update.prizeDetails is not None):#or hackathon_to_update.prizeDetails is not None
             validated_parameters["prizeDetails"] = None
