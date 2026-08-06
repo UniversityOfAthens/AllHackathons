@@ -10,4 +10,5 @@ migrations/
 
 # Build output
 dist
+*.tsbuildinfo
 

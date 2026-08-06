@@ -53,13 +53,18 @@ Pulled from `homepage.html` so new designs stay consistent. When in doubt, match
 
 ### Type
 
-- **Newsreader** (serif) — headings, logo, big numbers. Weights 400/500/600 (+ italic).
-- **Hanken Grotesk** (sans) — body text. 400/500/600.
-- **JetBrains Mono** — small uppercase eyebrow labels (letter-spacing ~`.14em`).
+The mockups were drawn with **Newsreader** + **Hanken Grotesk**, but neither ships Greek
+glyphs and the UI copy is Greek-first. The build therefore self-hosts Greek-capable
+*variable* equivalents in the same editorial spirit (declared in `frontend/src/fonts.css`,
+regenerated via `frontend/scripts/fetch-fonts.mjs`):
 
-Patterns: eyebrow = mono 11px uppercase muted · H1 = Newsreader 500 ~50px · section H2 = Newsreader
-600 ~27px · card title = Newsreader 600 ~21px · body = Hanken 15–17px / line-height 1.6 · big
-date = Newsreader 600 28–34px in blue.
+- **Literata** (serif) — headings, logo, big numbers. Variable, roman + italic. *(replaces Newsreader)*
+- **Manrope** (sans) — body text. Variable. *(replaces Hanken Grotesk)*
+- **JetBrains Mono** — small uppercase eyebrow labels (letter-spacing ~`.14em`). Already Greek-capable.
+
+Patterns: eyebrow = mono 11px uppercase muted · H1 = serif 500 ~50px · section H2 = serif
+600 ~27px · card title = serif 600 ~21px · body = sans 15–17px / line-height 1.6 · big
+date = serif 600 28–34px in blue.
 
 ### Components
 
