@@ -1,5 +1,9 @@
 <!doctype html>
-<html lang="en">
+<!-- lang="el": the UI copy is Greek-first, and browsers only apply Greek's
+     accent-dropping uppercase rules when the content language says so. With
+     lang="en", `text-transform: uppercase` paints "ΈΝΑ ΜΈΡΟΣ ΓΙΑ ΌΛΑ" instead
+     of "ΕΝΑ ΜΕΡΟΣ ΓΙΑ ΟΛΑ" (CSS Text 3 §2.1). -->
+<html lang="el">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
