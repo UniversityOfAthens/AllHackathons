@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import type { Hackathon } from '@/types/hackathon'
 import { dayMonth } from '@/lib/date'
 import Avatar from '@/components/common/Avatar'
+import { MoveRight } from 'lucide-react'
 
 const DISCORD_INVITE = 'https://discord.gg/zENTyrbJh'
 
@@ -37,7 +38,7 @@ export default function Hero({ hackathons }: { hackathons: Hackathon[] }) {
         {/* Pitch */}
         <div>
           <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-accent-blue/80">
-            Ένα μέρος για όλα
+            ΕΝΑ ΜΕΡΟΣ ΓΙΑ ΟΛΑ
           </p>
           <h1 className="mt-5 font-serif text-3xl font-medium leading-[1.08] text-foreground md:text-5xl">
             Κάθε hackathon στην Ελλάδα, σε μία λίστα.
@@ -58,9 +59,9 @@ export default function Hero({ hackathons }: { hackathons: Hackathon[] }) {
               href={DISCORD_INVITE}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-base font-semibold text-accent-blue underline-offset-4 hover:underline"
+              className="relative inline-flex items-center gap-2 text-base font-semibold text-accent-blue transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-left after:scale-x-0 after:bg-accent-blue after:transition-transform after:duration-300 after:ease-out hover:after:scale-x-100"
             >
-              ή μπες στην κοινότητα →
+              ή μπες στην κοινότητα <span><MoveRight /></span>
             </a>
           </div>
         </div>
