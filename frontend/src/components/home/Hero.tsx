@@ -38,7 +38,7 @@ export default function Hero({ hackathons }: { hackathons: Hackathon[] }) {
         {/* Pitch */}
         <div>
           <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-accent-blue/80">
-            ΕΝΑ ΜΕΡΟΣ ΓΙΑ ΟΛΑ
+            Ένα μέρος για όλα
           </p>
           <h1 className="mt-5 font-serif text-3xl font-medium leading-[1.08] text-foreground md:text-5xl">
             Κάθε hackathon στην Ελλάδα, σε μία λίστα.
