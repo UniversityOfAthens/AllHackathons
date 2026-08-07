@@ -8,6 +8,14 @@ import { loadHackathons } from '@/lib/store'
 import { compareForList, hackathonState, type HackathonState } from '@/lib/hackathons'
 import { dayMonth } from '@/lib/date'
 import { cn } from '@/lib/utils'
+import { Globe, MoveLeft } from 'lucide-react'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import type { Hackathon } from '@/types/hackathon'
 
 const PAGE_SIZE = 6
@@ -31,6 +39,14 @@ const MODE_PILLS: { key: ModeFilter; label: string }[] = [
 
 const STATE_KEYS = STATE_PILLS.map((p) => p.key) as string[]
 const MODE_KEYS = MODE_PILLS.map((p) => p.key) as string[]
+
+const REGIONS = [
+  { value: 'all', label: 'Όλη η Ελλάδα' },
+  { value: 'athens', label: 'Αθήνα' },
+  { value: 'thessaloniki', label: 'Θεσσαλονίκη' },
+  { value: 'patras', label: 'Πάτρα' },
+  { value: 'heraklion', label: 'Ηράκλειο' },
+]
 
 function matchesQuery(h: Hackathon, q: string): boolean {
   const needle = q.trim().toLowerCase()
@@ -107,9 +123,9 @@ export default function AllHackathons() {
         <section className="mx-auto w-full max-w-[1140px] px-6 py-12 md:px-10">
           <Link
             to="/"
-            className="text-sm text-muted-foreground underline-offset-4 transition-colors hover:text-accent-blue hover:underline"
+            className="relative inline-flex items-center gap-2 text-sm font-semibold text-accent-blue transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-left after:scale-x-0 after:bg-accent-blue after:transition-transform after:duration-300 after:ease-out hover:after:scale-x-100"
           >
-            ← Πίσω στην αρχική
+            <MoveLeft className="size-4" /> Πίσω στην αρχική
           </Link>
           <h1 className="mt-4 font-serif text-4xl font-semibold text-foreground md:text-5xl">
             Όλα τα hackathons
@@ -143,12 +159,19 @@ export default function AllHackathons() {
                 className="w-full rounded-full border border-input bg-card py-3 pl-11 pr-4 text-sm text-foreground outline-none placeholder:text-muted-foreground focus:border-accent-blue"
               />
             </div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-input bg-card px-4 py-3 text-sm text-foreground">
-              <span aria-hidden>🌐</span> Όλη η Ελλάδα{' '}
-              <span className="text-muted-foreground" aria-hidden>
-                ▾
-              </span>
-            </div>
+            <Select defaultValue="all" items={REGIONS}>
+              <SelectTrigger className="cursor-pointer rounded-full border-input bg-card px-5 py-2.5 data-[size=default]:h-auto">
+                <Globe className="size-4 text-muted-foreground" aria-hidden />
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent sideOffset={4} alignOffset={0} alignItemWithTrigger={false} className="p-2">
+                {REGIONS.map((region) => (
+                  <SelectItem key={region.value} value={region.value} className="cursor-pointer py-2 pl-2.5 pr-8">
+                    {region.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Filters */}

@@ -1,3 +1,4 @@
+import Discord from '@/assets/icons/discord'
 import { Link } from 'react-router-dom'
 
 // Real community invite (from README). Member count / presence stays a static
@@ -44,7 +45,7 @@ export default function Header() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-[9px] bg-discord px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90"
           >
-            <span className="size-2 rounded-full bg-green-500" aria-hidden />
+            <Discord />
             Join Discord
           </a>
         </div>
