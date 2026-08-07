@@ -9,6 +9,7 @@ import { dateRangeFull, relativeGreek } from '@/lib/date'
 import { cn } from '@/lib/utils'
 import type { Hackathon } from '@/types/hackathon'
 import { MoveLeft, MoveRight } from 'lucide-react'
+import Discord from '@/assets/icons/discord'
 
 const DISCORD_INVITE = 'https://discord.gg/zENTyrbJh'
 const MODE_LABEL: Record<NonNullable<Hackathon['mode']>, string> = {
@@ -85,9 +86,9 @@ export default function HackathonDetail() {
         <section className="mx-auto w-full max-w-[1140px] px-6 py-12 md:px-10">
           <button
             onClick={() => (location.key !== 'default' ? navigate(-1) : navigate('/hackathons'))}
-            className="cursor-pointer text-sm text-muted-foreground underline-offset-4 transition-colors hover:text-accent-blue hover:underline"
+            className="relative inline-flex cursor-pointer items-center gap-2 text-sm font-semibold text-accent-blue transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-left after:scale-x-0 after:bg-accent-blue after:transition-transform after:duration-300 after:ease-out hover:after:scale-x-100"
           >
-            ← Πίσω στη λίστα
+            <MoveLeft className="size-4" /> Πίσω στη λίστα
           </button>
 
           <div className="mt-6 grid gap-10 md:grid-cols-[1.6fr_1fr]">
@@ -182,7 +183,7 @@ export default function HackathonDetail() {
                     href={hackathon.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="relative mt-5 flex items-center justify-center gap-2 rounded-[10px] bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-opacity after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-left after:scale-x-0 after:bg-accent-blue after:transition-transform after:duration-300 after:ease-out hover:opacity-90 hover:after:scale-x-100"
+                    className="mt-5 flex items-center justify-center gap-2 rounded-[10px] bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
                   >
                     Επίσημη σελίδα <MoveRight className="size-4" />
                   </a>
@@ -228,9 +229,9 @@ export default function HackathonDetail() {
                     href={DISCORD_INVITE}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-semibold text-accent-blue underline-offset-4 hover:underline"
+                    className="relative inline-flex items-center gap-2 text-sm font-semibold text-accent-blue transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-left after:scale-x-0 after:bg-accent-blue after:transition-transform after:duration-300 after:ease-out hover:after:scale-x-100"
                   >
-                    Ρώτα την κοινότητα στο Discord →
+                    Ρώτα την κοινότητα στο Discord <MoveRight className="size-4" />
                   </a>
                 </p>
               </>
@@ -249,8 +250,7 @@ export default function HackathonDetail() {
                   rel="noopener noreferrer"
                   className="mt-5 inline-flex items-center gap-2 rounded-[10px] bg-discord px-4 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
                 >
-                  <span className="size-2 rounded-full bg-green-400" aria-hidden />
-                  Ρώτα στο Discord
+                  <Discord /> Ρώτα στο Discord
                 </a>
               </div>
             )}
