@@ -61,7 +61,7 @@ export default function Hero({ hackathons }: { hackathons: Hackathon[] }) {
               rel="noopener noreferrer"
               className="relative inline-flex items-center gap-2 text-base font-semibold text-accent-blue transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-left after:scale-x-0 after:bg-accent-blue after:transition-transform after:duration-300 after:ease-out hover:after:scale-x-100"
             >
-              ή μπες στην κοινότητα <span><MoveRight /></span>
+              ή μπες στην κοινότητα <span><MoveRight className="size-4" /></span>
             </a>
           </div>
         </div>

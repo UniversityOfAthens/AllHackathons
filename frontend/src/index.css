@@ -7,29 +7,23 @@
 @font-face {
   font-family: 'JetBrains Mono';
   src: 
-    url('/fonts/JetBrainsMono-Variable.woff2') format('woff2-variations'),
-    url('/fonts/JetBrainsMono-Variable.woff') format('woff'),
-    url('/fonts/JetBrainsMono-Variable.ttf') format('truetype');
+    url('/fonts/JetBrainsMono-Variable.woff2') format('woff2-variations');
   font-display: swap;
   font-weight: 100 800;
 }
 
 @font-face {
-  font-family: 'Roboto';
+  font-family: 'Manrope';
   src:
-    url('/fonts/Roboto-Variable.woff2') format('woff2-variations'),
-    url('/fonts/Roboto-Variable.woff') format('woff'),
-    url('/fonts/Roboto-Variable.ttf') format('truetype');
+    url('/fonts/Manrope-Variable.woff2') format('woff2-variations');
   font-display: swap;
   font-weight: 100 900;
 }
 
 @font-face {
-  font-family: 'Noto Serif';
+  font-family: 'Literata';
   src: 
-    url('/fonts/NotoSerif-Variable.woff2') format('woff2-variations'),
-    url('/fonts/NotoSerif-Variable.woff') format('woff'),
-    url('/fonts/NotoSerif-Variable.ttf') format('truetype');
+    url('/fonts/Literata-Variable.woff2') format('woff2-variations');
   font-display: swap;
   font-weight: 100 900;
 }
@@ -128,8 +122,8 @@
 }
 
 @theme inline {
-  --font-sans: 'Roboto';
-  --font-serif: 'Noto Serif';
+  --font-sans: 'Manrope';
+  --font-serif: 'Literata';
   --font-mono: 'JetBrains Mono';
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);

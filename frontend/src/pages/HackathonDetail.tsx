@@ -8,6 +8,7 @@ import { hackathonState, applicationBadge } from '@/lib/hackathons'
 import { dateRangeFull, relativeGreek } from '@/lib/date'
 import { cn } from '@/lib/utils'
 import type { Hackathon } from '@/types/hackathon'
+import { MoveLeft, MoveRight } from 'lucide-react'
 
 const DISCORD_INVITE = 'https://discord.gg/zENTyrbJh'
 const MODE_LABEL: Record<NonNullable<Hackathon['mode']>, string> = {
@@ -30,9 +31,9 @@ function NotFound() {
           </p>
           <Link
             to="/hackathons"
-            className="mt-6 inline-block text-accent-blue underline-offset-4 hover:underline"
+            className="relative inline-flex items-center gap-2 text-sm font-semibold text-accent-blue transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-left after:scale-x-0 after:bg-accent-blue after:transition-transform after:duration-300 after:ease-out hover:after:scale-x-100"
           >
-            ← Πίσω στη λίστα
+            <MoveLeft/> Πίσω στη λίστα
           </Link>
         </section>
       </main>
@@ -181,9 +182,9 @@ export default function HackathonDetail() {
                     href={hackathon.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-5 flex items-center justify-center rounded-[10px] bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+                    className="relative mt-5 flex items-center justify-center gap-2 rounded-[10px] bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-opacity after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-left after:scale-x-0 after:bg-accent-blue after:transition-transform after:duration-300 after:ease-out hover:opacity-90 hover:after:scale-x-100"
                   >
-                    Επίσημη σελίδα →
+                    Επίσημη σελίδα <MoveRight className="size-4" />
                   </a>
                 )}
               </div>
