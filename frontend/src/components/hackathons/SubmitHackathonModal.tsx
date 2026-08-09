@@ -1,38 +1,32 @@
-import { useState } from 'react'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from '../ui/dialog'
-import { Button } from '../ui/button'
-import { Input } from '../ui/input'
-import { Textarea } from '../ui/textarea'
-import { Label } from '../ui/label'
-import { Switch } from '../ui/switch'
-import type { Hackathon } from '@/types/hackathon'
+import { useState } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../ui/dialog';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Textarea } from '../ui/textarea';
+import { Label } from '../ui/label';
+import { Switch } from '../ui/switch';
+import type { Hackathon } from '@/types/hackathon';
 
 interface Props {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  onSubmit: (hackathon: Hackathon) => void
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onSubmit: (hackathon: Hackathon) => void;
 }
 
 export default function SubmitHackathonModal({ open, onOpenChange, onSubmit }: Props) {
-  const [name, setName] = useState('')
-  const [startDate, setStartDate] = useState('')
-  const [hasPrize, setHasPrize] = useState(false)
-  const [prizeDetails, setPrizeDetails] = useState('')
-  const [location, setLocation] = useState('')
-  const [url, setUrl] = useState('')
+  const [name, setName] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [hasPrize, setHasPrize] = useState(false);
+  const [prizeDetails, setPrizeDetails] = useState('');
+  const [location, setLocation] = useState('');
+  const [url, setUrl] = useState('');
 
   function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    const nameTrimmed = name.trim()
-    const urlTrimmed = url.trim()
-    if (!nameTrimmed && !urlTrimmed) return
-    const loc = location.trim()
+    e.preventDefault();
+    const nameTrimmed = name.trim();
+    const urlTrimmed = url.trim();
+    if (!nameTrimmed && !urlTrimmed) return;
+    const loc = location.trim();
     onSubmit({
       id: crypto.randomUUID(),
       name: nameTrimmed || urlTrimmed || 'Untitled Hackathon',
@@ -42,14 +36,14 @@ export default function SubmitHackathonModal({ open, onOpenChange, onSubmit }: P
       location: loc || undefined,
       url: urlTrimmed || undefined,
       status: 'published',
-    })
-    setName('')
-    setStartDate('')
-    setHasPrize(false)
-    setPrizeDetails('')
-    setLocation('')
-    setUrl('')
-    onOpenChange(false)
+    });
+    setName('');
+    setStartDate('');
+    setHasPrize(false);
+    setPrizeDetails('');
+    setLocation('');
+    setUrl('');
+    onOpenChange(false);
   }
 
   return (
@@ -111,15 +105,24 @@ export default function SubmitHackathonModal({ open, onOpenChange, onSubmit }: P
               onChange={(e) => setUrl(e.target.value)}
             />
           </div>
-          <p className="text-xs text-muted-foreground">Name or Link is required. Fill in as much as you know.</p>
+          <p className="text-xs text-muted-foreground">
+            Name or Link is required. Fill in as much as you know.
+          </p>
           <DialogFooter>
-            <Button type="button" variant="outline" className="cursor-pointer" onClick={() => onOpenChange(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              className="cursor-pointer"
+              onClick={() => onOpenChange(false)}
+            >
               Cancel
             </Button>
-            <Button type="submit" className="cursor-pointer">Submit</Button>
+            <Button type="submit" className="cursor-pointer">
+              Submit
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

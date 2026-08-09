@@ -1,33 +1,33 @@
-import { Link } from 'react-router-dom'
-import { dayOf, monthUpper, dayRange, relativeGreek } from '@/lib/date'
-import { hackathonState, todayISO, applicationBadge } from '@/lib/hackathons'
-import { cn } from '@/lib/utils'
-import type { Hackathon } from '@/types/hackathon'
+import { Link } from 'react-router-dom';
+import { dayOf, monthUpper, dayRange, relativeGreek } from '@/lib/date';
+import { hackathonState, todayISO, applicationBadge } from '@/lib/hackathons';
+import { cn } from '@/lib/utils';
+import type { Hackathon } from '@/types/hackathon';
 
 const MODE_LABEL: Record<NonNullable<Hackathon['mode']>, string> = {
   'in-person': 'In person',
   online: 'Online',
   hybrid: 'Hybrid',
-}
+};
 
 function prizeLabel(h: Hackathon): string | null {
-  if (!h.hasPrize) return null
-  const d = h.prizeDetails?.trim()
-  return d && d.length <= 16 ? d : 'με έπαθλο'
+  if (!h.hasPrize) return null;
+  const d = h.prizeDetails?.trim();
+  return d && d.length <= 16 ? d : 'με έπαθλο';
 }
 
 export default function HackathonCard({ hackathon }: { hackathon: Hackathon }) {
-  const today = todayISO()
-  const state = hackathonState(hackathon, today)
-  const isPast = state === 'past'
+  const today = todayISO();
+  const state = hackathonState(hackathon, today);
+  const isPast = state === 'past';
 
   const meta = [
     hackathon.location,
     hackathon.mode ? MODE_LABEL[hackathon.mode] : null,
     prizeLabel(hackathon),
-  ].filter(Boolean)
+  ].filter(Boolean);
 
-  const appBadge = applicationBadge(hackathon, isPast)
+  const appBadge = applicationBadge(hackathon, isPast);
 
   // Top-right status pill.
   const statePill =
@@ -35,9 +35,9 @@ export default function HackathonCard({ hackathon }: { hackathon: Hackathon }) {
       ? { text: 'Live τώρα', cls: 'bg-accent-green/15 text-accent-green' }
       : state === 'past'
         ? { text: 'Έληξε', cls: 'bg-muted text-muted-foreground' }
-        : { text: relativeGreek(hackathon.startDate), cls: 'bg-accent-blue/10 text-accent-blue' }
+        : { text: relativeGreek(hackathon.startDate), cls: 'bg-accent-blue/10 text-accent-blue' };
 
-  const range = dayRange(hackathon.startDate, hackathon.endDate)
+  const range = dayRange(hackathon.startDate, hackathon.endDate);
 
   return (
     <Link
@@ -122,5 +122,5 @@ export default function HackathonCard({ hackathon }: { hackathon: Hackathon }) {
         </div>
       </div>
     </Link>
-  )
+  );
 }

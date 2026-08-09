@@ -1,20 +1,22 @@
-import { useState } from 'react'
-import { Link, useParams, useNavigate, useLocation } from 'react-router-dom'
-import Header from '../components/layout/Header'
-import Footer from '../components/layout/Footer'
-import RequestChangeModal from '../components/hackathons/RequestChangeModal'
-import { getHackathon } from '@/lib/store'
-import { hackathonState, applicationBadge } from '@/lib/hackathons'
-import { dateRangeFull, relativeGreek } from '@/lib/date'
-import { cn } from '@/lib/utils'
-import type { Hackathon } from '@/types/hackathon'
+import { useState } from 'react';
+import { Link, useParams, useNavigate, useLocation } from 'react-router-dom';
+import Header from '../components/layout/Header';
+import Footer from '../components/layout/Footer';
+import RequestChangeModal from '../components/hackathons/RequestChangeModal';
+import { getHackathon } from '@/lib/store';
+import { hackathonState, applicationBadge } from '@/lib/hackathons';
+import { dateRangeFull, relativeGreek } from '@/lib/date';
+import { cn } from '@/lib/utils';
+import type { Hackathon } from '@/types/hackathon';
+import { MoveLeft, MoveRight } from 'lucide-react';
+import Discord from '@/assets/icons/discord';
 
-const DISCORD_INVITE = 'https://discord.gg/zENTyrbJh'
+const DISCORD_INVITE = 'https://discord.gg/zENTyrbJh';
 const MODE_LABEL: Record<NonNullable<Hackathon['mode']>, string> = {
   'in-person': 'In person',
   online: 'Online',
   hybrid: 'Hybrid',
-}
+};
 
 function NotFound() {
   return (
@@ -30,37 +32,37 @@ function NotFound() {
           </p>
           <Link
             to="/hackathons"
-            className="mt-6 inline-block text-accent-blue underline-offset-4 hover:underline"
+            className="relative inline-flex items-center gap-2 text-sm font-semibold text-accent-blue transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-left after:scale-x-0 after:bg-accent-blue after:transition-transform after:duration-300 after:ease-out hover:after:scale-x-100"
           >
-            ← Πίσω στη λίστα
+            <MoveLeft /> Πίσω στη λίστα
           </Link>
         </section>
       </main>
       <Footer />
     </div>
-  )
+  );
 }
 
 export default function HackathonDetail() {
-  const { id } = useParams()
-  const navigate = useNavigate()
-  const location = useLocation()
-  const [hackathon] = useState<Hackathon | undefined>(() => (id ? getHackathon(id) : undefined))
-  const [changeOpen, setChangeOpen] = useState(false)
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [hackathon] = useState<Hackathon | undefined>(() => (id ? getHackathon(id) : undefined));
+  const [changeOpen, setChangeOpen] = useState(false);
 
-  if (!hackathon) return <NotFound />
+  if (!hackathon) return <NotFound />;
 
-  const state = hackathonState(hackathon)
-  const isPast = state === 'past'
-  const appBadge = applicationBadge(hackathon, isPast)
-  const modeLabel = hackathon.mode ? MODE_LABEL[hackathon.mode] : null
+  const state = hackathonState(hackathon);
+  const isPast = state === 'past';
+  const appBadge = applicationBadge(hackathon, isPast);
+  const modeLabel = hackathon.mode ? MODE_LABEL[hackathon.mode] : null;
 
   const statePill =
     state === 'live'
       ? { text: 'Live τώρα', cls: 'bg-accent-green/15 text-accent-green' }
       : state === 'past'
         ? { text: 'Έληξε', cls: 'bg-muted text-muted-foreground' }
-        : { text: relativeGreek(hackathon.startDate), cls: 'bg-accent-blue/10 text-accent-blue' }
+        : { text: relativeGreek(hackathon.startDate), cls: 'bg-accent-blue/10 text-accent-blue' };
 
   const metaLine = [
     hackathon.location,
@@ -68,14 +70,14 @@ export default function HackathonDetail() {
     hackathon.hasPrize ? hackathon.prizeDetails || 'Έπαθλο' : null,
   ]
     .filter(Boolean)
-    .join(' · ')
+    .join(' · ');
 
   const details: { label: string; value: string }[] = [
     hackathon.mode ? { label: 'Τρόπος', value: MODE_LABEL[hackathon.mode] } : null,
     hackathon.location ? { label: 'Πόλη', value: hackathon.location } : null,
     hackathon.hasPrize ? { label: 'Έπαθλο', value: hackathon.prizeDetails || 'Ναι' } : null,
     hackathon.organizer ? { label: 'Διοργανωτής', value: hackathon.organizer } : null,
-  ].filter(Boolean) as { label: string; value: string }[]
+  ].filter(Boolean) as { label: string; value: string }[];
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -84,9 +86,9 @@ export default function HackathonDetail() {
         <section className="mx-auto w-full max-w-[1140px] px-6 py-12 md:px-10">
           <button
             onClick={() => (location.key !== 'default' ? navigate(-1) : navigate('/hackathons'))}
-            className="cursor-pointer text-sm text-muted-foreground underline-offset-4 transition-colors hover:text-accent-blue hover:underline"
+            className="relative inline-flex cursor-pointer items-center gap-2 text-sm font-semibold text-accent-blue transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-left after:scale-x-0 after:bg-accent-blue after:transition-transform after:duration-300 after:ease-out hover:after:scale-x-100"
           >
-            ← Πίσω στη λίστα
+            <MoveLeft className="size-4" /> Πίσω στη λίστα
           </button>
 
           <div className="mt-6 grid gap-10 md:grid-cols-[1.6fr_1fr]">
@@ -181,9 +183,9 @@ export default function HackathonDetail() {
                     href={hackathon.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-5 flex items-center justify-center rounded-[10px] bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+                    className="mt-5 flex items-center justify-center gap-2 rounded-[10px] bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
                   >
-                    Επίσημη σελίδα →
+                    Επίσημη σελίδα <MoveRight className="size-4" />
                   </a>
                 )}
               </div>
@@ -194,8 +196,8 @@ export default function HackathonDetail() {
                   Βλέπεις κάτι λάθος;
                 </h2>
                 <p className="mt-2 text-sm text-muted-foreground">
-                  Οτιδήποτε: στοιχεία του event ή κάποια απάντηση στις ερωτήσεις. Πες μας
-                  τι πρέπει να αλλάξει, με δικά σου λόγια.
+                  Οτιδήποτε: στοιχεία του event ή κάποια απάντηση στις ερωτήσεις. Πες μας τι πρέπει
+                  να αλλάξει, με δικά σου λόγια.
                 </p>
                 <button
                   onClick={() => setChangeOpen(true)}
@@ -227,9 +229,9 @@ export default function HackathonDetail() {
                     href={DISCORD_INVITE}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-semibold text-accent-blue underline-offset-4 hover:underline"
+                    className="relative inline-flex items-center gap-2 text-sm font-semibold text-accent-blue transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-left after:scale-x-0 after:bg-accent-blue after:transition-transform after:duration-300 after:ease-out hover:after:scale-x-100"
                   >
-                    Ρώτα την κοινότητα στο Discord →
+                    Ρώτα την κοινότητα στο Discord <MoveRight className="size-4" />
                   </a>
                 </p>
               </>
@@ -239,8 +241,8 @@ export default function HackathonDetail() {
                   Δεν υπάρχουν ακόμα ερωτήσεις εδώ
                 </p>
                 <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
-                  Έχεις κάποια απορία για αυτό το hackathon; Ρώτα στο Discord. Η κοινότητα
-                  και οι διοργανωτές απαντούν συνήθως γρήγορα.
+                  Έχεις κάποια απορία για αυτό το hackathon; Ρώτα στο Discord. Η κοινότητα και οι
+                  διοργανωτές απαντούν συνήθως γρήγορα.
                 </p>
                 <a
                   href={DISCORD_INVITE}
@@ -248,8 +250,7 @@ export default function HackathonDetail() {
                   rel="noopener noreferrer"
                   className="mt-5 inline-flex items-center gap-2 rounded-[10px] bg-discord px-4 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
                 >
-                  <span className="size-2 rounded-full bg-green-400" aria-hidden />
-                  Ρώτα στο Discord
+                  <Discord /> Ρώτα στο Discord
                 </a>
               </div>
             )}
@@ -263,5 +264,5 @@ export default function HackathonDetail() {
         hackathonName={hackathon.name}
       />
     </div>
-  )
+  );
 }

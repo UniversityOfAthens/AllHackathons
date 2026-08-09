@@ -1,4 +1,4 @@
-import type { Hackathon } from '@/types/hackathon'
+import type { Hackathon } from '@/types/hackathon';
 
 // Seed data matching the design mockups. Dates are relative to the demo "today"
 // (~2026-07): the soonest upcoming is a single event (Ionian Game Jam) so the
@@ -175,4 +175,4 @@ export const sampleHackathons: Hackathon[] = [
     status: 'published',
     submittedByName: '@nikos',
   },
-]
+];

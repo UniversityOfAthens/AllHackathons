@@ -1,5 +1,5 @@
-const DISCORD_INVITE = 'https://discord.gg/zENTyrbJh'
-const REPO_URL = 'https://github.com/UniversityOfAthens/AllHackathons'
+const DISCORD_INVITE = 'https://discord.gg/zENTyrbJh';
+const REPO_URL = 'https://github.com/UniversityOfAthens/AllHackathons';
 
 export default function Footer() {
   return (
@@ -29,5 +29,5 @@ export default function Footer() {
         </p>
       </div>
     </footer>
-  )
+  );
 }

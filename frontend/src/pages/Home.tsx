@@ -1,44 +1,45 @@
-import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import Header from '../components/layout/Header'
-import Footer from '../components/layout/Footer'
-import Hero from '../components/home/Hero'
-import Highlights from '../components/home/Highlights'
-import HackathonCard from '../components/hackathons/HackathonCard'
-import HackathonFilters, { type ModeFilter } from '../components/hackathons/HackathonFilters'
-import SubmitHackathonModal from '../components/hackathons/SubmitHackathonModal'
-import { loadHackathons, saveUserHackathons } from '@/lib/store'
-import { compareForList, highlightSelection } from '@/lib/hackathons'
-import type { Hackathon } from '@/types/hackathon'
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { MoveRight } from 'lucide-react';
+import Header from '../components/layout/Header';
+import Footer from '../components/layout/Footer';
+import Hero from '../components/home/Hero';
+import Highlights from '../components/home/Highlights';
+import HackathonCard from '../components/hackathons/HackathonCard';
+import HackathonFilters, { type ModeFilter } from '../components/hackathons/HackathonFilters';
+import SubmitHackathonModal from '../components/hackathons/SubmitHackathonModal';
+import { loadHackathons, saveUserHackathons } from '@/lib/store';
+import { compareForList, highlightSelection } from '@/lib/hackathons';
+import type { Hackathon } from '@/types/hackathon';
 
 // The homepage shows a teaser of the list; the full paginated list lives at /hackathons.
-const HOME_LIST_LIMIT = 6
+const HOME_LIST_LIMIT = 6;
 
 export default function Home() {
-  const [hackathons, setHackathons] = useState<Hackathon[]>(loadHackathons)
-  const [modalOpen, setModalOpen] = useState(false)
-  const [modeFilter, setModeFilter] = useState<ModeFilter>('all')
+  const [hackathons, setHackathons] = useState<Hackathon[]>(loadHackathons);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modeFilter, setModeFilter] = useState<ModeFilter>('all');
 
   useEffect(() => {
-    saveUserHackathons(hackathons)
-  }, [hackathons])
+    saveUserHackathons(hackathons);
+  }, [hackathons]);
 
   function addHackathon(h: Hackathon) {
-    setHackathons((prev) => [h, ...prev])
+    setHackathons((prev) => [h, ...prev]);
   }
 
   // Whatever the highlight already spotlights is excluded from the list below,
   // so a hackathon never appears twice.
-  const highlightedIds = new Set(highlightSelection(hackathons).items.map((h) => h.id))
+  const highlightedIds = new Set(highlightSelection(hackathons).items.map((h) => h.id));
 
   // Published items: live → upcoming (soonest first) → past (most recent first).
   const visible = hackathons
     .filter((h) => h.status === 'published')
     .filter((h) => !highlightedIds.has(h.id))
     .filter((h) => (modeFilter === 'all' ? true : h.mode === modeFilter))
-    .sort((a, b) => compareForList(a, b))
+    .sort((a, b) => compareForList(a, b));
 
-  const teaser = visible.slice(0, HOME_LIST_LIMIT)
+  const teaser = visible.slice(0, HOME_LIST_LIMIT);
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -89,9 +90,9 @@ export default function Home() {
               <div className="mt-10 text-center">
                 <Link
                   to="/hackathons"
-                  className="text-sm font-semibold text-accent-blue underline-offset-4 hover:underline"
+                  className="relative inline-flex items-center gap-2 text-sm font-semibold text-accent-blue transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-left after:scale-x-0 after:bg-accent-blue after:transition-transform after:duration-300 after:ease-out hover:after:scale-x-100"
                 >
-                  Δες περισσότερα →
+                  Δες περισσότερα <MoveRight className="size-4" />
                 </Link>
               </div>
             </>
@@ -105,8 +106,8 @@ export default function Home() {
               Λείπει κάποιο hackathon;
             </h2>
             <p className="mx-auto mt-3 max-w-md text-muted-foreground">
-              Δεν χρειάζεται να το διοργανώνεις, ένα link αρκεί. Πρόσθεσέ το και το
-              συμπληρώνουμε εμείς.
+              Δεν χρειάζεται να το διοργανώνεις, ένα link αρκεί. Πρόσθεσέ το και το συμπληρώνουμε
+              εμείς.
             </p>
             <button
               onClick={() => setModalOpen(true)}
@@ -118,11 +119,7 @@ export default function Home() {
         </section>
       </main>
       <Footer />
-      <SubmitHackathonModal
-        open={modalOpen}
-        onOpenChange={setModalOpen}
-        onSubmit={addHackathon}
-      />
+      <SubmitHackathonModal open={modalOpen} onOpenChange={setModalOpen} onSubmit={addHackathon} />
     </div>
-  )
+  );
 }

@@ -1,27 +1,27 @@
-import { Link } from 'react-router-dom'
-import type { Hackathon } from '@/types/hackathon'
-import { dayMonth, relativeGreek } from '@/lib/date'
-import { applicationBadge } from '@/lib/hackathons'
-import LiveDot from './LiveDot'
+import { Link } from 'react-router-dom';
+import type { Hackathon } from '@/types/hackathon';
+import { dayMonth, relativeGreek } from '@/lib/date';
+import { applicationBadge } from '@/lib/hackathons';
+import LiveDot from './LiveDot';
 
 const MODE_LABEL: Record<NonNullable<Hackathon['mode']>, string> = {
   'in-person': 'In person',
   online: 'Online',
   hybrid: 'Hybrid',
-}
+};
 
-export type HighlightState = 'live' | 'soon'
-export type HighlightVariant = 'featured' | 'grid'
+export type HighlightState = 'live' | 'soon';
+export type HighlightVariant = 'featured' | 'grid';
 
 function prizeLabel(h: Hackathon): string | null {
-  if (!h.hasPrize) return null
-  const d = h.prizeDetails?.trim()
-  return d && d.length <= 16 ? d : 'με έπαθλο'
+  if (!h.hasPrize) return null;
+  const d = h.prizeDetails?.trim();
+  return d && d.length <= 16 ? d : 'με έπαθλο';
 }
 
 function addedByLabel(h: Hackathon): string | null {
-  if (h.submittedByName) return `added by ${h.submittedByName} ✓`
-  return h.status === 'published' ? 'reviewed ✓' : null
+  if (h.submittedByName) return `added by ${h.submittedByName} ✓`;
+  return h.status === 'published' ? 'reviewed ✓' : null;
 }
 
 function LiveLabel() {
@@ -32,7 +32,7 @@ function LiveLabel() {
         Live <span className="font-serif italic">τώρα</span>
       </span>
     </span>
-  )
+  );
 }
 
 // On the coloured highlight card the application status is plain white text on a
@@ -42,7 +42,7 @@ function AppChip({ text }: { text: string }) {
     <span className="inline-block rounded-md bg-white/15 px-3 py-1.5 text-xs font-medium text-white">
       {text}
     </span>
-  )
+  );
 }
 
 export default function HighlightCard({
@@ -51,22 +51,22 @@ export default function HighlightCard({
   variant,
   showTags = true,
 }: {
-  hackathon: Hackathon
-  state: HighlightState
-  variant: HighlightVariant
-  showTags?: boolean
+  hackathon: Hackathon;
+  state: HighlightState;
+  variant: HighlightVariant;
+  showTags?: boolean;
 }) {
-  const bg = state === 'live' ? 'bg-[#2f6a47]' : 'bg-accent-blue'
-  const mode = hackathon.mode ? MODE_LABEL[hackathon.mode] : null
-  const addedBy = addedByLabel(hackathon)
-  const endsIn = `τελειώνει ${relativeGreek(hackathon.endDate ?? hackathon.startDate)}`
-  const appText = state === 'soon' ? (applicationBadge(hackathon, false)?.text ?? null) : null
-  const prize = prizeLabel(hackathon)
-  const to = `/hackathon/${hackathon.id}`
+  const bg = state === 'live' ? 'bg-[#2f6a47]' : 'bg-accent-blue';
+  const mode = hackathon.mode ? MODE_LABEL[hackathon.mode] : null;
+  const addedBy = addedByLabel(hackathon);
+  const endsIn = `τελειώνει ${relativeGreek(hackathon.endDate ?? hackathon.startDate)}`;
+  const appText = state === 'soon' ? (applicationBadge(hackathon, false)?.text ?? null) : null;
+  const prize = prizeLabel(hackathon);
+  const to = `/hackathon/${hackathon.id}`;
 
   // ---- Featured (single item): application status sits on the right, under the date ----
   if (variant === 'featured') {
-    const meta = [mode, hackathon.location, addedBy].filter(Boolean)
+    const meta = [mode, hackathon.location, addedBy].filter(Boolean);
     return (
       <Link
         to={to}
@@ -78,7 +78,9 @@ export default function HighlightCard({
               {state === 'live' && (
                 <>
                   <LiveLabel />
-                  <span aria-hidden className="text-white/40">·</span>
+                  <span aria-hidden className="text-white/40">
+                    ·
+                  </span>
                 </>
               )}
               <span>{meta.join('  ·  ')}</span>
@@ -117,16 +119,19 @@ export default function HighlightCard({
           )}
         </div>
       </Link>
-    )
+    );
   }
 
   // ---- Grid (2+ items) ----
   const metaLine = [hackathon.location, mode, prizeLabel(hackathon), addedBy]
     .filter(Boolean)
-    .join(' · ')
+    .join(' · ');
 
   return (
-    <Link to={to} className={`block rounded-2xl ${bg} p-6 text-white transition hover:brightness-105`}>
+    <Link
+      to={to}
+      className={`block rounded-2xl ${bg} p-6 text-white transition hover:brightness-105`}
+    >
       <div className="flex items-center justify-between gap-3">
         {state === 'live' ? (
           <span className="text-sm">
@@ -156,5 +161,5 @@ export default function HighlightCard({
         </div>
       )}
     </Link>
-  )
+  );
 }
