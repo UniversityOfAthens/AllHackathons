@@ -68,8 +68,19 @@ def assert_hackathon_not_created(client, payload, error_message):
     assert get_response.status_code == 404
     assert get_response.json["error"] == "Wrong id"
 
+def test_add_hackathon_name_and_without_url_empty_strings(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
 
-def test_add_hackathon_without_name_and_without_url(app, client):
+    payload = {
+        "name": "",
+        "url": "",
+    }
+
+    assert_hackathon_not_created(client, payload, "name and url are required")
+
+def test_add_hackathon_with_name_and_url_none(app, client):
     with app.app_context():
         from main import db
         db.create_all()
@@ -430,7 +441,7 @@ def test_add_hackathon_with_status_needs_changes(app, client):
         from main import db
         db.create_all()
 
-    payload = {**base_payload, "status": "needs-changes"}
+    payload = {**base_payload, "status": "needs_changes"}
 
     assert_hackathon_created(client, payload)
 

@@ -248,7 +248,7 @@ def test_update_hackathon_only_status_needs_changes(app,client):
 
     response_get1_after = client.get("api/hackathons/1")
     assert response_get1_after.status_code == 200
-    assert response_get1_after.json["status"] == "needs-changes"
+    assert response_get1_after.json["status"] == "needs_changes"
     
 def test_update_hackathon_only_status_wrong(app,client):
     

@@ -255,76 +255,75 @@ def validate_parameters2(params:dict,method:str,hackathon_to_update:Hackathon = 
     
 @app.route("/api/hackathons",methods=["GET"])
 def all_hackathons():
-    if request.method == "GET":
-        now = datetime.now().replace(microsecond=0) #Formats time like this: YYYY-MM-DD HH:MM:SS example: 2026-05-01 15:12:00
-        
-        #NOTE: REPLACE SOME PARAM QUERIES (tags,status) WITH ILIKE JUST SO IT IS EASIER TO FIND THE DESIRED PARAM
-        
-        params = {
-            "status" : request.args.get('status'),
-            "upcoming" : request.args.get('upcoming').lower() if request.args.get('upcoming') else None,
-            "past" : request.args.get('past').lower() if request.args.get('past') else None,
-            "tags" : request.args.get('tags'),
-            "q" : request.args.get('q'),
-            "sort" : request.args.get('sort')
-        }
-        
-        query = db.session.query(Hackathon) # Arxiko query pou kanei build up stin sinexeia
-                                            # me vasi ta params pou exoun epistrafei
+    now = datetime.now().replace(microsecond=0) #Formats time like this: YYYY-MM-DD HH:MM:SS example: 2026-05-01 15:12:00
 
-        #status parameter
-        if params["status"]:
-            if (params["status"] in (StatusEnum.draft.value, StatusEnum.pending.value, StatusEnum.published.value, StatusEnum.needs_changes.value)):
-                query = query.filter(Hackathon.status == params["status"])
-            else:
-                return jsonify(error="Wrong status"), 404
-        
-        #upcoming parameter
-        if params["upcoming"] == "true":
-            query = query.filter(Hackathon.startDate > now)
-        elif params["upcoming"] == "false":
-            query = query.filter(Hackathon.startDate < now)
-        elif params["upcoming"]:
-            return jsonify(error="Wrong upcoming"), 404
-        
-        #past parameter
-        if params["past"] == "true":
-            query = query.filter(Hackathon.startDate < now)
-        elif params["past"] == "false":
-            query = query.filter(Hackathon.startDate > now)
-        elif params["past"]:
-            return jsonify(error="Wrong past"), 404
+    #NOTE: REPLACE SOME PARAM QUERIES (tags,status) WITH ILIKE JUST SO IT IS EASIER TO FIND THE DESIRED PARAM
 
-        #tags parameter
-        if params["tags"]:
-            query = query.filter(Hackathon.tags == params["tags"])
+    params = {
+        "status" : request.args.get('status').lower() if request.args.get('status') else None,
+        "upcoming" : request.args.get('upcoming').lower() if request.args.get('upcoming') else None,
+        "past" : request.args.get('past').lower() if request.args.get('past') else None,
+        "tags" : request.args.get('tags'),
+        "q" : request.args.get('q'),
+        "sort" : request.args.get('sort')
+    }
+
+    query = db.session.query(Hackathon) # Arxiko query pou kanei build up stin sinexeia
+                                        # me vasi ta params pou exoun epistrafei
+
+    #status parameter
+    if params["status"]:
+        if (params["status"] in (StatusEnum.draft.value, StatusEnum.pending.value, StatusEnum.published.value, StatusEnum.needs_changes.value)):
+            query = query.filter(Hackathon.status == params["status"])
+        else:
+            return jsonify(error="Wrong status"), 400
+
+    #upcoming parameter
+    if params["upcoming"] == "true":
+        query = query.filter(Hackathon.startDate > now)
+    elif params["upcoming"] == "false":
+        query = query.filter(Hackathon.startDate < now)
+    elif params["upcoming"]:
+        return jsonify(error="Wrong upcoming"), 400
+
+    #past parameter
+    if params["past"] == "true":
+        query = query.filter(Hackathon.startDate < now)
+    elif params["past"] == "false":
+        query = query.filter(Hackathon.startDate > now)
+    elif params["past"]:
+        return jsonify(error="Wrong past"), 400
+
+    #tags parameter
+    if params["tags"]:
+        query = query.filter(Hackathon.tags.ilike(like))
+
+    #q parameter
+    if params["q"]:
+        like = f"%{params["q"]}%"
         
-        #q parameter
-        if params["q"]:
-            like = f"%{params["q"]}%"
+        query = query.filter(Hackathon.name.ilike(like) | Hackathon.url.ilike(like) | Hackathon.description.ilike(like) |
+                                Hackathon.location.ilike(like) | Hackathon.organizer.ilike(like) | Hackathon.hasPrize.ilike(like) |
+                                Hackathon.prizeDetails.ilike(like) | Hackathon.tags.ilike(like))
+
+    #sort parameter
+    if params["sort"]:
+        if params["sort"] == "name":
+            query = query.order_by(Hackathon.name)
+        elif params["sort"] == "startDate":
+            query = query.order_by(Hackathon.startDate)
+        elif params["sort"] == "endDate":
+            query = query.order_by(Hackathon.endDate)
+        elif params["sort"] == "submittedAt":
+            query = query.order_by(Hackathon.submittedAt)
+        elif params["sort"] == "updatedAt":
+            query = query.order_by(Hackathon.updatedAt.desc())
+        elif params["sort"] == "interestCount":
+            query = query.order_by(Hackathon.interestCount.desc()) #highest to lowest
             
-            query = query.filter(Hackathon.name.ilike(like) | Hackathon.url.ilike(like) | Hackathon.description.ilike(like) |
-                                 Hackathon.location.ilike(like) | Hackathon.organizer.ilike(like) | Hackathon.hasPrize.ilike(like) |
-                                 Hackathon.prizeDetails.ilike(like) | Hackathon.tags.ilike(like))
-        
-        #sort parameter
-        if params["sort"]:
-            if params["sort"] == "name":
-                query = query.order_by(Hackathon.name)
-            elif params["sort"] == "startDate":
-                query = query.order_by(Hackathon.startDate)
-            elif params["sort"] == "endDate":
-                query = query.order_by(Hackathon.endDate)
-            elif params["sort"] == "sumbittedAt":
-                query = query.order_by(Hackathon.submittedAt)
-            elif params["sort"] == "updatedAt":
-                query = query.order_by(Hackathon.updatedAt.desc())
-            elif params["sort"] == "interestCount":
-                query = query.order_by(Hackathon.interestCount.desc()) #highest to lowest
-                
-        results = query.all()
-        data = [result.to_dict() for result in results]
-        return jsonify(data),200
+    results = query.all()
+    data = [result.to_dict() for result in results]
+    return jsonify(data),200
 
 @app.route("/api/hackathons/<hackathon_id>",methods=['GET'])
 def find_hackathon(hackathon_id):

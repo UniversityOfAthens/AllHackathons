@@ -19,7 +19,7 @@ class StatusEnum(enum.Enum): # Python feature for creating a fixed set of named 
     draft = "draft" #name is draft and value is 'draft', they are seperate things but in our case they have the same name
     pending = "pending"
     published = "published"
-    needs_changes = "needs-changes"
+    needs_changes = "needs_changes"
     
 class ModeEnum(enum.Enum):
     in_person = "in_person"

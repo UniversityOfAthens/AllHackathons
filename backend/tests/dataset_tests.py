@@ -832,7 +832,7 @@ update_hackathon_dtst1_on_updt_only_status_needs_changes = {
 						"hasPrize": None,
 						"prizeDetails": None,
 						"tags": None,
-						"status": "needs-changes",
+						"status": "needs_changes",
 						"submittedAt": None,
 						"updatedAt": None,
 						"interestCount": None,
