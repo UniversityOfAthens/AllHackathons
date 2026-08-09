@@ -1,16 +1,10 @@
-import { cn } from '@/lib/utils'
-import { avatarColor, initials } from '@/lib/avatar'
+import { cn } from '@/lib/utils';
+import { avatarColor, initials } from '@/lib/avatar';
 
 // A generated initials avatar. No image is stored or fetched — the colour and
 // letters are derived from `name`. Size/border come from `className`.
-export default function Avatar({
-  name,
-  className,
-}: {
-  name: string
-  className?: string
-}) {
-  const display = name.replace(/^@/, '')
+export default function Avatar({ name, className }: { name: string; className?: string }) {
+  const display = name.replace(/^@/, '');
   return (
     <span
       className={cn(
@@ -23,5 +17,5 @@ export default function Avatar({
     >
       {initials(name)}
     </span>
-  )
+  );
 }

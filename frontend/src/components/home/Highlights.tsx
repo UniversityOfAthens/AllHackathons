@@ -1,19 +1,19 @@
-import type { Hackathon } from '@/types/hackathon'
-import HighlightCard from './HighlightCard'
-import LiveDot from './LiveDot'
-import { highlightSelection } from '@/lib/hackathons'
+import type { Hackathon } from '@/types/hackathon';
+import HighlightCard from './HighlightCard';
+import LiveDot from './LiveDot';
+import { highlightSelection } from '@/lib/hackathons';
 
 // The top highlight slot: live hackathons (green) if any are happening now,
 // otherwise the soonest upcoming ones (blue). Both adapt to 1 / 2 / 3+ items.
 // The selection logic lives in lib/hackathons so the list can exclude these.
 export default function Highlights({ hackathons }: { hackathons: Hackathon[] }) {
-  const { state, items } = highlightSelection(hackathons)
-  if (!state) return null
+  const { state, items } = highlightSelection(hackathons);
+  if (!state) return null;
 
-  const count = items.length
-  const variant = count === 1 ? 'featured' : 'grid'
-  const showTags = count <= 2
-  const gridCols = count === 2 ? 'sm:grid-cols-2' : 'sm:grid-cols-2 lg:grid-cols-3'
+  const count = items.length;
+  const variant = count === 1 ? 'featured' : 'grid';
+  const showTags = count <= 2;
+  const gridCols = count === 2 ? 'sm:grid-cols-2' : 'sm:grid-cols-2 lg:grid-cols-3';
 
   const eyebrow =
     state === 'live'
@@ -22,7 +22,7 @@ export default function Highlights({ hackathons }: { hackathons: Hackathon[] }) 
         : `Live τώρα · ${count}`
       : count === 1
         ? 'Ξεκινάει σύντομα'
-        : `Ξεκινάνε σύντομα · ${count}`
+        : `Ξεκινάνε σύντομα · ${count}`;
 
   return (
     <section className="mx-auto w-full max-w-[1140px] px-6 pt-14 md:px-10">
@@ -45,5 +45,5 @@ export default function Highlights({ hackathons }: { hackathons: Hackathon[] }) 
         ))}
       </div>
     </section>
-  )
+  );
 }

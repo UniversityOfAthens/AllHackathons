@@ -1,9 +1,9 @@
-import Discord from '@/assets/icons/discord'
-import { Link } from 'react-router-dom'
+import Discord from '@/assets/icons/discord';
+import { Link } from 'react-router-dom';
 
 // Real community invite (from README). Member count / presence stays a static
 // placeholder — live Discord data is deferred (see issue #12/#16).
-const DISCORD_INVITE = 'https://discord.gg/zENTyrbJh'
+const DISCORD_INVITE = 'https://discord.gg/zENTyrbJh';
 
 export default function Header() {
   return (
@@ -11,10 +11,7 @@ export default function Header() {
       <div className="mx-auto flex w-full max-w-[1140px] items-center justify-between gap-4 px-6 py-4 md:px-10">
         {/* Logo + community tagline */}
         <div className="flex items-baseline gap-4">
-          <Link
-            to="/"
-            className="font-serif text-xl font-semibold tracking-tight text-foreground"
-          >
+          <Link to="/" className="font-serif text-xl font-semibold tracking-tight text-foreground">
             GreekHackathons
           </Link>
           <span className="hidden font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground lg:inline">
@@ -51,5 +48,5 @@ export default function Header() {
         </div>
       </div>
     </header>
-  )
+  );
 }

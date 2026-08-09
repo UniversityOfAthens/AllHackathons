@@ -1,44 +1,44 @@
-import { useState, type ReactNode } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
-import Header from '../components/layout/Header'
-import Footer from '../components/layout/Footer'
-import HackathonCard from '../components/hackathons/HackathonCard'
-import Pagination from '../components/hackathons/Pagination'
-import { loadHackathons } from '@/lib/store'
-import { compareForList, hackathonState, type HackathonState } from '@/lib/hackathons'
-import { dayMonth } from '@/lib/date'
-import { cn } from '@/lib/utils'
-import { Globe, MoveLeft } from 'lucide-react'
+import { useState, type ReactNode } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import Header from '../components/layout/Header';
+import Footer from '../components/layout/Footer';
+import HackathonCard from '../components/hackathons/HackathonCard';
+import Pagination from '../components/hackathons/Pagination';
+import { loadHackathons } from '@/lib/store';
+import { compareForList, hackathonState, type HackathonState } from '@/lib/hackathons';
+import { dayMonth } from '@/lib/date';
+import { cn } from '@/lib/utils';
+import { Globe, MoveLeft } from 'lucide-react';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import type { Hackathon } from '@/types/hackathon'
+} from '@/components/ui/select';
+import type { Hackathon } from '@/types/hackathon';
 
-const PAGE_SIZE = 6
+const PAGE_SIZE = 6;
 
-type StateFilter = 'all' | HackathonState
-type ModeFilter = 'all' | NonNullable<Hackathon['mode']>
+type StateFilter = 'all' | HackathonState;
+type ModeFilter = 'all' | NonNullable<Hackathon['mode']>;
 
 const STATE_PILLS: { key: StateFilter; label: string }[] = [
   { key: 'all', label: 'Όλα' },
   { key: 'live', label: 'Live τώρα' },
   { key: 'upcoming', label: 'Προσεχή' },
   { key: 'past', label: 'Έληξαν' },
-]
+];
 
 const MODE_PILLS: { key: ModeFilter; label: string }[] = [
   { key: 'all', label: 'Όλα' },
   { key: 'in-person', label: 'In person' },
   { key: 'online', label: 'Online' },
   { key: 'hybrid', label: 'Hybrid' },
-]
+];
 
-const STATE_KEYS = STATE_PILLS.map((p) => p.key) as string[]
-const MODE_KEYS = MODE_PILLS.map((p) => p.key) as string[]
+const STATE_KEYS = STATE_PILLS.map((p) => p.key) as string[];
+const MODE_KEYS = MODE_PILLS.map((p) => p.key) as string[];
 
 const REGIONS = [
   { value: 'all', label: 'Όλη η Ελλάδα' },
@@ -46,16 +46,16 @@ const REGIONS = [
   { value: 'thessaloniki', label: 'Θεσσαλονίκη' },
   { value: 'patras', label: 'Πάτρα' },
   { value: 'heraklion', label: 'Ηράκλειο' },
-]
+];
 
 function matchesQuery(h: Hackathon, q: string): boolean {
-  const needle = q.trim().toLowerCase()
-  if (!needle) return true
+  const needle = q.trim().toLowerCase();
+  if (!needle) return true;
   const hay = [h.name, h.location, h.organizer, ...(h.tags ?? [])]
     .filter(Boolean)
     .join(' ')
-    .toLowerCase()
-  return hay.includes(needle)
+    .toLowerCase();
+  return hay.includes(needle);
 }
 
 function Pill({
@@ -63,9 +63,9 @@ function Pill({
   onClick,
   children,
 }: {
-  active: boolean
-  onClick: () => void
-  children: ReactNode
+  active: boolean;
+  onClick: () => void;
+  children: ReactNode;
 }) {
   return (
     <button
@@ -79,42 +79,42 @@ function Pill({
     >
       {children}
     </button>
-  )
+  );
 }
 
 export default function AllHackathons() {
   const [all] = useState<Hackathon[]>(() =>
     loadHackathons().filter((h) => h.status === 'published'),
-  )
+  );
   // Filters/search/page live in the URL so navigating away and back restores them.
-  const [searchParams, setSearchParams] = useSearchParams()
-  const query = searchParams.get('q') ?? ''
-  const stateFilter = (STATE_KEYS.includes(searchParams.get('state') ?? '')
-    ? searchParams.get('state')
-    : 'all') as StateFilter
-  const modeFilter = (MODE_KEYS.includes(searchParams.get('mode') ?? '')
-    ? searchParams.get('mode')
-    : 'all') as ModeFilter
-  const page = Math.max(1, Number(searchParams.get('page')) || 1)
+  const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get('q') ?? '';
+  const stateFilter = (
+    STATE_KEYS.includes(searchParams.get('state') ?? '') ? searchParams.get('state') : 'all'
+  ) as StateFilter;
+  const modeFilter = (
+    MODE_KEYS.includes(searchParams.get('mode') ?? '') ? searchParams.get('mode') : 'all'
+  ) as ModeFilter;
+  const page = Math.max(1, Number(searchParams.get('page')) || 1);
 
   function patch(entries: Record<string, string>) {
-    const next = new URLSearchParams(searchParams)
+    const next = new URLSearchParams(searchParams);
     for (const [k, v] of Object.entries(entries)) {
-      if (!v || v === 'all' || (k === 'page' && v === '1')) next.delete(k)
-      else next.set(k, v)
+      if (!v || v === 'all' || (k === 'page' && v === '1')) next.delete(k);
+      else next.set(k, v);
     }
-    setSearchParams(next, { replace: true })
+    setSearchParams(next, { replace: true });
   }
 
   const filtered = all
     .filter((h) => (stateFilter === 'all' ? true : hackathonState(h) === stateFilter))
     .filter((h) => (modeFilter === 'all' ? true : h.mode === modeFilter))
     .filter((h) => matchesQuery(h, query))
-    .sort((a, b) => compareForList(a, b))
+    .sort((a, b) => compareForList(a, b));
 
-  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
-  const safePage = Math.min(page, pageCount)
-  const pageItems = filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE)
+  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const safePage = Math.min(page, pageCount);
+  const pageItems = filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -164,9 +164,18 @@ export default function AllHackathons() {
                 <Globe className="size-4 text-muted-foreground" aria-hidden />
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent sideOffset={4} alignOffset={0} alignItemWithTrigger={false} className="p-2">
+              <SelectContent
+                sideOffset={4}
+                alignOffset={0}
+                alignItemWithTrigger={false}
+                className="p-2"
+              >
                 {REGIONS.map((region) => (
-                  <SelectItem key={region.value} value={region.value} className="cursor-pointer py-2 pl-2.5 pr-8">
+                  <SelectItem
+                    key={region.value}
+                    value={region.value}
+                    className="cursor-pointer py-2 pl-2.5 pr-8"
+                  >
                     {region.label}
                   </SelectItem>
                 ))}
@@ -232,5 +241,5 @@ export default function AllHackathons() {
       </main>
       <Footer />
     </div>
-  )
+  );
 }

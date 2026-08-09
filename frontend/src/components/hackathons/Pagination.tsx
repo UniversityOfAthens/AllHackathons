@@ -1,34 +1,34 @@
-import { cn } from '@/lib/utils'
-import { MoveLeft, MoveRight } from 'lucide-react'
+import { cn } from '@/lib/utils';
+import { MoveLeft, MoveRight } from 'lucide-react';
 
 // Page list with first/last always shown and an ellipsis for the gap, e.g.
 // [1, gap, 4, 5, 6, gap, 20]. Scales to many pages.
 function pageRange(current: number, total: number): (number | 'gap')[] {
-  const range: (number | 'gap')[] = []
-  const left = Math.max(2, current - 1)
-  const right = Math.min(total - 1, current + 1)
-  range.push(1)
-  if (left > 2) range.push('gap')
-  for (let i = left; i <= right; i++) range.push(i)
-  if (right < total - 1) range.push('gap')
-  if (total > 1) range.push(total)
-  return range
+  const range: (number | 'gap')[] = [];
+  const left = Math.max(2, current - 1);
+  const right = Math.min(total - 1, current + 1);
+  range.push(1);
+  if (left > 2) range.push('gap');
+  for (let i = left; i <= right; i++) range.push(i);
+  if (right < total - 1) range.push('gap');
+  if (total > 1) range.push(total);
+  return range;
 }
 
 const BTN =
-  'inline-flex h-9 min-w-9 cursor-pointer items-center justify-center rounded-md px-3 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40'
+  'inline-flex h-9 min-w-9 cursor-pointer items-center justify-center rounded-md px-3 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40';
 
 export default function Pagination({
   page,
   pageCount,
   onPage,
 }: {
-  page: number
-  pageCount: number
-  onPage: (p: number) => void
+  page: number;
+  pageCount: number;
+  onPage: (p: number) => void;
 }) {
-  if (pageCount <= 1) return null
-  const items = pageRange(page, pageCount)
+  if (pageCount <= 1) return null;
+  const items = pageRange(page, pageCount);
 
   return (
     <nav className="flex flex-wrap items-center justify-center gap-1.5" aria-label="Σελιδοποίηση">
@@ -68,5 +68,5 @@ export default function Pagination({
         Επόμ. <MoveRight className="size-4" />
       </button>
     </nav>
-  )
+  );
 }

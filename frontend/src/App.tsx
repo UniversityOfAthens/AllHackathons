@@ -1,9 +1,9 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import ScrollManager from './components/ScrollManager'
-import Home from './pages/Home'
-import AllHackathons from './pages/AllHackathons'
-import HackathonDetail from './pages/HackathonDetail'
-import Feedback from './pages/Feedback'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import ScrollManager from './components/ScrollManager';
+import Home from './pages/Home';
+import AllHackathons from './pages/AllHackathons';
+import HackathonDetail from './pages/HackathonDetail';
+import Feedback from './pages/Feedback';
 
 export default function App() {
   return (
@@ -16,5 +16,5 @@ export default function App() {
         <Route path="/feedback" element={<Feedback />} />
       </Routes>
     </BrowserRouter>
-  )
+  );
 }

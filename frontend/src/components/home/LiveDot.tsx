@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
 // A single "live" dot that breathes — shrinks + fades, then expands + returns
 // (see the `live-pulse` keyframe in index.css). Colour comes from `className`
@@ -11,5 +11,5 @@ export default function LiveDot({ className = 'bg-green-500' }: { className?: st
         className,
       )}
     />
-  )
+  );
 }

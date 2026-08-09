@@ -1,74 +1,69 @@
-@import "tailwindcss";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
 @custom-variant dark (&:is(.dark *));
-
 
 @font-face {
   font-family: 'JetBrains Mono';
-  src: 
-    url('/fonts/JetBrainsMono-Variable.woff2') format('woff2-variations');
+  src: url('/fonts/JetBrainsMono-Variable.woff2') format('woff2-variations');
   font-display: swap;
   font-weight: 100 800;
 }
 
 @font-face {
   font-family: 'Manrope';
-  src:
-    url('/fonts/Manrope-Variable.woff2') format('woff2-variations');
+  src: url('/fonts/Manrope-Variable.woff2') format('woff2-variations');
   font-display: swap;
   font-weight: 100 900;
 }
 
 @font-face {
   font-family: 'Literata';
-  src: 
-    url('/fonts/Literata-Variable.woff2') format('woff2-variations');
+  src: url('/fonts/Literata-Variable.woff2') format('woff2-variations');
   font-display: swap;
   font-weight: 100 900;
 }
-
 
 :root {
   /* AllHackathons editorial palette — mapped from design/README.md (issue #3).
      The design is LIGHT-ONLY, so the .dark block below is intentionally left
      as-is for now (dark mode is out of scope until the team designs one). */
 
-  --radius: 0.875rem;               /* ~14px — matches the design's 14–16px cards */
+  --radius: 0.875rem; /* ~14px — matches the design's 14–16px cards */
 
-  --background: #f3efe6;            /* warm cream — the page background */
-  --foreground: #23211c;           /* primary text (ink) */
+  --background: #f3efe6; /* warm cream — the page background */
+  --foreground: #23211c; /* primary text (ink) */
 
-  --card: #fffdf8;                 /* off-white card surface */
+  --card: #fffdf8; /* off-white card surface */
   --card-foreground: #23211c;
   --popover: #fffdf8;
   --popover-foreground: #23211c;
 
-  --primary: #23211c;              /* primary button = dark ink... */
-  --primary-foreground: #f3efe6;   /* ...with cream text */
+  --primary: #23211c; /* primary button = dark ink... */
+  --primary-foreground: #f3efe6; /* ...with cream text */
 
-  --secondary: #efe9dc;            /* tag-pill / subtle chip surface */
+  --secondary: #efe9dc; /* tag-pill / subtle chip surface */
   --secondary-foreground: #6f6757;
 
-  --muted: #f6f2ea;                /* band / alt background (top bar, footer, callouts) */
-  --muted-foreground: #5d564a;     /* secondary body copy */
+  --muted: #f6f2ea; /* band / alt background (top bar, footer, callouts) */
+  --muted-foreground: #5d564a; /* secondary body copy */
 
-  --accent: #efe9dc;               /* subtle warm hover surface */
+  --accent: #efe9dc; /* subtle warm hover surface */
   --accent-foreground: #23211c;
 
   --destructive: #b3402f;
   --destructive-foreground: #fffdf8;
 
-  --border: #e6dfd0;               /* card border */
-  --input: #d8d0bf;                /* control border (inputs, filter chips) */
-  --ring: #2f5d86;                 /* focus ring — brand blue */
+  --border: #e6dfd0; /* card border */
+  --input: #d8d0bf; /* control border (inputs, filter chips) */
+  --ring: #2f5d86; /* focus ring — brand blue */
 
   /* Brand accents beyond the shadcn set — exposed as utilities in @theme below,
      so you can use e.g. text-accent-blue / bg-accent-terracotta in components. */
-  --accent-blue: #2f5d86;          /* dates, links, featured card */
-  --accent-terracotta: #b9663f;    /* highlights, "fun" tags */
-  --accent-green: #3f7d5a;         /* "reviewed" / success */
-  --discord: #5865f2;              /* community CTAs */
+  --accent-blue: #2f5d86; /* dates, links, featured card */
+  --accent-terracotta: #b9663f; /* highlights, "fun" tags */
+  --accent-green: #3f7d5a; /* "reviewed" / success */
+  --discord: #5865f2; /* community CTAs */
 
   --chart-1: #2f5d86;
   --chart-2: #b9663f;

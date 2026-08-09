@@ -1,0 +1,19 @@
+# Build output
+dist
+build
+
+# Dependencies
+node_modules
+
+# Environment variables
+.env
+.env.*
+
+# Editor directories
+.idea
+.vscode
+*.swp
+*.swo
+
+# Other
+src/**/ui
