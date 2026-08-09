@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { MoveRight } from 'lucide-react'
 import Header from '../components/layout/Header'
 import Footer from '../components/layout/Footer'
 import Hero from '../components/home/Hero'
@@ -89,9 +90,9 @@ export default function Home() {
               <div className="mt-10 text-center">
                 <Link
                   to="/hackathons"
-                  className="text-sm font-semibold text-accent-blue underline-offset-4 hover:underline"
+                  className="relative inline-flex items-center gap-2 text-sm font-semibold text-accent-blue transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-left after:scale-x-0 after:bg-accent-blue after:transition-transform after:duration-300 after:ease-out hover:after:scale-x-100"
                 >
-                  Δες περισσότερα →
+                  Δες περισσότερα <MoveRight className="size-4" />
                 </Link>
               </div>
             </>

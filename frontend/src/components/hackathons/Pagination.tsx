@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils'
+import { MoveLeft, MoveRight } from 'lucide-react'
 
 // Page list with first/last always shown and an ellipsis for the gap, e.g.
 // [1, gap, 4, 5, 6, gap, 20]. Scales to many pages.
@@ -32,11 +33,11 @@ export default function Pagination({
   return (
     <nav className="flex flex-wrap items-center justify-center gap-1.5" aria-label="Σελιδοποίηση">
       <button
-        className={cn(BTN, 'border border-input text-foreground hover:bg-accent')}
+        className={cn(BTN, 'border border-input text-foreground hover:bg-accent gap-1')}
         onClick={() => onPage(page - 1)}
         disabled={page === 1}
       >
-        ← Προηγ.
+        <MoveLeft className="size-4" /> Προηγ.
       </button>
       {items.map((it, i) =>
         it === 'gap' ? (
@@ -60,11 +61,11 @@ export default function Pagination({
         ),
       )}
       <button
-        className={cn(BTN, 'border border-input text-foreground hover:bg-accent')}
+        className={cn(BTN, 'border border-input text-foreground hover:bg-accent gap-1')}
         onClick={() => onPage(page + 1)}
         disabled={page === pageCount}
       >
-        Επόμ. →
+        Επόμ. <MoveRight className="size-4" />
       </button>
     </nav>
   )
