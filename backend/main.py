@@ -4,7 +4,7 @@ from sqlalchemy.exc import IntegrityError
 from flask_alembic import Alembic
 from werkzeug.exceptions import NotFound
 from datetime import datetime,timedelta
-import os,json
+import os,json,re
 
 #NOTE: If interestCount value is a number whether it is integer or string type it will join the db
 #NOTE: If hasPrize value is a string or bool type since it is validated as a str.lower() it will join the db
@@ -108,6 +108,7 @@ def validate_parameters2(params:dict,method:str,hackathon_to_update:Hackathon = 
                             "interestCount": None,
                         }
         
+        #validating required fields for POST request
         if (params["name"] is None) or (params["url"] is None):
             return False,"name and url are required"
         
@@ -265,7 +266,7 @@ def all_hackathons():
         "past" : request.args.get('past').lower() if request.args.get('past') else None,
         "tags" : request.args.get('tags'),
         "q" : request.args.get('q'),
-        "sort" : request.args.get('sort')
+        "sort" : request.args.get('sort').lower() if request.args.get("sort") else None
     }
 
     query = db.session.query(Hackathon) # Arxiko query pou kanei build up stin sinexeia
@@ -294,31 +295,34 @@ def all_hackathons():
     elif params["past"]:
         return jsonify(error="Wrong past"), 400
 
-    #tags parameter
+    #tags parameter NEEDS REFACTORING
     if params["tags"]:
+        like = f"%{params["tags"]}%"
         query = query.filter(Hackathon.tags.ilike(like))
 
     #q parameter
     if params["q"]:
         like = f"%{params["q"]}%"
-        
         query = query.filter(Hackathon.name.ilike(like) | Hackathon.url.ilike(like) | Hackathon.description.ilike(like) |
                                 Hackathon.location.ilike(like) | Hackathon.organizer.ilike(like) | Hackathon.hasPrize.ilike(like) |
                                 Hackathon.prizeDetails.ilike(like) | Hackathon.tags.ilike(like))
 
     #sort parameter
+    allowed_sort_values = ["name","startdate","enddate","submittedat","updatedat","interestcount"]
     if params["sort"]:
-        if params["sort"] == "name":
+        if params["sort"] not in allowed_sort_values:
+            return jsonify(error="Wrong sort"),400
+        elif params["sort"] == "name":
             query = query.order_by(Hackathon.name)
-        elif params["sort"] == "startDate":
+        elif params["sort"] == "startdate":
             query = query.order_by(Hackathon.startDate)
-        elif params["sort"] == "endDate":
+        elif params["sort"] == "enddate":
             query = query.order_by(Hackathon.endDate)
-        elif params["sort"] == "submittedAt":
+        elif params["sort"] == "submittedat":
             query = query.order_by(Hackathon.submittedAt)
-        elif params["sort"] == "updatedAt":
+        elif params["sort"] == "updatedat":
             query = query.order_by(Hackathon.updatedAt.desc())
-        elif params["sort"] == "interestCount":
+        elif params["sort"] == "interestcount":
             query = query.order_by(Hackathon.interestCount.desc()) #highest to lowest
             
     results = query.all()

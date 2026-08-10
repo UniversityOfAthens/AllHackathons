@@ -304,6 +304,15 @@ def test_get_hackathons_status_wrong_parameter_and_correct_value(app, client):
     assert results.status_code == 200
     assert len(results.json) == len(base_payloads)
 
+    expected_names = []
+    expected_urls = []
+    for payload in base_payloads:
+        expected_names.append(payload["name"])
+        expected_urls.append(payload["url"])
+
+    assert sorted(item["name"] for item in results.json) == sorted(expected_names)
+    assert sorted(item["url"] for item in results.json) == sorted(expected_urls)
+
 
 def test_get_hackathons_status_wrong_parameter_and_wrong_value(app, client):
     with app.app_context():
@@ -315,6 +324,15 @@ def test_get_hackathons_status_wrong_parameter_and_wrong_value(app, client):
     results = client.get("/api/hackathons?stat=invalid")
     assert results.status_code == 200
     assert len(results.json) == len(base_payloads)
+
+    expected_names = []
+    expected_urls = []
+    for payload in base_payloads:
+        expected_names.append(payload["name"])
+        expected_urls.append(payload["url"])
+
+    assert sorted(item["name"] for item in results.json) == sorted(expected_names)
+    assert sorted(item["url"] for item in results.json) == sorted(expected_urls)
 
 
 def test_get_hackathons_status_empty_string(app, client):
@@ -471,6 +489,48 @@ def test_get_hackathons_upcoming_wrong_value(app, client):
     assert results.json["error"] == "Wrong upcoming"
 
 
+def test_get_hackathons_upcoming_wrong_parameter_and_correct_value(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?upco=true")
+    assert results.status_code == 200
+    assert len(results.json) == len(base_payloads)
+
+    expected_names = []
+    expected_urls = []
+    for payload in base_payloads:
+        expected_names.append(payload["name"])
+        expected_urls.append(payload["url"])
+
+    assert sorted(item["name"] for item in results.json) == sorted(expected_names)
+    assert sorted(item["url"] for item in results.json) == sorted(expected_urls)
+
+
+def test_get_hackathons_upcoming_wrong_parameter_and_wrong_value(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?upco=invalid")
+    assert results.status_code == 200
+    assert len(results.json) == len(base_payloads)
+
+    expected_names = []
+    expected_urls = []
+    for payload in base_payloads:
+        expected_names.append(payload["name"])
+        expected_urls.append(payload["url"])
+
+    assert sorted(item["name"] for item in results.json) == sorted(expected_names)
+    assert sorted(item["url"] for item in results.json) == sorted(expected_urls)
+
+
 def test_get_hackathons_upcoming_uppercase_true(app, client):
     with app.app_context():
         from main import db
@@ -514,8 +574,7 @@ def test_get_hackathons_upcoming_empty_string(app, client):
     assert results.status_code == 200
     assert len(results.json) == len(base_payloads)
 
-
-## upcoming param tests
+## past param tests
 
 def test_get_hackathons_past_true(app, client):
     with app.app_context():
@@ -561,6 +620,48 @@ def test_get_hackathons_past_wrong_value(app, client):
     assert results.json["error"] == "Wrong past"
 
 
+def test_get_hackathons_past_wrong_parameter_and_correct_value(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?ps=true")
+    assert results.status_code == 200
+    assert len(results.json) == len(base_payloads)
+
+    expected_names = []
+    expected_urls = []
+    for payload in base_payloads:
+        expected_names.append(payload["name"])
+        expected_urls.append(payload["url"])
+
+    assert sorted(item["name"] for item in results.json) == sorted(expected_names)
+    assert sorted(item["url"] for item in results.json) == sorted(expected_urls)
+
+
+def test_get_hackathons_past_wrong_parameter_and_wrong_value(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?ps=invalid")
+    assert results.status_code == 200
+    assert len(results.json) == len(base_payloads)
+
+    expected_names = []
+    expected_urls = []
+    for payload in base_payloads:
+        expected_names.append(payload["name"])
+        expected_urls.append(payload["url"])
+
+    assert sorted(item["name"] for item in results.json) == sorted(expected_names)
+    assert sorted(item["url"] for item in results.json) == sorted(expected_urls)
+
+
 def test_get_hackathons_past_uppercase_true(app, client):
     with app.app_context():
         from main import db
@@ -601,3 +702,441 @@ def test_get_hackathons_past_empty_string(app, client):
     results = client.get("/api/hackathons?past=")
     assert results.status_code == 200
     assert len(results.json) == len(base_payloads)
+
+
+# tags param tests
+
+def test_get_hackathons_tags_ai_matches_multiple_tags(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?tags=AI")
+    assert results.status_code == 200
+    returned_names = [item["name"] for item in results.json]
+    returned_urls = [item["url"] for item in results.json]
+    assert sorted(returned_names) == sorted(["HackathonFull1", "HackathonNoMode"])
+    assert sorted(returned_urls) == sorted(["hackfull1.com", "hacknomode.com"])
+
+
+def test_get_hackathons_tags_second_tag_in_list(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?tags=ML")
+    assert results.status_code == 200
+    returned_names = [item["name"] for item in results.json]
+    returned_urls = [item["url"] for item in results.json]
+    assert sorted(returned_names) == sorted(["HackathonFull1"])
+    assert sorted(returned_urls) == sorted(["hackfull1.com"])
+
+
+def test_get_hackathons_tags_case_insensitive(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    for value in ["python", "PYTHON", "PyThOn"]:
+        results = client.get(f"/api/hackathons?tags={value}")
+        assert results.status_code == 200
+        returned_names = [item["name"] for item in results.json]
+        returned_urls = [item["url"] for item in results.json]
+        assert sorted(returned_names) == sorted(["HackathonNoStatus"])
+        assert sorted(returned_urls) == sorted(["hacknostatus.com"])
+
+
+def test_get_hackathons_tags_partial_match(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?tags=De")
+    assert results.status_code == 200
+    returned_names = [item["name"] for item in results.json]
+    returned_urls = [item["url"] for item in results.json]
+    assert sorted(returned_names) == sorted(["HackathonNoDates", "HackathonNoPrize"])
+    assert sorted(returned_urls) == sorted(["hacknodates.com", "hacknoprize.com"])
+
+
+def test_get_hackathons_tags_multiple_matches(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?tags=h")
+    assert results.status_code == 200
+    returned_names = [item["name"] for item in results.json]
+    returned_urls = [item["url"] for item in results.json]
+    assert sorted(returned_names) == sorted(["HackathonNoStatus", "HackathonNoMode"])
+    assert sorted(returned_urls) == sorted(["hacknostatus.com", "hacknomode.com"])
+
+
+def test_get_hackathons_tags_no_matches(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?tags=NonExistent")
+    assert results.status_code == 200
+    assert results.json == []
+
+
+def test_get_hackathons_tags_wrong_parameter(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?tag=AI")
+    assert results.status_code == 200
+    assert len(results.json) == len(base_payloads)
+
+    expected_names = [payload["name"] for payload in base_payloads]
+    expected_urls = [payload["url"] for payload in base_payloads]
+    assert sorted(item["name"] for item in results.json) == sorted(expected_names)
+    assert sorted(item["url"] for item in results.json) == sorted(expected_urls)
+
+
+def test_get_hackathons_tags_empty_string(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?tags=")
+    assert results.status_code == 200
+    assert len(results.json) == len(base_payloads)
+    
+def test_get_hackathons_tags_duplicate_param(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?tags=AI&tags=Python")
+    assert results.status_code == 200
+    returned_names = [item["name"] for item in results.json]
+    returned_urls = [item["url"] for item in results.json]
+    assert sorted(returned_names) == sorted(["HackathonFull1", "HackathonNoMode"])
+    assert sorted(returned_urls) == sorted(["hackfull1.com", "hacknomode.com"])
+
+
+## sort param tests
+
+def test_get_hackathons_sort_name(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?sort=name")
+    assert results.status_code == 200
+
+    expected_names = ["HackathonFull1", "HackathonMinimal", "HackathonNoDates", "HackathonNoLocTagsOrg",
+                      "HackathonNoLocTagsOrgDesc", "HackathonNoLocationTags", "HackathonNoMode", "HackathonNoOrgDesc",
+                      "HackathonNoPrize", "HackathonNoStatus"]
+    expected_urls = ["hackfull1.com", "hackminimal.com", "hacknodates.com", "hacknolocorg.com",
+                     "hacknolocdescorg.com", "hacknolocationtags.com", "hacknomode.com", "hacknoorgdesc.com",
+                     "hacknoprize.com", "hacknostatus.com"]
+
+    assert [item["name"] for item in results.json] == expected_names
+    assert [item["url"] for item in results.json] == expected_urls
+
+
+def test_get_hackathons_sort_startDate(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?sort=startDate")
+    assert results.status_code == 200
+
+    expected_names = ["HackathonNoDates", "HackathonMinimal", "HackathonNoPrize", "HackathonNoStatus",
+                      "HackathonNoOrgDesc", "HackathonNoLocTagsOrgDesc", "HackathonNoLocationTags",
+                      "HackathonNoMode", "HackathonNoLocTagsOrg", "HackathonFull1"]
+    expected_urls = ["hacknodates.com", "hackminimal.com", "hacknoprize.com", "hacknostatus.com",
+                     "hacknoorgdesc.com", "hacknolocdescorg.com", "hacknolocationtags.com",
+                     "hacknomode.com", "hacknolocorg.com", "hackfull1.com"]
+
+    assert [item["name"] for item in results.json] == expected_names
+    assert [item["url"] for item in results.json] == expected_urls
+
+
+def test_get_hackathons_sort_endDate(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?sort=endDate")
+    assert results.status_code == 200
+
+    expected_names = ["HackathonNoDates", "HackathonMinimal", "HackathonNoPrize", "HackathonNoStatus",
+                      "HackathonNoOrgDesc", "HackathonNoLocTagsOrgDesc", "HackathonNoLocationTags",
+                      "HackathonNoMode", "HackathonNoLocTagsOrg", "HackathonFull1"]
+    expected_urls = ["hacknodates.com", "hackminimal.com", "hacknoprize.com", "hacknostatus.com",
+                     "hacknoorgdesc.com", "hacknolocdescorg.com", "hacknolocationtags.com",
+                     "hacknomode.com", "hacknolocorg.com", "hackfull1.com"]
+
+    assert [item["name"] for item in results.json] == expected_names
+    assert [item["url"] for item in results.json] == expected_urls
+
+
+def test_get_hackathons_sort_submittedAt(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?sort=submittedAt")
+    assert results.status_code == 200
+
+    expected_names = ["HackathonFull1", "HackathonNoDates", "HackathonNoPrize", "HackathonNoStatus",
+                      "HackathonNoMode", "HackathonNoOrgDesc", "HackathonMinimal", "HackathonNoLocationTags",
+                      "HackathonNoLocTagsOrgDesc", "HackathonNoLocTagsOrg"]
+    expected_urls = ["hackfull1.com", "hacknodates.com", "hacknoprize.com", "hacknostatus.com",
+                     "hacknomode.com", "hacknoorgdesc.com", "hackminimal.com", "hacknolocationtags.com",
+                     "hacknolocdescorg.com", "hacknolocorg.com"]
+
+    assert [item["name"] for item in results.json] == expected_names
+    assert [item["url"] for item in results.json] == expected_urls
+
+
+def test_get_hackathons_sort_updatedAt(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?sort=updatedAt")
+    assert results.status_code == 200
+
+    expected_names = ["HackathonNoLocTagsOrg", "HackathonNoLocTagsOrgDesc", "HackathonNoLocationTags",
+                      "HackathonMinimal", "HackathonNoOrgDesc", "HackathonNoMode", "HackathonNoStatus",
+                      "HackathonNoPrize", "HackathonNoDates", "HackathonFull1"]
+    expected_urls = ["hacknolocorg.com", "hacknolocdescorg.com", "hacknolocationtags.com",
+                     "hackminimal.com", "hacknoorgdesc.com", "hacknomode.com", "hacknostatus.com",
+                     "hacknoprize.com", "hacknodates.com", "hackfull1.com"]
+
+    assert [item["name"] for item in results.json] == expected_names
+    assert [item["url"] for item in results.json] == expected_urls
+
+
+def test_get_hackathons_sort_interestCount(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    #interestCount is always set to 0 when a hackathon is added, so give each row a distinct value
+    interest_counts = {1: 120, 2: 25, 3: 47, 4: 89, 5: 33, 6: 54, 7: 5, 8: 10, 9: 7, 10: 75}
+    for hackathon_id, count in interest_counts.items():
+        response_patch = client.patch(f"api/{hackathon_id}",data={"interestCount": count})
+        assert response_patch.status_code == 200
+        assert response_patch.json["success"] == f"Successfully updated hackathon with an id of : {hackathon_id}"
+        
+    results = client.get("/api/hackathons?sort=interestCount")
+    assert results.status_code == 200
+
+    expected_names = ["HackathonFull1", "HackathonNoStatus", "HackathonNoLocTagsOrg", "HackathonNoOrgDesc",
+                      "HackathonNoPrize", "HackathonNoMode", "HackathonNoDates", "HackathonNoLocationTags",
+                      "HackathonNoLocTagsOrgDesc", "HackathonMinimal"]
+    expected_urls = ["hackfull1.com", "hacknostatus.com", "hacknolocorg.com", "hacknoorgdesc.com",
+                     "hacknoprize.com", "hacknomode.com", "hacknodates.com", "hacknolocationtags.com",
+                     "hacknolocdescorg.com", "hackminimal.com"]
+
+    assert [item["name"] for item in results.json] == expected_names
+    assert [item["url"] for item in results.json] == expected_urls
+
+
+def test_get_hackathons_sort_interestCount_null_values_go_last(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    #leave HackathonMinimal(id=7) with interestCount None to check nulls sort last in descending order
+    interest_counts = {1: 120, 2: 25, 3: 47, 4: 89, 5: 33, 6: 54, 8: 10, 9: 7, 10: 75}
+    for hackathon_id, count in interest_counts.items():
+        response_patch = client.patch(f"api/{hackathon_id}",data={"interestCount": count})
+        assert response_patch.status_code == 200
+        assert response_patch.json["success"] == f"Successfully updated hackathon with an id of : {hackathon_id}"
+
+    results = client.get("/api/hackathons?sort=interestCount")
+    assert results.status_code == 200
+
+    expected_names = ["HackathonFull1", "HackathonNoStatus", "HackathonNoLocTagsOrg", "HackathonNoOrgDesc",
+                      "HackathonNoPrize", "HackathonNoMode", "HackathonNoDates", "HackathonNoLocationTags",
+                      "HackathonNoLocTagsOrgDesc", "HackathonMinimal"]
+    expected_urls = ["hackfull1.com", "hacknostatus.com", "hacknolocorg.com", "hacknoorgdesc.com",
+                     "hacknoprize.com", "hacknomode.com", "hacknodates.com", "hacknolocationtags.com",
+                     "hacknolocdescorg.com", "hackminimal.com"]
+
+    assert [item["name"] for item in results.json] == expected_names
+    assert [item["url"] for item in results.json] == expected_urls
+    
+def test_get_hackathons_sort_uppercase_value(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    for value in ["Name", "NAME", "NaMe"]:
+        results = client.get(f"/api/hackathons?sort={value}")
+        assert results.status_code == 200
+        assert len(results.json) == len(base_payloads)
+        expected_names = ["HackathonFull1", "HackathonMinimal", "HackathonNoDates", "HackathonNoLocTagsOrg",
+                      "HackathonNoLocTagsOrgDesc", "HackathonNoLocationTags", "HackathonNoMode", "HackathonNoOrgDesc",
+                      "HackathonNoPrize", "HackathonNoStatus"]
+        expected_urls = ["hackfull1.com", "hackminimal.com", "hacknodates.com", "hacknolocorg.com",
+                     "hacknolocdescorg.com", "hacknolocationtags.com", "hacknomode.com", "hacknoorgdesc.com",
+                     "hacknoprize.com", "hacknostatus.com"]
+        assert [item["name"] for item in results.json] == expected_names
+        assert [item["url"] for item in results.json] == expected_urls
+        
+def test_get_hackathons_sort_empty_string(app, client): 
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?sort=")
+    assert results.status_code == 200
+    assert len(results.json) == len(base_payloads)
+    
+    returned_names = sorted(item["name"] for item in results.json)
+    returned_urls = sorted(item["url"] for item in results.json)
+    expected_names = sorted(payload["name"] for payload in base_payloads)
+    expected_urls = sorted(payload["url"] for payload in base_payloads)
+
+    assert returned_names == expected_names
+    assert returned_urls == expected_urls
+    
+def test_get_hackathons_sort_wrong_value(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?sort=invalid")
+    assert results.status_code == 400
+    assert results.json["error"] == "Wrong sort"
+
+def test_get_hackathons_sort_wrong_parameter_and_correct_value(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?srot=name")
+    assert results.status_code == 200
+    assert len(results.json) == len(base_payloads)
+
+    expected_names = [payload["name"] for payload in base_payloads]
+    expected_urls = [payload["url"] for payload in base_payloads]
+    assert sorted(item["name"] for item in results.json) == sorted(expected_names)
+    assert sorted(item["url"] for item in results.json) == sorted(expected_urls)
+
+def test_get_hackathons_sort_wrong_parameter_and_wrong_value(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?srot=invalid")
+    assert results.status_code == 200
+    assert len(results.json) == len(base_payloads)
+
+    expected_names = [payload["name"] for payload in base_payloads]
+    expected_urls = [payload["url"] for payload in base_payloads]
+    assert sorted(item["name"] for item in results.json) == sorted(expected_names)
+    assert sorted(item["url"] for item in results.json) == sorted(expected_urls)
+
+def test_get_hackathons_sort_duplicate_param_first_name_second_interestCount(app, client):
+    
+    """
+    since name is first in our sort request the sort will be based on it
+    """
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    interest_counts = {1: 120, 2: 25, 3: 47, 4: 89, 5: 33, 6: 54, 7: 5, 8: 10, 9: 7, 10: 75}
+    for hackathon_id, count in interest_counts.items():
+        response_patch = client.patch(f"api/{hackathon_id}",data={"interestCount": count})
+        assert response_patch.status_code == 200
+        assert response_patch.json["success"] == f"Successfully updated hackathon with an id of : {hackathon_id}"
+    
+    results = client.get("/api/hackathons?sort=name&sort=interestCount")
+    assert results.status_code == 200
+    
+    expected_names = ["HackathonFull1", "HackathonMinimal", "HackathonNoDates", "HackathonNoLocTagsOrg",
+                      "HackathonNoLocTagsOrgDesc", "HackathonNoLocationTags", "HackathonNoMode", "HackathonNoOrgDesc",
+                      "HackathonNoPrize", "HackathonNoStatus"]
+    expected_urls = ["hackfull1.com", "hackminimal.com", "hacknodates.com", "hacknolocorg.com",
+                     "hacknolocdescorg.com", "hacknolocationtags.com", "hacknomode.com", "hacknoorgdesc.com",
+                     "hacknoprize.com", "hacknostatus.com"]
+
+    assert [item["name"] for item in results.json] == expected_names
+    assert [item["url"] for item in results.json] == expected_urls
+    
+def test_get_hackathons_sort_duplicate_param_first_interestCount_second_name(app, client):
+    
+    """
+    since interestCount is first in our sort request the sort will be based on it
+    """
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    interest_counts = {1: 120, 2: 25, 3: 47, 4: 89, 5: 33, 6: 54, 7: 5, 8: 10, 9: 7, 10: 75}
+    for hackathon_id, count in interest_counts.items():
+        response_patch = client.patch(f"api/{hackathon_id}",data={"interestCount": count})
+        assert response_patch.status_code == 200
+        assert response_patch.json["success"] == f"Successfully updated hackathon with an id of : {hackathon_id}"
+    
+    results = client.get("/api/hackathons?sort=interestCount&sort=name")
+    assert results.status_code == 200
+    
+    expected_names = ["HackathonFull1", "HackathonNoStatus", "HackathonNoLocTagsOrg", "HackathonNoOrgDesc",
+                      "HackathonNoPrize", "HackathonNoMode", "HackathonNoDates", "HackathonNoLocationTags",
+                      "HackathonNoLocTagsOrgDesc", "HackathonMinimal"]
+    expected_urls = ["hackfull1.com", "hacknostatus.com", "hacknolocorg.com", "hacknoorgdesc.com",
+                     "hacknoprize.com", "hacknomode.com", "hacknodates.com", "hacknolocationtags.com",
+                     "hacknolocdescorg.com", "hackminimal.com"]
+
+    assert [item["name"] for item in results.json] == expected_names
+    assert [item["url"] for item in results.json] == expected_urls
