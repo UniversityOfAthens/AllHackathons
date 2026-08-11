@@ -121,7 +121,7 @@ base_payload8 = {
     "organizer": "NextGen",
     "status": "pending",
     "mode": "online",
-    "tags": None,
+    "tags": "web",
     "startDate": make_date_pair(20)[0],
     "endDate": make_date_pair(20)[1],
     "location": None,
@@ -574,6 +574,28 @@ def test_get_hackathons_upcoming_empty_string(app, client):
     assert results.status_code == 200
     assert len(results.json) == len(base_payloads)
 
+def test_get_hackathons_upcoming_true_without_startDate_and_endDate(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client,contains_specific_payloads=True,specific_payloads=[base_payload2,base_payload7])
+
+    results = client.get("/api/hackathons?upcoming=true")
+    assert results.status_code == 200
+    assert results.json == []
+    
+def test_get_hackathons_upcoming_false_without_startDate_and_endDate(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client,contains_specific_payloads=True,specific_payloads=[base_payload2,base_payload7])
+
+    results = client.get("/api/hackathons?upcoming=false")
+    assert results.status_code == 200
+    assert results.json == []
+    
 ## past param tests
 
 def test_get_hackathons_past_true(app, client):
@@ -703,37 +725,45 @@ def test_get_hackathons_past_empty_string(app, client):
     assert results.status_code == 200
     assert len(results.json) == len(base_payloads)
 
+def test_get_hackathons_past_true_without_startDate_and_endDate(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
 
-# tags param tests
+    post_all_base_payloads(client,contains_specific_payloads=True,specific_payloads=[base_payload2,base_payload7])
 
-def test_get_hackathons_tags_ai_matches_multiple_tags(app, client):
+    results = client.get("/api/hackathons?past=true")
+    assert results.status_code == 200
+    assert results.json == []
+    
+def test_get_hackathons_past_false_without_startDate_and_endDate(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client,contains_specific_payloads=True,specific_payloads=[base_payload2,base_payload7])
+
+    results = client.get("/api/hackathons?past=false")
+    assert results.status_code == 200
+    assert results.json == []
+
+
+
+## tags param tests
+
+def test_get_hackathons_tags_matches_multiple_tags(app, client):
     with app.app_context():
         from main import db
         db.create_all()
 
     post_all_base_payloads(client)
 
-    results = client.get("/api/hackathons?tags=AI")
+    results = client.get("/api/hackathons?tags=python security")
     assert results.status_code == 200
     returned_names = [item["name"] for item in results.json]
     returned_urls = [item["url"] for item in results.json]
-    assert sorted(returned_names) == sorted(["HackathonFull1", "HackathonNoMode"])
-    assert sorted(returned_urls) == sorted(["hackfull1.com", "hacknomode.com"])
-
-
-def test_get_hackathons_tags_second_tag_in_list(app, client):
-    with app.app_context():
-        from main import db
-        db.create_all()
-
-    post_all_base_payloads(client)
-
-    results = client.get("/api/hackathons?tags=ML")
-    assert results.status_code == 200
-    returned_names = [item["name"] for item in results.json]
-    returned_urls = [item["url"] for item in results.json]
-    assert sorted(returned_names) == sorted(["HackathonFull1"])
-    assert sorted(returned_urls) == sorted(["hackfull1.com"])
+    assert sorted(returned_names) == sorted(["HackathonNoStatus", "HackathonNoMode"])
+    assert sorted(returned_urls) == sorted(["hacknostatus.com", "hacknomode.com"])
 
 
 def test_get_hackathons_tags_case_insensitive(app, client):
@@ -752,36 +782,6 @@ def test_get_hackathons_tags_case_insensitive(app, client):
         assert sorted(returned_urls) == sorted(["hacknostatus.com"])
 
 
-def test_get_hackathons_tags_partial_match(app, client):
-    with app.app_context():
-        from main import db
-        db.create_all()
-
-    post_all_base_payloads(client)
-
-    results = client.get("/api/hackathons?tags=De")
-    assert results.status_code == 200
-    returned_names = [item["name"] for item in results.json]
-    returned_urls = [item["url"] for item in results.json]
-    assert sorted(returned_names) == sorted(["HackathonNoDates", "HackathonNoPrize"])
-    assert sorted(returned_urls) == sorted(["hacknodates.com", "hacknoprize.com"])
-
-
-def test_get_hackathons_tags_multiple_matches(app, client):
-    with app.app_context():
-        from main import db
-        db.create_all()
-
-    post_all_base_payloads(client)
-
-    results = client.get("/api/hackathons?tags=h")
-    assert results.status_code == 200
-    returned_names = [item["name"] for item in results.json]
-    returned_urls = [item["url"] for item in results.json]
-    assert sorted(returned_names) == sorted(["HackathonNoStatus", "HackathonNoMode"])
-    assert sorted(returned_urls) == sorted(["hacknostatus.com", "hacknomode.com"])
-
-
 def test_get_hackathons_tags_no_matches(app, client):
     with app.app_context():
         from main import db
@@ -789,19 +789,36 @@ def test_get_hackathons_tags_no_matches(app, client):
 
     post_all_base_payloads(client)
 
-    results = client.get("/api/hackathons?tags=NonExistent")
+    results = client.get("/api/hackathons?tags=NonExistentTag")
     assert results.status_code == 200
     assert results.json == []
 
 
-def test_get_hackathons_tags_wrong_parameter(app, client):
+def test_get_hackathons_tags_wrong_parameter_wrong_value(app, client):
     with app.app_context():
         from main import db
         db.create_all()
 
     post_all_base_payloads(client)
 
-    results = client.get("/api/hackathons?tag=AI")
+    results = client.get("/api/hackathons?tag=invalid")
+    assert results.status_code == 200
+    assert len(results.json) == len(base_payloads)
+
+    expected_names = [payload["name"] for payload in base_payloads]
+    expected_urls = [payload["url"] for payload in base_payloads]
+    assert sorted(item["name"] for item in results.json) == sorted(expected_names)
+    assert sorted(item["url"] for item in results.json) == sorted(expected_urls)
+
+
+def test_get_hackathons_tags_wrong_parameter_correct_value(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?tag=python")
     assert results.status_code == 200
     assert len(results.json) == len(base_payloads)
 
@@ -821,7 +838,83 @@ def test_get_hackathons_tags_empty_string(app, client):
     results = client.get("/api/hackathons?tags=")
     assert results.status_code == 200
     assert len(results.json) == len(base_payloads)
+
+
+def test_get_hackathons_tags_with_last_value_search(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    for value in ["python", "pyth", "pYth"]:
+        results = client.get(f"/api/hackathons?tags={value}")
+        assert results.status_code == 200
+        returned_names = [item["name"] for item in results.json]
+        returned_urls = [item["url"] for item in results.json]
+        assert sorted(returned_names) == sorted(["HackathonNoStatus"])
+        assert sorted(returned_urls) == sorted(["hacknostatus.com"])
+
+
+def test_get_hackathons_tags_partial_match_first_value(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?tags=data")
+    assert results.status_code == 200
+    returned_names = [item["name"] for item in results.json]
+    returned_urls = [item["url"] for item in results.json]
+    assert sorted(returned_names) == sorted(["HackathonNoStatus"])
+    assert sorted(returned_urls) == sorted(["hacknostatus.com"])
+
+
+def test_get_hackathons_tags_multi_word_tag(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?tags=web development")
+    assert results.status_code == 200
+    returned_names = [item["name"] for item in results.json]
+    returned_urls = [item["url"] for item in results.json]
+    assert sorted(returned_names) == sorted(["HackathonNoDates", "HackathonNoLocationTags"])
+    assert sorted(returned_urls) == sorted(["hacknodates.com", "hacknolocationtags.com"])
     
+def test_get_hackathons_tags_multi_word_tag_reversed(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?tags=development web")
+    assert results.status_code == 200
+    returned_names = [item["name"] for item in results.json]
+    returned_urls = [item["url"] for item in results.json]
+    assert sorted(returned_names) == sorted(["HackathonNoDates", "HackathonNoLocationTags"])
+    assert sorted(returned_urls) == sorted(["hacknodates.com", "hacknolocationtags.com"])
+
+
+def test_get_hackathons_tags_comma_separated_query(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?tags=ai,ml")
+    assert results.status_code == 200
+    returned_names = [item["name"] for item in results.json]
+    returned_urls = [item["url"] for item in results.json]
+    assert sorted(returned_names) == sorted(["HackathonFull1", "HackathonNoMode"])
+    assert sorted(returned_urls) == sorted(["hackfull1.com", "hacknomode.com"])
+
+
 def test_get_hackathons_tags_duplicate_param(app, client):
     with app.app_context():
         from main import db
@@ -835,6 +928,258 @@ def test_get_hackathons_tags_duplicate_param(app, client):
     returned_urls = [item["url"] for item in results.json]
     assert sorted(returned_names) == sorted(["HackathonFull1", "HackathonNoMode"])
     assert sorted(returned_urls) == sorted(["hackfull1.com", "hacknomode.com"])
+
+
+## q param tests
+
+def test_get_hackathons_q_matches_name(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?q=HackathonMinimal")
+    assert results.status_code == 200
+    returned_names = [item["name"] for item in results.json]
+    returned_urls = [item["url"] for item in results.json]
+    assert sorted(returned_names) == ["HackathonMinimal"]
+    assert sorted(returned_urls) == ["hackminimal.com"]
+
+
+def test_get_hackathons_q_matches_description(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?q=dates")
+    assert results.status_code == 200
+    returned_names = [item["name"] for item in results.json]
+    returned_urls = [item["url"] for item in results.json]
+    assert sorted(returned_names) == ["HackathonNoDates"]
+    assert sorted(returned_urls) == ["hacknodates.com"]
+
+
+def test_get_hackathons_q_matches_url(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?q=hackfull1")
+    assert results.status_code == 200
+    returned_names = [item["name"] for item in results.json]
+    returned_urls = [item["url"] for item in results.json]
+    assert sorted(returned_names) == ["HackathonFull1"]
+    assert sorted(returned_urls) == ["hackfull1.com"]
+
+
+def test_get_hackathons_q_matches_location(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?q=Athens")
+    assert results.status_code == 200
+    returned_names = [item["name"] for item in results.json]
+    returned_urls = [item["url"] for item in results.json]
+    assert sorted(returned_names) == ["HackathonFull1"]
+    assert sorted(returned_urls) == ["hackfull1.com"]
+
+
+def test_get_hackathons_q_matches_organizer(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?q=TechCorp")
+    assert results.status_code == 200
+    returned_names = [item["name"] for item in results.json]
+    returned_urls = [item["url"] for item in results.json]
+    assert sorted(returned_names) == ["HackathonFull1"]
+    assert sorted(returned_urls) == ["hackfull1.com"]
+
+
+def test_get_hackathons_q_matches_prizeDetails(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?q=2500")
+    assert results.status_code == 200
+    returned_names = [item["name"] for item in results.json]
+    returned_urls = [item["url"] for item in results.json]
+    assert sorted(returned_names) == ["HackathonNoStatus"]
+    assert sorted(returned_urls) == ["hacknostatus.com"]
+
+
+def test_get_hackathons_q_matches_tags(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?q=Blockchain")
+    assert results.status_code == 200
+    returned_names = [item["name"] for item in results.json]
+    returned_urls = [item["url"] for item in results.json]
+    assert sorted(returned_names) == ["HackathonNoMode"]
+    assert sorted(returned_urls) == ["hacknomode.com"]
+
+
+def test_get_hackathons_q_no_matches(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?q=qwertyuiopxyz")
+    assert results.status_code == 200
+    assert results.json == []
+
+
+def test_get_hackathons_q_case_insesitive(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    for value in ["python", "PYTHON", "PyThOn"]:
+        results = client.get(f"/api/hackathons?q={value}")
+        assert results.status_code == 200
+        returned_names = [item["name"] for item in results.json]
+        returned_urls = [item["url"] for item in results.json]
+        assert sorted(returned_names) == sorted(["HackathonNoStatus"])
+        assert sorted(returned_urls) == sorted(["hacknostatus.com"])
+
+
+def test_get_hackathons_q_wildcard_symbols_injected(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+	# "_" underscore is evaluating as true due to tokenization fix in the future
+    symbol_combos = ["!!!", "%%%", "^^^", "~~~", "***",
+                     "()", "[]", "{}", "@@@", ";;;", ":::"]
+
+    for symbols in symbol_combos:
+        results = client.get(f"/api/hackathons?q={symbols}")
+        assert results.status_code == 400
+        assert results.json["error"] == "Wrong q"
+
+
+def test_get_hackathons_q_empty_string(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?q=")
+    assert results.status_code == 200
+    assert len(results.json) == len(base_payloads)
+
+
+def test_get_hackathons_q_and_operator_works(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    #both tokens exist in the payloads but each one belongs to a different hackathon
+    #so the AND operator returns nothing
+    results = client.get("/api/hackathons?q=TechCorp Blockchain")
+    assert results.status_code == 200
+    assert results.json == []
+
+
+def test_get_hackathons_q_all_tokens_same_row(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    #both tokens exist in the same hackathon so the AND operator returns it
+    results = client.get("/api/hackathons?q=Athens TechCorp")
+    assert results.status_code == 200
+    returned_names = [item["name"] for item in results.json]
+    returned_urls = [item["url"] for item in results.json]
+    assert sorted(returned_names) == sorted(["HackathonFull1"])
+    assert sorted(returned_urls) == sorted(["hackfull1.com"])
+
+
+def test_get_hackathons_q_duplicate_parameter(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    #only the first q value is used by the endpoint
+    results = client.get("/api/hackathons?q=python&q=blockchain")
+    assert results.status_code == 200
+    returned_names = [item["name"] for item in results.json]
+    returned_urls = [item["url"] for item in results.json]
+    assert sorted(returned_names) == sorted(["HackathonNoStatus"])
+    assert sorted(returned_urls) == sorted(["hacknostatus.com"])
+
+
+def test_get_hackathons_q_wrong_parameter(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    post_all_base_payloads(client)
+
+    results = client.get("/api/hackathons?query=python")
+    assert results.status_code == 200
+    assert len(results.json) == len(base_payloads)
+
+    expected_names = [payload["name"] for payload in base_payloads]
+    expected_urls = [payload["url"] for payload in base_payloads]
+    assert sorted(item["name"] for item in results.json) == sorted(expected_names)
+    assert sorted(item["url"] for item in results.json) == sorted(expected_urls)
+
+
+# def test_get_hackathons_q_very_large_str(app, client):
+#     #TODO: prevent very large values - will be fixed later
+#     with app.app_context():
+#         from main import db
+#         db.create_all()
+#
+#     post_all_base_payloads(client)
+#
+#     results = client.get("/api/hackathons?q=" + "a" * 100000)
+#     assert results.status_code == 200
+#     assert results.json == []
+
+
+# def test_get_hackathons_q_very_large_int(app, client):
+#     #TODO: prevent very large values - will be fixed later
+#     with app.app_context():
+#         from main import db
+#         db.create_all()
+#
+#     post_all_base_payloads(client)
+#
+#     results = client.get("/api/hackathons?q=" + "1" * 100000)
+#     assert results.status_code == 200
+#     assert results.json == []
 
 
 ## sort param tests

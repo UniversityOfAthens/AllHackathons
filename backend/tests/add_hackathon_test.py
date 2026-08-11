@@ -1,6 +1,9 @@
 # TESTING ADD HACKATHON API | ENDPOINT: /api/hackathons | METHOD: POST
 from datetime import datetime
 import time
+from database import (MAX_NAME_CHARACTERS, MAX_URL_CHARACTERS, MAX_DESCRIPTION_CHARACTERS,
+                      MAX_LOCATION_CHARACTERS, MAX_ORGANIZER_CHARACTERS,
+                      MAX_PRIZE_DETAILS_CHARACTERS, MAX_TAGS_CHARACTERS)
 
 TIME_SLEEP_DURATION = 1 
 
@@ -132,15 +135,37 @@ def test_add_hackathon_with_name_and_url(app, client):
     assert_hackathon_created(client, payload)
 
 
+def test_add_hackathon_with_name_oversized(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    payload = {**base_payload, "name": "a" * (MAX_NAME_CHARACTERS + 4)}
+    assert_hackathon_not_created(client, payload, f"name must contain {MAX_NAME_CHARACTERS} characters or less.")
+
+def test_add_hackathon_with_url_oversized(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    payload = {**base_payload, "url": "a" * (MAX_URL_CHARACTERS + 4)}
+    assert_hackathon_not_created(client, payload, f"url must contain {MAX_URL_CHARACTERS} characters or less.")
+
 def test_add_hackathon_with_description(app, client):
     with app.app_context():
         from main import db
         db.create_all()
 
     payload = {**base_payload, "description": "A beginner-friendly hackathon"}
-
     assert_hackathon_created(client, payload)
 
+def test_add_hackathon_with_description_oversized(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    payload = {**base_payload, "description": "a" * (MAX_DESCRIPTION_CHARACTERS + 4)}
+    assert_hackathon_not_created(client, payload, f"description must contain {MAX_DESCRIPTION_CHARACTERS} characters or less.")
 
 def test_add_hackathon_with_location(app, client):
     with app.app_context():
@@ -148,8 +173,16 @@ def test_add_hackathon_with_location(app, client):
         db.create_all()
 
     payload = {**base_payload, "location": "Athens"}
-
     assert_hackathon_created(client, payload)
+
+def test_add_hackathon_with_location_oversized(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    payload = {**base_payload, "location": "a" * (MAX_LOCATION_CHARACTERS + 4)}
+
+    assert_hackathon_not_created(client, payload, f"location must contain {MAX_LOCATION_CHARACTERS} characters or less.")
 
 
 def test_add_hackathon_with_organizer(app, client):
@@ -162,6 +195,16 @@ def test_add_hackathon_with_organizer(app, client):
     assert_hackathon_created(client, payload)
 
 
+def test_add_hackathon_with_organizer_oversized(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    payload = {**base_payload, "organizer": "a" * (MAX_ORGANIZER_CHARACTERS + 4)}
+
+    assert_hackathon_not_created(client, payload, f"organizer must contain {MAX_ORGANIZER_CHARACTERS} characters or less.")
+
+
 def test_add_hackathon_with_tags(app, client):
     with app.app_context():
         from main import db
@@ -170,6 +213,16 @@ def test_add_hackathon_with_tags(app, client):
     payload = {**base_payload, "tags": "AI,Python"}
 
     assert_hackathon_created(client, payload)
+
+
+def test_add_hackathon_with_tags_oversized(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    payload = {**base_payload, "tags": "a" * (MAX_TAGS_CHARACTERS + 4)}
+
+    assert_hackathon_not_created(client, payload, f"tags must contain {MAX_TAGS_CHARACTERS} characters or less.")
 
 
 def test_add_hackathon_with_description_and_location(app, client):
@@ -531,6 +584,16 @@ def test_add_hackathon_hasPrize_string_true(app, client):
 
     payload = {**base_payload, "hasPrize": "true"}
     assert_hackathon_created(client, payload)
+
+
+def test_add_hackathon_with_prizeDetails_oversized(app, client):
+    with app.app_context():
+        from main import db
+        db.create_all()
+
+    payload = {**base_payload, "hasPrize": True, "prizeDetails": "a" * (MAX_PRIZE_DETAILS_CHARACTERS + 4)}
+
+    assert_hackathon_not_created(client, payload, f"prizeDetails must contain {MAX_PRIZE_DETAILS_CHARACTERS} characters or less.")
 
 
 def test_add_hackathon_with_wrong_mode(app, client):

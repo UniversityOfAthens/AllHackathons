@@ -1,6 +1,7 @@
 from flask import Flask,jsonify,request
 from database import db,Hackathon,ModeEnum,StatusEnum,MAX_INTERESTCOUNT_VALUE
 from sqlalchemy.exc import IntegrityError 
+from sqlalchemy import or_, and_
 from flask_alembic import Alembic
 from werkzeug.exceptions import NotFound
 from datetime import datetime,timedelta
@@ -253,12 +254,13 @@ def validate_parameters2(params:dict,method:str,hackathon_to_update:Hackathon = 
             setattr(hackathon_to_update, key,value)
     
     return True,None
+
+def tokenize(query_string):
+    return re.findall(r'\w+', query_string)
     
 @app.route("/api/hackathons",methods=["GET"])
 def all_hackathons():
     now = datetime.now().replace(microsecond=0) #Formats time like this: YYYY-MM-DD HH:MM:SS example: 2026-05-01 15:12:00
-
-    #NOTE: REPLACE SOME PARAM QUERIES (tags,status) WITH ILIKE JUST SO IT IS EASIER TO FIND THE DESIRED PARAM
 
     params = {
         "status" : request.args.get('status').lower() if request.args.get('status') else None,
@@ -297,16 +299,35 @@ def all_hackathons():
 
     #tags parameter NEEDS REFACTORING
     if params["tags"]:
-        like = f"%{params["tags"]}%"
-        query = query.filter(Hackathon.tags.ilike(like))
+        tokens = tokenize(params["tags"])
+        
+        conditions = []
+        for token in tokens:
+            field_match = Hackathon.tags.ilike(f"%{token}%")
+            conditions.append(or_(field_match))
 
+        query = query.filter(or_(*conditions))
+        
     #q parameter
     if params["q"]:
-        like = f"%{params["q"]}%"
-        query = query.filter(Hackathon.name.ilike(like) | Hackathon.url.ilike(like) | Hackathon.description.ilike(like) |
-                                Hackathon.location.ilike(like) | Hackathon.organizer.ilike(like) | Hackathon.hasPrize.ilike(like) |
-                                Hackathon.prizeDetails.ilike(like) | Hackathon.tags.ilike(like))
+        tokens = tokenize(params["q"])
+        print(tokens)
+        if tokens:
+            searchable_fields = [
+                Hackathon.name, Hackathon.url, Hackathon.description,
+                Hackathon.location, Hackathon.organizer,
+                Hackathon.prizeDetails, Hackathon.tags,
+            ]
 
+            conditions = []
+            for token in tokens:
+                field_matches = [field.ilike(f"%{token}%") for field in searchable_fields]
+                conditions.append(or_(*field_matches))
+
+            query = query.filter(and_(*conditions))
+        elif tokens == []:
+            return jsonify(error="Wrong q"), 400
+        
     #sort parameter
     allowed_sort_values = ["name","startdate","enddate","submittedat","updatedat","interestcount"]
     if params["sort"]:
@@ -333,7 +354,6 @@ def all_hackathons():
 def find_hackathon(hackathon_id):
     try:
         hackathon = db.get_or_404(Hackathon, hackathon_id)
-        print(type(hackathon.startDate))
         return jsonify(hackathon.to_dict()),200
     except NotFound:
         return jsonify(error="Wrong id"),404
@@ -387,11 +407,15 @@ def add_hackathon():
     result_validated , value_validated = validate_parameters2(params_parsed,request.method,None)
     
     if result_validated:
-        new_hackathon = Hackathon(name=value_validated["name"],url=value_validated["url"],description=value_validated["description"],startDate=value_validated["startDate"],endDate=value_validated["endDate"],location=value_validated["location"],mode=value_validated["mode"],
+        try:
+            new_hackathon = Hackathon(name=value_validated["name"],url=value_validated["url"],description=value_validated["description"],startDate=value_validated["startDate"],endDate=value_validated["endDate"],location=value_validated["location"],mode=value_validated["mode"],
                                 organizer=value_validated["organizer"],hasPrize=value_validated["hasPrize"],prizeDetails=value_validated["prizeDetails"],tags=value_validated["tags"],status=value_validated["status"],
                                 submittedAt=value_validated["submittedAt"],updatedAt=value_validated["updatedAt"],interestCount=value_validated["interestCount"])
-        db.session.add(new_hackathon)
-        db.session.commit()
+        
+            db.session.add(new_hackathon)
+            db.session.commit()
+        except ValueError as e:
+            return jsonify(error=str(e)),400
         return jsonify(success=f"Successfully added hackathon:{value_validated["name"]}!"),200
     else:
         return jsonify(error=f"{value_validated}"),400
