@@ -1299,7 +1299,7 @@ def test_get_hackathons_sort_interestCount(app, client):
     #interestCount is always set to 0 when a hackathon is added, so give each row a distinct value
     interest_counts = {1: 120, 2: 25, 3: 47, 4: 89, 5: 33, 6: 54, 7: 5, 8: 10, 9: 7, 10: 75}
     for hackathon_id, count in interest_counts.items():
-        response_patch = client.patch(f"api/{hackathon_id}",data={"interestCount": count})
+        response_patch = client.patch(f"/api/hackathons/{hackathon_id}",data={"interestCount": count})
         assert response_patch.status_code == 200
         assert response_patch.json["success"] == f"Successfully updated hackathon with an id of : {hackathon_id}"
         
@@ -1327,7 +1327,7 @@ def test_get_hackathons_sort_interestCount_null_values_go_last(app, client):
     #leave HackathonMinimal(id=7) with interestCount None to check nulls sort last in descending order
     interest_counts = {1: 120, 2: 25, 3: 47, 4: 89, 5: 33, 6: 54, 8: 10, 9: 7, 10: 75}
     for hackathon_id, count in interest_counts.items():
-        response_patch = client.patch(f"api/{hackathon_id}",data={"interestCount": count})
+        response_patch = client.patch(f"/api/hackathons/{hackathon_id}",data={"interestCount": count})
         assert response_patch.status_code == 200
         assert response_patch.json["success"] == f"Successfully updated hackathon with an id of : {hackathon_id}"
 
@@ -1439,7 +1439,7 @@ def test_get_hackathons_sort_duplicate_param_first_name_second_interestCount(app
 
     interest_counts = {1: 120, 2: 25, 3: 47, 4: 89, 5: 33, 6: 54, 7: 5, 8: 10, 9: 7, 10: 75}
     for hackathon_id, count in interest_counts.items():
-        response_patch = client.patch(f"api/{hackathon_id}",data={"interestCount": count})
+        response_patch = client.patch(f"/api/hackathons/{hackathon_id}",data={"interestCount": count})
         assert response_patch.status_code == 200
         assert response_patch.json["success"] == f"Successfully updated hackathon with an id of : {hackathon_id}"
     
@@ -1469,7 +1469,7 @@ def test_get_hackathons_sort_duplicate_param_first_interestCount_second_name(app
 
     interest_counts = {1: 120, 2: 25, 3: 47, 4: 89, 5: 33, 6: 54, 7: 5, 8: 10, 9: 7, 10: 75}
     for hackathon_id, count in interest_counts.items():
-        response_patch = client.patch(f"api/{hackathon_id}",data={"interestCount": count})
+        response_patch = client.patch(f"/api/hackathons/{hackathon_id}",data={"interestCount": count})
         assert response_patch.status_code == 200
         assert response_patch.json["success"] == f"Successfully updated hackathon with an id of : {hackathon_id}"
     

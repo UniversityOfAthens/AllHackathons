@@ -249,11 +249,8 @@ def validate_parameters2(params:dict,method:str,hackathon_to_update:Hackathon = 
             validated_parameters["prizeDetails"] = None
         if (params["hasPrize"] is False) and (hackathon_to_update.prizeDetails is None):
             validated_parameters["prizeDetails"] = None
-        
-        for key,value in validated_parameters.items():
-            setattr(hackathon_to_update, key,value)
     
-    return True,None
+    return True,validated_parameters
 
 def tokenize(query_string):
     return re.findall(r'\w+', query_string)
@@ -350,22 +347,29 @@ def all_hackathons():
     data = [result.to_dict() for result in results]
     return jsonify(data),200
 
+@app.route("/api/hackathons/", methods=['GET'], defaults={'hackathon_id': None})
 @app.route("/api/hackathons/<hackathon_id>",methods=['GET'])
 def find_hackathon(hackathon_id):
+    
+    if (hackathon_id is None) or (hackathon_id.strip() == ""):
+        return jsonify(error="id is required"),400
+    
+    try:
+        hackathon = int(hackathon_id)
+    except ValueError:
+        return jsonify(error="id must be a number"),400
+    
     try:
         hackathon = db.get_or_404(Hackathon, hackathon_id)
         return jsonify(hackathon.to_dict()),200
     except NotFound:
         return jsonify(error="Wrong id"),404
 
-@app.route("/api/", methods=['PATCH'], defaults={'hackathon_id': None})
-@app.route("/api/<hackathon_id>",methods=['PATCH'])
+@app.route("/api/hackathons/", methods=['PATCH'], defaults={'hackathon_id': None})
+@app.route("/api/hackathons/<hackathon_id>",methods=['PATCH'])
 def update_hackathon(hackathon_id):
     
-    print(hackathon_id)
-    print(type(hackathon_id))
-    
-    if (hackathon_id is None) or (hackathon_id == ""):
+    if (hackathon_id is None) or (hackathon_id.strip() == ""):
         return jsonify(error="id is required"),400
     
     try:
@@ -382,15 +386,19 @@ def update_hackathon(hackathon_id):
     
     try:
         hackathon_to_update = db.get_or_404(Hackathon,hackathon_id)
-        result_validated , error_validated = validate_parameters2(params_parsed,request.method,hackathon_to_update)
-        if result_validated and not(error_validated):
+        result_validated , returned_parameters = validate_parameters2(params_parsed,request.method,hackathon_to_update)
+        if result_validated:
             try:
+                for key,value in returned_parameters.items():
+                    setattr(hackathon_to_update, key,value)
                 db.session.commit()
-                return jsonify(success=f"Successfully updated hackathon with an id of : {hackathon_id}"),200
+            except ValueError as e:
+                    return jsonify(error=str(e)),400
             except IntegrityError:
                 return jsonify(error="invalid data"),400
+            return jsonify(success=f"Successfully updated hackathon with an id of : {hackathon_id}"),200
         else:
-            return jsonify(error=f"{error_validated}"),400
+            return jsonify(error=f"{returned_parameters}"),400
     except NotFound:
         return jsonify(error="Hackathon not found"),404
     

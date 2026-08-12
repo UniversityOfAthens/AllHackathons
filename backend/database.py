@@ -95,6 +95,16 @@ class Hackathon(db.Model): #db has the model class=Base, we can add another base
             raise ValueError(f"tags must contain {MAX_TAGS_CHARACTERS} characters or less.")
         return value
     
+    @validates("interestCount")
+    def validate_interestCount(self, key, value):
+        try:
+            value = int(value)
+        except ValueError:
+            raise ValueError("interestCount must be an integer value")
+        if value is not None and (value < 0 or value > MAX_INTERESTCOUNT_VALUE):
+            raise ValueError(f"interestCount must contain an integer value between 0 and {MAX_INTERESTCOUNT_VALUE}")
+        return value
+
     def to_dict(self):
         return{
             "id": self.id,
