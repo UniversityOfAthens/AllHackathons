@@ -1,12 +1,18 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, validates
 from sqlalchemy import Integer, String, Float, Boolean, DateTime, Enum, text, CheckConstraint
 from sqlalchemy.sql import func
 from datetime import datetime,timedelta
 import enum
-#from main import MAX_INTERESTCOUNT_VALUE
 
 MAX_INTERESTCOUNT_VALUE = 10000
+MAX_NAME_CHARACTERS = 200
+MAX_DESCRIPTION_CHARACTERS = 400
+MAX_URL_CHARACTERS = 200
+MAX_LOCATION_CHARACTERS = 200
+MAX_ORGANIZER_CHARACTERS = 200
+MAX_PRIZE_DETAILS_CHARACTERS = 200
+MAX_TAGS_CHARACTERS = 200
 
 class Base(DeclarativeBase):
     pass
@@ -19,7 +25,7 @@ class StatusEnum(enum.Enum): # Python feature for creating a fixed set of named 
     draft = "draft" #name is draft and value is 'draft', they are seperate things but in our case they have the same name
     pending = "pending"
     published = "published"
-    needs_changes = "needs-changes"
+    needs_changes = "needs_changes"
     
 class ModeEnum(enum.Enum):
     in_person = "in_person"
@@ -29,17 +35,17 @@ class ModeEnum(enum.Enum):
 class Hackathon(db.Model): #db has the model class=Base, we can add another base later for our next table
     __tablename__ = "hackathon"
     id: Mapped[str] = mapped_column(Integer,primary_key=True,autoincrement=True) #autoincrement increases id number by 1 each time a new hackathon gets added
-    name: Mapped[str] = mapped_column(String,nullable=False) #name REQUIRED
-    description: Mapped[str] = mapped_column(String,nullable=True)
-    url: Mapped[str] = mapped_column(String,nullable=False) #official link REQUIRED
-    startDate: Mapped[datetime] = mapped_column(DateTime, nullable=True) # ISO 8601 date (des to meta)
-    endDate: Mapped[datetime] = mapped_column(DateTime,nullable=True) # ISO 8601 date (des to meta)
-    location: Mapped[str] = mapped_column(String,nullable=True)
+    name: Mapped[str] = mapped_column(String(MAX_NAME_CHARACTERS),nullable=False) #name REQUIRED
+    description: Mapped[str] = mapped_column(String(MAX_DESCRIPTION_CHARACTERS),nullable=True)
+    url: Mapped[str] = mapped_column(String(MAX_URL_CHARACTERS),nullable=False) #official link REQUIRED
+    startDate: Mapped[datetime] = mapped_column(DateTime, nullable=True) # ISO 8601 date 
+    endDate: Mapped[datetime] = mapped_column(DateTime,nullable=True) # ISO 8601 date
+    location: Mapped[str] = mapped_column(String(MAX_LOCATION_CHARACTERS),nullable=True)
     mode: Mapped[ModeEnum] = mapped_column(Enum(ModeEnum),nullable=True) # sqlalchemy's Enum(ModeEnum) restricts this column to only those values: in-person,online,hybrid
-    organizer: Mapped[str] = mapped_column(String,nullable=True)
+    organizer: Mapped[str] = mapped_column(String(MAX_ORGANIZER_CHARACTERS),nullable=True)
     hasPrize: Mapped[bool] = mapped_column(Boolean,nullable=True)
-    prizeDetails: Mapped[str] = mapped_column(String,nullable=True)
-    tags: Mapped[str] = mapped_column(String,nullable=True)
+    prizeDetails: Mapped[str] = mapped_column(String(MAX_PRIZE_DETAILS_CHARACTERS),nullable=True)
+    tags: Mapped[str] = mapped_column(String(MAX_TAGS_CHARACTERS),nullable=True)
     status: Mapped[StatusEnum] = mapped_column(Enum(StatusEnum),nullable=True) # sqlalchemy's Enum(StatusEnum) restricts this column to only those values: draft,pending,published,needs-change 
     submittedAt: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(),nullable=False)
     updatedAt: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(),nullable=False)
@@ -47,6 +53,58 @@ class Hackathon(db.Model): #db has the model class=Base, we can add another base
     __table_args__ = (CheckConstraint(f'interestCount >= 0 AND interestCount <= {MAX_INTERESTCOUNT_VALUE}', name='check_interest_count_range'),)
     
     
+    @validates("name")
+    def validate_name(self, key, value):
+        if value is not None and len(value) > MAX_NAME_CHARACTERS:
+            raise ValueError(f"name must contain {MAX_NAME_CHARACTERS} characters or less.")
+        return value
+    
+    @validates("description")
+    def validate_description(self, key, value):
+        if value is not None and (len(value) > MAX_DESCRIPTION_CHARACTERS):
+            raise ValueError(f"description must contain {MAX_DESCRIPTION_CHARACTERS} characters or less.")
+        return value
+    
+    @validates("url")
+    def validate_url(self, key, value):
+        if value is not None and len(value) > MAX_URL_CHARACTERS:
+            raise ValueError(f"url must contain {MAX_URL_CHARACTERS} characters or less.")
+        return value
+    
+    @validates("location")
+    def validate_location(self, key, value):
+        if value is not None and len(value) > MAX_LOCATION_CHARACTERS:
+            raise ValueError(f"location must contain {MAX_LOCATION_CHARACTERS} characters or less.")
+        return value
+    
+    @validates("organizer")
+    def validate_organizer(self, key, value):
+        if value is not None and len(value) > MAX_ORGANIZER_CHARACTERS:
+            raise ValueError(f"organizer must contain {MAX_ORGANIZER_CHARACTERS} characters or less.")
+        return value
+    
+    @validates("prizeDetails")
+    def validate_prizeDetails(self, key, value):
+        if value is not None and len(value) > MAX_PRIZE_DETAILS_CHARACTERS:
+            raise ValueError(f"prizeDetails must contain {MAX_PRIZE_DETAILS_CHARACTERS} characters or less.")
+        return value
+    
+    @validates("tags")
+    def validate_tags(self, key, value):
+        if value is not None and len(value) > MAX_TAGS_CHARACTERS:
+            raise ValueError(f"tags must contain {MAX_TAGS_CHARACTERS} characters or less.")
+        return value
+    
+    @validates("interestCount")
+    def validate_interestCount(self, key, value):
+        try:
+            value = int(value)
+        except ValueError:
+            raise ValueError("interestCount must be an integer value")
+        if value is not None and (value < 0 or value > MAX_INTERESTCOUNT_VALUE):
+            raise ValueError(f"interestCount must contain an integer value between 0 and {MAX_INTERESTCOUNT_VALUE}")
+        return value
+
     def to_dict(self):
         return{
             "id": self.id,
