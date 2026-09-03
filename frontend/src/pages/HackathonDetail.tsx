@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate, useLocation } from 'react-router-dom';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import RequestChangeModal from '../components/hackathons/RequestChangeModal';
-import { getHackathon } from '@/lib/store';
+import { getHackathon } from '@/lib/api';
 import { hackathonState, applicationBadge } from '@/lib/hackathons';
 import { dateRangeFull, relativeGreek } from '@/lib/date';
 import { cn } from '@/lib/utils';
@@ -47,10 +47,47 @@ export default function HackathonDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const [hackathon] = useState<Hackathon | undefined>(() => (id ? getHackathon(id) : undefined));
+  const [hackathon, setHackathon] = useState<Hackathon | undefined>(undefined);
   const [changeOpen, setChangeOpen] = useState(false);
+  const [loading, setLoading] = useState(!!id);
+  const [notFound, setNotFound] = useState(false);
 
-  if (!hackathon) return <NotFound />;
+  useEffect(() => {
+    if (!id) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const data = await getHackathon(id);
+        if (!cancelled) {
+          setHackathon(data);
+          setNotFound(false);
+        }
+      } catch {
+        if (!cancelled) setNotFound(true);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen flex-col bg-background">
+        <Header />
+        <main className="flex-1">
+          <section className="mx-auto w-full max-w-[1140px] px-6 py-24 text-center md:px-10">
+            <p className="text-muted-foreground">Φόρτωση…</p>
+          </section>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (notFound || !hackathon) return <NotFound />;
 
   const state = hackathonState(hackathon);
   const isPast = state === 'past';

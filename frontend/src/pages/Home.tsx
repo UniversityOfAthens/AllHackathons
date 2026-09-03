@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { MoveRight } from 'lucide-react';
 import Header from '../components/layout/Header';
@@ -8,31 +8,42 @@ import Highlights from '../components/home/Highlights';
 import HackathonCard from '../components/hackathons/HackathonCard';
 import HackathonFilters, { type ModeFilter } from '../components/hackathons/HackathonFilters';
 import SubmitHackathonModal from '../components/hackathons/SubmitHackathonModal';
-import { loadHackathons, saveUserHackathons } from '@/lib/store';
+import { listHackathons } from '@/lib/api';
 import { compareForList, highlightSelection } from '@/lib/hackathons';
 import type { Hackathon } from '@/types/hackathon';
 
-// The homepage shows a teaser of the list; the full paginated list lives at /hackathons.
 const HOME_LIST_LIMIT = 6;
 
 export default function Home() {
-  const [hackathons, setHackathons] = useState<Hackathon[]>(loadHackathons);
+  const [hackathons, setHackathons] = useState<Hackathon[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [modeFilter, setModeFilter] = useState<ModeFilter>('all');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await listHackathons({ status: 'published' });
+      setHackathons(data);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to load');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    saveUserHackathons(hackathons);
-  }, [hackathons]);
+    load();
+  }, [load]);
 
-  function addHackathon(h: Hackathon) {
-    setHackathons((prev) => [h, ...prev]);
+  function handleCreated() {
+    load();
   }
 
-  // Whatever the highlight already spotlights is excluded from the list below,
-  // so a hackathon never appears twice.
   const highlightedIds = new Set(highlightSelection(hackathons).items.map((h) => h.id));
 
-  // Published items: live → upcoming (soonest first) → past (most recent first).
   const visible = hackathons
     .filter((h) => h.status === 'published')
     .filter((h) => !highlightedIds.has(h.id))
@@ -47,10 +58,8 @@ export default function Home() {
       <main className="flex-1">
         <Hero hackathons={hackathons} />
 
-        {/* Highlight: live now (green) if any, else coming soon (blue) */}
         <Highlights hackathons={hackathons} />
 
-        {/* Full list (teaser) */}
         <section id="list" className="mx-auto w-full max-w-[1140px] px-6 py-16 md:px-10">
           <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
             <div>
@@ -75,7 +84,19 @@ export default function Home() {
             <HackathonFilters mode={modeFilter} onModeChange={setModeFilter} />
           </div>
 
-          {teaser.length === 0 ? (
+          {loading ? (
+            <div className="mt-12 py-16 text-center text-muted-foreground">Φόρτωση…</div>
+          ) : error ? (
+            <div className="mt-12 flex flex-col items-center gap-3 py-12 text-center">
+              <p className="text-sm text-destructive">{error}</p>
+              <button
+                onClick={load}
+                className="rounded-md border border-input px-4 py-2 text-sm font-medium hover:bg-accent"
+              >
+                Retry
+              </button>
+            </div>
+          ) : teaser.length === 0 ? (
             <div className="mt-12 flex flex-col items-center justify-center py-16 text-center text-muted-foreground">
               <p className="text-lg">Δεν βρέθηκαν hackathons.</p>
               <p className="text-sm">Δοκίμασε άλλο φίλτρο ή πρόσθεσε το πρώτο.</p>
@@ -99,7 +120,6 @@ export default function Home() {
           )}
         </section>
 
-        {/* Submit band — low-friction dashed callout (owns the add modal trigger) */}
         <section id="submit" className="mx-auto w-full max-w-[1140px] px-6 pb-20 md:px-10">
           <div className="rounded-3xl border-2 border-dashed border-[#cfc6b2] bg-muted/60 px-8 py-12 text-center">
             <h2 className="font-serif text-2xl font-semibold text-foreground md:text-3xl">
@@ -119,7 +139,11 @@ export default function Home() {
         </section>
       </main>
       <Footer />
-      <SubmitHackathonModal open={modalOpen} onOpenChange={setModalOpen} onSubmit={addHackathon} />
+      <SubmitHackathonModal
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        onCreated={handleCreated}
+      />
     </div>
   );
 }
