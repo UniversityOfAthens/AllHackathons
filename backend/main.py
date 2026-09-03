@@ -69,19 +69,12 @@ def _get_input(key: str):
     return val
 
 def _parse_date(value):
-    """Accept YYYY-MM-DD HH:MM:SS, YYYY-MM-DD, ISO8601."""
+    """Strict: only YYYY-MM-DD HH:MM:SS (backend canonical)."""
     if not value:
         return None
-    # try backend's canonical format
-    for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%dT%H:%M:%S.%f"):
-        try:
-            return datetime.strptime(value, fmt)
-        except ValueError:
-            continue
     try:
-        # fallback ISO parse
-        return datetime.fromisoformat(value.replace("Z", ""))
-    except Exception:
+        return datetime.strptime(value, "%Y-%m-%d %H:%M:%S")
+    except ValueError:
         raise ValueError("Wrong date format")
 
 def parse_parameters(method:str):
