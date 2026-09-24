@@ -1,10 +1,10 @@
-import { useState, type ReactNode } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import HackathonCard from '../components/hackathons/HackathonCard';
 import Pagination from '../components/hackathons/Pagination';
-import { loadHackathons } from '@/lib/store';
+import { listHackathons } from '@/lib/api';
 import { compareForList, hackathonState, type HackathonState } from '@/lib/hackathons';
 import { dayMonth } from '@/lib/date';
 import { cn } from '@/lib/utils';
@@ -83,9 +83,26 @@ function Pill({
 }
 
 export default function AllHackathons() {
-  const [all] = useState<Hackathon[]>(() =>
-    loadHackathons().filter((h) => h.status === 'published'),
-  );
+  const [all, setAll] = useState<Hackathon[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const load = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await listHackathons({ status: 'published' });
+      setAll(data);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to load');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    load();
+  }, []);
   // Filters/search/page live in the URL so navigating away and back restores them.
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('q') ?? '';
@@ -216,7 +233,19 @@ export default function AllHackathons() {
           </div>
 
           {/* Grid */}
-          {pageItems.length === 0 ? (
+          {loading ? (
+            <div className="mt-12 py-16 text-center text-muted-foreground">Φόρτωση…</div>
+          ) : error ? (
+            <div className="mt-12 flex flex-col items-center gap-3 py-12 text-center">
+              <p className="text-sm text-destructive">{error}</p>
+              <button
+                onClick={load}
+                className="rounded-md border border-input px-4 py-2 text-sm font-medium hover:bg-accent"
+              >
+                Retry
+              </button>
+            </div>
+          ) : pageItems.length === 0 ? (
             <div className="mt-12 py-16 text-center text-muted-foreground">
               <p className="text-lg">Δεν βρέθηκαν hackathons.</p>
               <p className="text-sm">Δοκίμασε άλλη αναζήτηση ή φίλτρο.</p>

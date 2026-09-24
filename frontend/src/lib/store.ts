@@ -1,25 +1,34 @@
-import { sampleHackathons } from '@/mocks/sample-hackathons';
 import type { Hackathon } from '@/types/hackathon';
 
-// Browser-local store (no backend yet — the real API is issue #5/#7).
-// User-submitted hackathons live in localStorage and are merged ahead of the seed samples.
-const USER_KEY = 'allhackathons_user';
+// My submissions tracker only — modeled on Feedback.tsx Previous Submissions (issue #7).
+// Public list is fetched via api.ts (GET /api/hackathons); localStorage MUST NOT back it.
+const MY_SUBMISSIONS_KEY = 'allhackathons_my_submissions';
 
-export function loadHackathons(): Hackathon[] {
+export type MySubmission = Pick<Hackathon, 'id' | 'name' | 'url' | 'status'> & {
+  submittedAt: string;
+};
+
+export function loadMySubmissions(): MySubmission[] {
   try {
-    const raw = localStorage.getItem(USER_KEY);
-    const user: Hackathon[] = raw ? JSON.parse(raw) : [];
-    return [...user, ...sampleHackathons];
+    const raw = localStorage.getItem(MY_SUBMISSIONS_KEY);
+    return raw ? (JSON.parse(raw) as MySubmission[]) : [];
   } catch {
-    return [...sampleHackathons];
+    return [];
   }
 }
 
-export function saveUserHackathons(all: Hackathon[]) {
-  const user = all.filter((h) => !sampleHackathons.some((s) => s.id === h.id));
-  localStorage.setItem(USER_KEY, JSON.stringify(user));
+export function addMySubmission(h: Hackathon): void {
+  const list = loadMySubmissions();
+  const entry: MySubmission = {
+    id: h.id,
+    name: h.name,
+    url: h.url,
+    status: h.status,
+    submittedAt: new Date().toISOString(),
+  };
+  localStorage.setItem(MY_SUBMISSIONS_KEY, JSON.stringify([entry, ...list]));
 }
 
-export function getHackathon(id: string): Hackathon | undefined {
-  return loadHackathons().find((h) => h.id === id);
+export function clearMySubmissions(): void {
+  localStorage.removeItem(MY_SUBMISSIONS_KEY);
 }

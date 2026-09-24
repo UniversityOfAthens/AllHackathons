@@ -5,49 +5,80 @@ import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 import { Label } from '../ui/label';
 import { Switch } from '../ui/switch';
-import type { Hackathon } from '@/types/hackathon';
+import { submitHackathon } from '@/lib/api';
+import { addMySubmission } from '@/lib/store';
 
 interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (hackathon: Hackathon) => void;
+  onCreated?: () => void;
 }
 
-export default function SubmitHackathonModal({ open, onOpenChange, onSubmit }: Props) {
+export default function SubmitHackathonModal({ open, onOpenChange, onCreated }: Props) {
   const [name, setName] = useState('');
   const [startDate, setStartDate] = useState('');
   const [hasPrize, setHasPrize] = useState(false);
   const [prizeDetails, setPrizeDetails] = useState('');
   const [location, setLocation] = useState('');
   const [url, setUrl] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [successStatus, setSuccessStatus] = useState<string | null>(null);
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    const nameTrimmed = name.trim();
-    const urlTrimmed = url.trim();
-    if (!nameTrimmed && !urlTrimmed) return;
-    const loc = location.trim();
-    onSubmit({
-      id: crypto.randomUUID(),
-      name: nameTrimmed || urlTrimmed || 'Untitled Hackathon',
-      startDate: startDate.trim() || undefined,
-      hasPrize: hasPrize || undefined,
-      prizeDetails: hasPrize ? prizeDetails.trim() : undefined,
-      location: loc || undefined,
-      url: urlTrimmed || undefined,
-      status: 'published',
-    });
+  function resetAndClose(created?: { status: string }) {
     setName('');
     setStartDate('');
     setHasPrize(false);
     setPrizeDetails('');
     setLocation('');
     setUrl('');
+    setError(null);
+    if (created) addMySubmission(created as never);
     onOpenChange(false);
+    setTimeout(() => setSuccessStatus(null), 300);
+    onCreated?.();
+  }
+
+  function handleOpenChange(next: boolean) {
+    onOpenChange(next);
+    if (!next) {
+      setError(null);
+      setSuccessStatus(null);
+    }
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const nameTrimmed = name.trim();
+    const urlTrimmed = url.trim();
+    if (!nameTrimmed && !urlTrimmed) {
+      setError('Provide at least name or link');
+      return;
+    }
+    setSubmitting(true);
+    setError(null);
+    setSuccessStatus(null);
+    try {
+      const created = await submitHackathon({
+        ...(nameTrimmed ? { name: nameTrimmed } : {}),
+        ...(urlTrimmed ? { url: urlTrimmed } : {}),
+        startDate: startDate.trim() || undefined,
+        hasPrize: hasPrize || undefined,
+        prizeDetails: hasPrize ? prizeDetails.trim() || undefined : undefined,
+        location: location.trim() || undefined,
+      });
+      setSuccessStatus(created.status);
+      // brief success feedback before closing so user sees published vs pending
+      setTimeout(() => resetAndClose(created), 900);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Submit failed');
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Submit a Hackathon</DialogTitle>
@@ -105,6 +136,14 @@ export default function SubmitHackathonModal({ open, onOpenChange, onSubmit }: P
               onChange={(e) => setUrl(e.target.value)}
             />
           </div>
+          {error && <p className="text-xs text-destructive">{error}</p>}
+          {successStatus && (
+            <p className="text-xs text-accent-green">
+              {successStatus === 'published'
+                ? '✓ Published — live on the list'
+                : `Status: ${successStatus} — pending review`}
+            </p>
+          )}
           <p className="text-xs text-muted-foreground">
             Name or Link is required. Fill in as much as you know.
           </p>
@@ -113,12 +152,13 @@ export default function SubmitHackathonModal({ open, onOpenChange, onSubmit }: P
               type="button"
               variant="outline"
               className="cursor-pointer"
-              onClick={() => onOpenChange(false)}
+              onClick={() => handleOpenChange(false)}
+              disabled={submitting}
             >
               Cancel
             </Button>
-            <Button type="submit" className="cursor-pointer">
-              Submit
+            <Button type="submit" className="cursor-pointer" disabled={submitting}>
+              {submitting ? 'Submitting…' : 'Submit'}
             </Button>
           </DialogFooter>
         </form>

@@ -36,43 +36,84 @@ alembic.init_app(app)
 with app.app_context():
     db.create_all()
 
+# --- CORS for frontend (Vite dev server) ---
+@app.after_request
+def _cors_headers(response):
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PATCH, OPTIONS, DELETE"
+    return response
+
+@app.route("/api/<path:_path>", methods=["OPTIONS"])
+@app.route("/api/hackathons", methods=["OPTIONS"])
+@app.route("/api/hackathons/<path:_sub>", methods=["OPTIONS"])
+def _cors_preflight(_path=None, _sub=None):
+    return ("", 204)
+
+def _get_input(key: str):
+    """Read from JSON body if present, else from form data. Normalizes empty strings to None."""
+    val = None
+    if request.is_json:
+        data = request.get_json(silent=True) or {}
+        val = data.get(key)
+        # JSON may contain list for tags -> join to string
+        if isinstance(val, list):
+            val = ",".join(str(v) for v in val)
+        if isinstance(val, bool):
+            # keep bool for hasPrize; stringify later via str().lower() checks
+            return val
+    if val is None:
+        val = request.form.get(key)
+    if val == "":
+        return None
+    return val
+
+def _parse_date(value):
+    """Strict: only YYYY-MM-DD HH:MM:SS (backend canonical)."""
+    if not value:
+        return None
+    try:
+        return datetime.strptime(value, "%Y-%m-%d %H:%M:%S")
+    except ValueError:
+        raise ValueError("Wrong date format")
+
 def parse_parameters(method:str):
     now = datetime.now()
     
     if method == "POST":
         params = {
-            "name": request.form.get("name") or None,
-            "url": request.form.get("url") or None,
-            "description": request.form.get("description") or None,
-            "organizer": request.form.get("organizer") or None,
-            "status": request.form.get("status") or None,
-            "mode": request.form.get("mode") or None,
-            "tags": request.form.get("tags") or None,
-            "startDate": request.form.get("startDate") or None,
-            "endDate": request.form.get("endDate") or None,
-            "location": request.form.get("location") or None,
-            "hasPrize": request.form.get("hasPrize") or None,
-            "prizeDetails": request.form.get("prizeDetails") or None,
+            "name": _get_input("name"),
+            "url": _get_input("url"),
+            "description": _get_input("description"),
+            "organizer": _get_input("organizer"),
+            "status": _get_input("status"),
+            "mode": _get_input("mode"),
+            "tags": _get_input("tags"),
+            "startDate": _get_input("startDate"),
+            "endDate": _get_input("endDate"),
+            "location": _get_input("location"),
+            "hasPrize": _get_input("hasPrize"),
+            "prizeDetails": _get_input("prizeDetails"),
             "submittedAt": now,
             "updatedAt": now,
             "interestCount": 0, #we dont even parse interestCount from the request since it is always 0 when a new hackathon is added
         }
     elif method == "PATCH":
         params = {
-            "name": request.form.get("name") or None,
-            "url": request.form.get("url") or None,
-            "description": request.form.get("description") or None,
-            "organizer": request.form.get("organizer") or None,
-            "status": request.form.get("status") or None,
-            "mode": request.form.get("mode") or None,
-            "tags": request.form.get("tags") or None,
-            "startDate": request.form.get("startDate") or None,
-            "endDate": request.form.get("endDate") or None,
-            "location": request.form.get("location") or None,
-            "hasPrize": request.form.get("hasPrize") or None,
-            "prizeDetails": request.form.get("prizeDetails") or None,
+            "name": _get_input("name"),
+            "url": _get_input("url"),
+            "description": _get_input("description"),
+            "organizer": _get_input("organizer"),
+            "status": _get_input("status"),
+            "mode": _get_input("mode"),
+            "tags": _get_input("tags"),
+            "startDate": _get_input("startDate"),
+            "endDate": _get_input("endDate"),
+            "location": _get_input("location"),
+            "hasPrize": _get_input("hasPrize"),
+            "prizeDetails": _get_input("prizeDetails"),
             "updatedAt": now,
-            "interestCount": request.form.get("interestCount") or None,
+            "interestCount": _get_input("interestCount"),
         }
         #we dont need to implement same logic in POST request since
         #we only need name and url to be provided and error-case is 
@@ -124,6 +165,9 @@ def validate_parameters2(params:dict,method:str,hackathon_to_update:Hackathon = 
                         return False,"Wrong status"
                 
                 if key == "mode":
+                    # frontend sends "in-person", backend stores "in_person"
+                    if isinstance(value, str) and value == "in-person":
+                        value = "in_person"
                     try:
                         value = ModeEnum(value)  #converts string "online" to ModeEnum.online
                     except ValueError:
@@ -152,14 +196,9 @@ def validate_parameters2(params:dict,method:str,hackathon_to_update:Hackathon = 
                 
                 if key in ["startDate", "endDate"]:
                     try:
-                        value = datetime.strptime(value, "%Y-%m-%d %H:%M:%S") if value else None
+                        value = _parse_date(value) if value else None
                     except ValueError:
                         return False,"Wrong date format"
-                try:
-                    startDate = datetime.strptime(request.form.get("startDate"), "%Y-%m-%d %H:%M:%S") if request.form.get("startDate") else None
-                    endDate = datetime.strptime(request.form.get("endDate"), "%Y-%m-%d %H:%M:%S") if request.form.get("endDate") else None
-                except ValueError:
-                    return False,"Wrong date format"
                 
                 validated_parameters[key] = value
         
@@ -199,6 +238,8 @@ def validate_parameters2(params:dict,method:str,hackathon_to_update:Hackathon = 
                         return False,"Wrong status"
                 
                 if key == "mode":
+                    if isinstance(value, str) and value == "in-person":
+                        value = "in_person"
                     try:
                         value = ModeEnum(value)  #converts string "online" to ModeEnum.online
                     except ValueError:
@@ -235,7 +276,7 @@ def validate_parameters2(params:dict,method:str,hackathon_to_update:Hackathon = 
                         
                 if key in ["startDate", "endDate"]:
                     try:
-                        value = datetime.strptime(value, "%Y-%m-%d %H:%M:%S") if value else None
+                        value = _parse_date(value) if value else None
                     except ValueError:
                         return False,"Wrong date format"
                         
