@@ -9,7 +9,7 @@ import HackathonCard from '../components/hackathons/HackathonCard';
 import HackathonFilters, { type ModeFilter } from '../components/hackathons/HackathonFilters';
 import SubmitHackathonModal from '../components/hackathons/SubmitHackathonModal';
 import { listHackathons } from '@/lib/api';
-import { compareForList, highlightSelection } from '@/lib/hackathons';
+import { compareForList, highlightSelection, isVisible } from '@/lib/hackathons';
 import type { Hackathon } from '@/types/hackathon';
 
 const HOME_LIST_LIMIT = 6;
@@ -45,7 +45,7 @@ export default function Home() {
   const highlightedIds = new Set(highlightSelection(hackathons).items.map((h) => h.id));
 
   const visible = hackathons
-    .filter((h) => h.status === 'published')
+    .filter(isVisible)
     .filter((h) => !highlightedIds.has(h.id))
     .filter((h) => (modeFilter === 'all' ? true : h.mode === modeFilter))
     .sort((a, b) => compareForList(a, b));

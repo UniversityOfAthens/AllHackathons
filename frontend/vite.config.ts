@@ -19,4 +19,10 @@ export default defineConfig({
       },
     },
   },
+  test: {
+    // store.ts / components read `localStorage`; jsdom provides it (and gives each
+    // test file a fresh one).
+    environment: 'jsdom',
+    include: ['tests/**/*.test.{ts,tsx}'],
+  },
 });

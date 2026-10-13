@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Link, useParams, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
+import Breadcrumbs, { fromHome } from '@/components/common/Breadcrumbs';
 import RequestChangeModal from '../components/hackathons/RequestChangeModal';
 import { getHackathon } from '@/lib/api';
-import { hackathonState, applicationBadge } from '@/lib/hackathons';
+import { hackathonState, applicationBadge, isVisible } from '@/lib/hackathons';
 import { dateRangeFull, relativeGreek } from '@/lib/date';
 import { cn } from '@/lib/utils';
 import type { Hackathon } from '@/types/hackathon';
@@ -24,7 +25,11 @@ function NotFound() {
       <Header />
       <main className="flex-1">
         <section className="mx-auto w-full max-w-[1140px] px-6 py-24 text-center md:px-10">
-          <h1 className="font-serif text-3xl font-semibold text-foreground">
+          <Breadcrumbs
+            items={fromHome({ label: 'Όλα τα hackathons', to: '/hackathons' })}
+            className="flex justify-center"
+          />
+          <h1 className="mt-4 font-serif text-3xl font-semibold text-foreground">
             Δεν βρέθηκε το hackathon
           </h1>
           <p className="mt-3 text-muted-foreground">
@@ -34,7 +39,7 @@ function NotFound() {
             to="/hackathons"
             className="relative inline-flex items-center gap-2 text-sm font-semibold text-accent-blue transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-left after:scale-x-0 after:bg-accent-blue after:transition-transform after:duration-300 after:ease-out hover:after:scale-x-100"
           >
-            <MoveLeft /> Πίσω στη λίστα
+            <MoveLeft className="size-4" /> Πίσω στη λίστα
           </Link>
         </section>
       </main>
@@ -45,8 +50,6 @@ function NotFound() {
 
 export default function HackathonDetail() {
   const { id } = useParams();
-  const navigate = useNavigate();
-  const location = useLocation();
   const [hackathon, setHackathon] = useState<Hackathon | undefined>(undefined);
   const [changeOpen, setChangeOpen] = useState(false);
   const [loading, setLoading] = useState(!!id);
@@ -59,8 +62,15 @@ export default function HackathonDetail() {
       try {
         const data = await getHackathon(id);
         if (!cancelled) {
-          setHackathon(data);
-          setNotFound(false);
+          // The backend serves any id, including drafts/pending. A draft must not
+          // be reachable by URL when the list doesn't link to it, so treat an
+          // unpublished item exactly like a missing one.
+          if (isVisible(data)) {
+            setHackathon(data);
+            setNotFound(false);
+          } else {
+            setNotFound(true);
+          }
         }
       } catch {
         if (!cancelled) setNotFound(true);
@@ -121,12 +131,12 @@ export default function HackathonDetail() {
       <Header />
       <main className="flex-1">
         <section className="mx-auto w-full max-w-[1140px] px-6 py-12 md:px-10">
-          <button
-            onClick={() => (location.key !== 'default' ? navigate(-1) : navigate('/hackathons'))}
-            className="relative inline-flex cursor-pointer items-center gap-2 text-sm font-semibold text-accent-blue transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-left after:scale-x-0 after:bg-accent-blue after:transition-transform after:duration-300 after:ease-out hover:after:scale-x-100"
-          >
-            <MoveLeft className="size-4" /> Πίσω στη λίστα
-          </button>
+          <Breadcrumbs
+            items={fromHome(
+              { label: 'Όλα τα hackathons', to: '/hackathons' },
+              { label: hackathon.name },
+            )}
+          />
 
           <div className="mt-6 grid gap-10 md:grid-cols-[1.6fr_1fr]">
             {/* Main */}

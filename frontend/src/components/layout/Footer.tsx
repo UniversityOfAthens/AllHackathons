@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 const DISCORD_INVITE = 'https://discord.gg/zENTyrbJh';
 const REPO_URL = 'https://github.com/UniversityOfAthens/AllHackathons';
 
@@ -7,7 +9,12 @@ export default function Footer() {
       <div className="mx-auto flex w-full max-w-[1140px] flex-col items-center justify-between gap-3 px-6 py-6 text-sm sm:flex-row md:px-10">
         <span className="font-serif text-base font-semibold text-foreground">GreekHackathons</span>
         <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-muted-foreground">
-          <span>Φτιαγμένο από την κοινότητα, για την κοινότητα</span>
+          <Link
+            to="/credits"
+            className="underline-offset-4 transition-colors hover:text-foreground hover:underline"
+          >
+            Συντελεστές
+          </Link>
           <span aria-hidden>·</span>
           <a
             href={REPO_URL}
@@ -15,7 +22,7 @@ export default function Footer() {
             rel="noopener noreferrer"
             className="underline-offset-4 transition-colors hover:text-foreground hover:underline"
           >
-            Open source
+            GitHub
           </a>
           <span aria-hidden>·</span>
           <a

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import type { Hackathon } from '@/types/hackathon';
 import { dayMonth } from '@/lib/date';
+import { isVisible } from '@/lib/hackathons';
 import Avatar from '@/components/common/Avatar';
 import { MoveRight } from 'lucide-react';
 
@@ -13,9 +14,9 @@ function isUpcoming(h: Hackathon, today: string) {
 
 export default function Hero({ hackathons }: { hackathons: Hackathon[] }) {
   const today = new Date().toISOString().slice(0, 10);
-  const active = hackathons.filter((h) => h.status === 'published' && isUpcoming(h, today));
+  const active = hackathons.filter((h) => isVisible(h) && isUpcoming(h, today));
   const openApplications = hackathons.filter(
-    (h) => h.status === 'published' && !!h.applicationDeadline && h.applicationDeadline >= today,
+    (h) => isVisible(h) && !!h.applicationDeadline && h.applicationDeadline >= today,
   ).length;
 
   // Contributors = distinct people who added a hackathon (generated avatars, no accounts).
