@@ -1,14 +1,15 @@
 import { useState, useEffect, type ReactNode } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
+import { HomeBreadcrumb } from '@/components/common/Breadcrumbs';
 import HackathonCard from '../components/hackathons/HackathonCard';
 import Pagination from '../components/hackathons/Pagination';
 import { listHackathons } from '@/lib/api';
-import { compareForList, hackathonState, type HackathonState } from '@/lib/hackathons';
+import { compareForList, hackathonState, isVisible, type HackathonState } from '@/lib/hackathons';
 import { dayMonth } from '@/lib/date';
 import { cn } from '@/lib/utils';
-import { Globe, MoveLeft } from 'lucide-react';
+import { Globe } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -124,6 +125,9 @@ export default function AllHackathons() {
   }
 
   const filtered = all
+    // The API is already asked for status=published; re-check client-side so the
+    // rule holds even if a future response shape slips through.
+    .filter(isVisible)
     .filter((h) => (stateFilter === 'all' ? true : hackathonState(h) === stateFilter))
     .filter((h) => (modeFilter === 'all' ? true : h.mode === modeFilter))
     .filter((h) => matchesQuery(h, query))
@@ -138,12 +142,7 @@ export default function AllHackathons() {
       <Header />
       <main className="flex-1">
         <section className="mx-auto w-full max-w-[1140px] px-6 py-12 md:px-10">
-          <Link
-            to="/"
-            className="relative inline-flex items-center gap-2 text-sm font-semibold text-accent-blue transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-left after:scale-x-0 after:bg-accent-blue after:transition-transform after:duration-300 after:ease-out hover:after:scale-x-100"
-          >
-            <MoveLeft className="size-4" /> Πίσω στην αρχική
-          </Link>
+          <HomeBreadcrumb />
           <h1 className="mt-4 font-serif text-4xl font-semibold text-foreground md:text-5xl">
             Όλα τα hackathons
           </h1>

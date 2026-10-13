@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
+import { HomeBreadcrumb } from '@/components/common/Breadcrumbs';
 import { Button } from '../components/ui/button';
 import { Textarea } from '../components/ui/textarea';
 import { Label } from '../components/ui/label';
@@ -50,7 +51,8 @@ export default function Feedback() {
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1 container mx-auto px-4 py-8">
-        <div className="mb-8">
+        <HomeBreadcrumb />
+        <div className="mb-8 mt-4">
           <h1 className="text-3xl font-bold tracking-tight">Feedback</h1>
           <p className="text-muted-foreground mt-1">Found a bug or have an idea? Let us know.</p>
         </div>

@@ -7,6 +7,19 @@ export function todayISO(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
+/**
+ * Public visibility rule: only `published` hackathons are visible.
+ *
+ * The list is already filtered by `GET /api/hackathons?status=published`, but the
+ * detail page fetches a single item by id — which the backend happily returns for
+ * a draft. Without this gate, /hackathon/<draft-id> renders a page that the list
+ * doesn't link to. Every surface that lists or resolves a hackathon goes through
+ * this one predicate so the two can't drift apart.
+ */
+export function isVisible(h: Hackathon): boolean {
+  return h.status === 'published';
+}
+
 /** live = happening now, upcoming = starts in the future, past = already ended. */
 export function hackathonState(h: Hackathon, today: string = todayISO()): HackathonState {
   const start = h.startDate;
@@ -38,7 +51,7 @@ export function highlightSelection(
   hackathons: Hackathon[],
   today: string = todayISO(),
 ): HighlightSelection {
-  const published = hackathons.filter((h) => h.status === 'published' && !!h.startDate);
+  const published = hackathons.filter((h) => isVisible(h) && !!h.startDate);
   const byStart = (a: Hackathon, b: Hackathon) =>
     (a.startDate ?? '').localeCompare(b.startDate ?? '');
 
